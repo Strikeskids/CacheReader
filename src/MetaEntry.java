@@ -1,0 +1,85 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class MetaEntry extends MetaChildEntry {
+
+	private static final int WHIRLPOOL_SIZE = 64;
+
+	private int version = -1;
+	private int crc;
+	private int childCount;
+	private byte[] whirlpool;
+
+	private Map<Integer, MetaChildEntry> children = new HashMap<>();
+	private int maximumKey = -1;
+
+	public MetaEntry(int id) {
+		super(id);
+	}
+
+	public MetaChildEntry getChild(int key) {
+		return children.get(key);
+	}
+
+	public void putChild(int key, MetaChildEntry entry) {
+		children.put(key, entry);
+		maximumKey = Math.max(key, maximumKey);
+	}
+	
+	public void addChild(int key) {
+		putChild(key, new MetaChildEntry(key));
+	}
+
+	public int getMaximum() {
+		return maximumKey + 1;
+	}
+
+	public int getSize() {
+		return children.size();
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public int getCrc() {
+		return crc;
+	}
+
+	public void setCrc(int crc) {
+		this.crc = crc;
+	}
+
+	public byte[] getAndInitializeWhirlpool() {
+		if (whirlpool == null)
+			whirlpool = new byte[WHIRLPOOL_SIZE];
+		return getWhirlpool();
+	}
+
+	public byte[] getWhirlpool() {
+		return whirlpool;
+	}
+
+	public void setWhirlpool(byte[] whirlpool) {
+		if (!verifyWhirlpool(whirlpool))
+			throw new IllegalArgumentException();
+		this.whirlpool = whirlpool;
+	}
+
+	private boolean verifyWhirlpool(byte[] whirlpool) {
+		return whirlpool != null && whirlpool.length == WHIRLPOOL_SIZE;
+	}
+
+	public int getChildCount() {
+		return childCount;
+	}
+
+	public void setChildCount(int childCount) {
+		this.childCount = childCount;
+	}
+
+}
