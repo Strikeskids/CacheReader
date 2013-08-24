@@ -5,6 +5,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileSystem {
@@ -23,31 +24,57 @@ public class FileSystem {
 
 	private final File cacheDirectory;
 
+	private final int indexFileCount;
 	private final File cacheFile, indexFiles[], metaIndexFile;
-	private FileChannel cacheChannel, indexChannels[], metaIndexChannel;
+	private FileChannel cacheChannel, indexChannels[];
 
 	public FileSystem(File cacheDirectory) throws FileNotFoundException {
 		this.cacheDirectory = cacheDirectory;
 		this.cacheFile = new File(this.cacheDirectory, CACHE_FILE);
 		this.metaIndexFile = new File(this.cacheDirectory, META_INDEX_FILE);
-		this.indexFiles = findIndexFiles();
+		File[] indexFiles = findIndexFiles();
+		this.indexFileCount = indexFiles.length;
+		this.indexFiles = Arrays.copyOf(indexFiles, META_INDEX_FILE_NUM + 1);
 		if (!validateFiles())
 			throw new FileNotFoundException("All the required cache files were not found in " + cacheDirectory);
+		indexFiles[META_INDEX_FILE_NUM] = metaIndexFile;
 	}
 
 	public FileChannel getCacheChannel() {
 		return cacheChannel = getChannel(cacheFile, cacheChannel);
 	}
 
+	public FileChannel getMetaIndexChannel() {
+		return getIndexChannel(META_INDEX_FILE_NUM);
+	}
+
 	public FileChannel getIndexChannel(int type) {
-		if (validateType(type))
+		if (validateIndexChannel(type))
 			return indexChannels[type] = getChannel(indexFiles[type], indexChannels[type]);
 		else
 			return null;
 	}
 
-	public FileChannel getMetaIndexChannel() {
-		return metaIndexChannel = getChannel(metaIndexFile, metaIndexChannel);
+	private boolean validateIndexChannel(int type) {
+		return 0 <= type && type < indexFiles.length && indexFiles[type] != null;
+	}
+
+	private FileChannel getChannel(File location, FileChannel currentChannel) {
+		synchronized (location) {
+			if (currentChannel == null || !currentChannel.isOpen()) {
+				currentChannel = openChannel(location);
+			}
+			return currentChannel;
+		}
+	}
+
+	private FileChannel openChannel(File location) {
+		try {
+			return new RandomAccessFile(location, FILE_MODE).getChannel();
+		} catch (FileNotFoundException impossible) {
+			impossible.printStackTrace();
+			throw new RuntimeException();
+		}
 	}
 
 	public byte[] readFile(ArchiveQuery query) {
@@ -111,11 +138,11 @@ public class FileSystem {
 	}
 
 	private boolean validateFiles() {
-		return cacheFile.exists() && metaIndexFile.exists() && indexFiles.length > 0;
+		return cacheFile.exists() && metaIndexFile.exists() && indexFileCount > 0;
 	}
 
 	public boolean validateType(int type) {
-		return 0 <= type && type < indexFiles.length;
+		return 0 <= type && type < indexFileCount;
 	}
 
 	private boolean validateSector(FileChannel channel, int sector) throws IOException {
@@ -123,23 +150,5 @@ public class FileSystem {
 			return false;
 		long endPosition = (sector + 1) * SECTOR_SIZE;
 		return endPosition <= channel.size();
-	}
-
-	private FileChannel getChannel(File location, FileChannel currentChannel) {
-		synchronized (location) {
-			if (currentChannel == null || !currentChannel.isOpen()) {
-				currentChannel = openChannel(location);
-			}
-			return currentChannel;
-		}
-	}
-
-	private FileChannel openChannel(File location) {
-		try {
-			return new RandomAccessFile(location, FILE_MODE).getChannel();
-		} catch (FileNotFoundException impossible) {
-			impossible.printStackTrace();
-			throw new RuntimeException();
-		}
 	}
 }
