@@ -29,7 +29,7 @@ public class CacheSystem {
 			throw new IndexOutOfBoundsException();
 		if (types[cacheType] == null) {
 			types[cacheType] = new CacheType(this, cacheType);
-			if (!initialize(types[cacheType]))
+			if (!types[cacheType].init())
 				throw new RuntimeException("Failed to initialize table and index");
 		}
 		return types[cacheType];
@@ -38,18 +38,7 @@ public class CacheSystem {
 	public ReferenceTable getReferenceTable(int cacheType) {
 		return getCacheType(cacheType).getTable();
 	}
-
-	private boolean initialize(CacheType type) {
-		try {
-			type.getTable().init();
-			type.getIndex().init();
-			return true;
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			return false;
-		}
-	}
-
+	
 	public FileSystem getSourceSystem() {
 		return source;
 	}

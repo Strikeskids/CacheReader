@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public class CacheType {
 
 	private final ReferenceTable table;
@@ -32,6 +34,17 @@ public class CacheType {
 
 	public IndexFile getIndex() {
 		return index;
+	}
+	
+	public boolean init() {
+		try {
+			this.getTable().init();
+			this.getIndex().init();
+			return true;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
 	}
 
 }
