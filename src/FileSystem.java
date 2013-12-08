@@ -151,4 +151,8 @@ public class FileSystem {
 		long endPosition = (sector + 1) * SECTOR_SIZE;
 		return endPosition <= channel.size();
 	}
+
+	public int getIndexFileCount() {
+		return indexFileCount;
+	}
 }
