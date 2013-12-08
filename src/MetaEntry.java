@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MetaEntry extends MetaChildEntry {
@@ -11,6 +13,7 @@ public class MetaEntry extends MetaChildEntry {
 	private byte[] whirlpool;
 
 	private Map<Integer, MetaChildEntry> children = new HashMap<>();
+	private List<Integer> childIndexOrder = new ArrayList<>();
 	private int maximumKey = -1;
 
 	public MetaEntry(int id) {
@@ -28,10 +31,15 @@ public class MetaEntry extends MetaChildEntry {
 	public void putChild(int key, MetaChildEntry entry) {
 		children.put(key, entry);
 		maximumKey = Math.max(key, maximumKey);
+		childIndexOrder.add(key);
 	}
 	
 	public void addChild(int key) {
 		putChild(key, new MetaChildEntry(key));
+	}
+	
+	public int getChildIndex(int order) {
+		return childIndexOrder.get(order);
 	}
 
 	public int getMaximum() {
