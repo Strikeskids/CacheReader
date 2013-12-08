@@ -4,6 +4,8 @@ import java.nio.BufferUnderflowException;
 import java.util.Arrays;
 import java.util.zip.Inflater;
 
+import com.sk.compress.BZip2Decompressor;
+
 public abstract class Stream {
 
 	public static final int BYTE_SIZE = 8, SHORT_SIZE = 16, INT_SIZE = 32, LONG_SIZE = 64;
