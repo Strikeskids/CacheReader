@@ -32,12 +32,12 @@ public class FileSystem {
 		this.cacheDirectory = cacheDirectory;
 		this.cacheFile = new File(this.cacheDirectory, CACHE_FILE);
 		this.metaIndexFile = new File(this.cacheDirectory, META_INDEX_FILE);
-		File[] indexFiles = findIndexFiles();
-		this.indexFileCount = indexFiles.length;
-		this.indexFiles = Arrays.copyOf(indexFiles, META_INDEX_FILE_NUM + 1);
+		File[] indexFileSource = findIndexFiles();
+		this.indexFileCount = indexFileSource.length;
+		this.indexFiles = Arrays.copyOf(indexFileSource, META_INDEX_FILE_NUM + 1);
 		if (!validateFiles())
 			throw new FileNotFoundException("All the required cache files were not found in " + cacheDirectory);
-		indexFiles[META_INDEX_FILE_NUM] = metaIndexFile;
+		this.indexFiles[META_INDEX_FILE_NUM] = metaIndexFile;
 	}
 
 	public FileChannel getCacheChannel() {
