@@ -1,3 +1,7 @@
+package com.sk.cache.fs;
+import com.sk.datastream.ByteStream;
+import com.sk.datastream.Stream;
+
 
 public class FileData {
 	private final int id;	

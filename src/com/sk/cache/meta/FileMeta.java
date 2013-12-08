@@ -1,11 +1,12 @@
+package com.sk.cache.meta;
 
-public class MetaChildEntry {
+public class FileMeta {
 
 	private int identifier = -1;
 	
 	private final int id;
 	
-	public MetaChildEntry(int id) {
+	public FileMeta(int id) {
 		this.id = id;
 	}
 	

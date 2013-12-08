@@ -1,12 +1,16 @@
+package com.sk.cache.fs;
 import java.io.IOException;
+
+import com.sk.cache.DataSource;
+import com.sk.cache.meta.ReferenceTable;
 
 public class CacheSystem {
 
-	private final FileSystem source;
-	private final CacheType[] types = new CacheType[FileSystem.MAX_INDEX_FILES];
+	private final DataSource source;
+	private final CacheType[] types = new CacheType[DataSource.MAX_INDEX_FILES];
 	private final IndexFile metaIndex;
 
-	public CacheSystem(FileSystem source) {
+	public CacheSystem(DataSource source) {
 		this.source = source;
 		this.metaIndex = new MetaIndexFile(source);
 	}
@@ -39,7 +43,7 @@ public class CacheSystem {
 		return types[cacheType];
 	}
 	
-	public FileSystem getSourceSystem() {
+	public DataSource getSourceSystem() {
 		return source;
 	}
 

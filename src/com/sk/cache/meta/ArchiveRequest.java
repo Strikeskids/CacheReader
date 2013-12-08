@@ -1,11 +1,15 @@
-public class ArchiveMeta {
+package com.sk.cache.meta;
+
+import com.sk.cache.Sector;
+
+public class ArchiveRequest {
 
 	private final int cacheType;
 	private final int fileId;
 	private final int startSector;
 	private final int fileSize;
 
-	public ArchiveMeta(int cacheType, int archiveId, int archiveSize, int startSector) {
+	public ArchiveRequest(int cacheType, int archiveId, int archiveSize, int startSector) {
 		this.cacheType = cacheType;
 		this.fileId = archiveId;
 		this.fileSize = archiveSize;

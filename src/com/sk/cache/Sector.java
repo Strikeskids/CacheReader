@@ -1,3 +1,4 @@
+package com.sk.cache;
 public class Sector {
 
 	public static final int HEADER_SIZE = 8, DATA_SIZE = 512, SIZE = HEADER_SIZE + DATA_SIZE;

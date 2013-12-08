@@ -1,3 +1,4 @@
+package com.sk.datastream;
 import java.nio.BufferUnderflowException;
 import java.util.Arrays;
 import java.util.zip.Inflater;

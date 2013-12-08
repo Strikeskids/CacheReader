@@ -1,9 +1,10 @@
+package com.sk.cache.meta;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MetaEntry extends MetaChildEntry {
+public class ArchiveMeta extends FileMeta {
 
 	private static final int WHIRLPOOL_SIZE = 64;
 
@@ -12,15 +13,15 @@ public class MetaEntry extends MetaChildEntry {
 	private int childCount;
 	private byte[] whirlpool;
 
-	private Map<Integer, MetaChildEntry> children = new HashMap<>();
+	private Map<Integer, FileMeta> children = new HashMap<>();
 	private List<Integer> childIndexOrder = new ArrayList<>();
 	private int maximumKey = -1;
 
-	public MetaEntry(int id) {
+	public ArchiveMeta(int id) {
 		super(id);
 	}
 
-	public MetaChildEntry getChild(int key) {
+	public FileMeta getChild(int key) {
 		return children.get(key);
 	}
 
@@ -28,14 +29,14 @@ public class MetaEntry extends MetaChildEntry {
 		return getChild(index) != null;
 	}
 
-	public void putChild(int key, MetaChildEntry entry) {
+	public void putChild(int key, FileMeta entry) {
 		children.put(key, entry);
 		maximumKey = Math.max(key, maximumKey);
 		childIndexOrder.add(key);
 	}
 	
 	public void addChild(int key) {
-		putChild(key, new MetaChildEntry(key));
+		putChild(key, new FileMeta(key));
 	}
 	
 	public int getChildIndex(int order) {

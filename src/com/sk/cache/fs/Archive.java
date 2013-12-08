@@ -1,9 +1,14 @@
+package com.sk.cache.fs;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sk.cache.meta.ArchiveMeta;
+import com.sk.datastream.ByteStream;
+import com.sk.datastream.Stream;
+
 public class Archive {
 	private final int id;
-	private final MetaEntry metaData;
+	private final ArchiveMeta metaData;
 	private final CacheType cache;
 
 	private final byte[] wrapped;

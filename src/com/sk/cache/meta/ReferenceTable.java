@@ -1,6 +1,11 @@
+package com.sk.cache.meta;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sk.cache.fs.CacheSystem;
+import com.sk.datastream.ByteStream;
+import com.sk.datastream.Stream;
 
 public class ReferenceTable {
 
@@ -13,7 +18,7 @@ public class ReferenceTable {
 	private int version;
 	private int format;
 
-	private Map<Integer, MetaEntry> entries;
+	private Map<Integer, ArchiveMeta> entries;
 
 	private Stream data;
 	private int[] ids;
@@ -40,7 +45,7 @@ public class ReferenceTable {
 		return format;
 	}
 
-	public MetaEntry getEntry(int id) {
+	public ArchiveMeta getEntry(int id) {
 		return entries.get(id);
 	}
 
@@ -57,13 +62,13 @@ public class ReferenceTable {
 		}
 	}
 
-	private ArchiveMeta getQuery() {
+	private ArchiveRequest getQuery() {
 		return cache.getMetaIndex().getArchiveMeta(id);
 	}
 
 	private byte[] getTableData() {
-		ArchiveMeta query = getQuery();
-		return cache.getSourceSystem().readFile(query);
+		ArchiveRequest query = getQuery();
+		return cache.getSourceSystem().readArchive(query);
 	}
 
 	private void decode(Stream data) {
@@ -125,7 +130,7 @@ public class ReferenceTable {
 
 	private void addEntries() {
 		for (int id : ids) {
-			entries.put(id, new MetaEntry(id));
+			entries.put(id, new ArchiveMeta(id));
 		}
 	}
 
@@ -171,7 +176,7 @@ public class ReferenceTable {
 	private void decodeChildren() {
 		children = new int[ids.length][];
 		for (int i = 0; i < ids.length; ++i) {
-			MetaEntry currentEntry = getEntry(ids[i]);
+			ArchiveMeta currentEntry = getEntry(ids[i]);
 			children[i] = getIds(currentEntry.getChildCount());
 			addEntryChildren(currentEntry, children[i]);
 		}
@@ -180,7 +185,7 @@ public class ReferenceTable {
 		children = null;
 	}
 
-	private void addEntryChildren(MetaEntry entry, int... ids) {
+	private void addEntryChildren(ArchiveMeta entry, int... ids) {
 		for (int id : ids)
 			entry.addChild(id);
 	}

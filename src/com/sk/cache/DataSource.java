@@ -1,3 +1,4 @@
+package com.sk.cache;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FileSystem {
+import com.sk.cache.meta.ArchiveRequest;
+import com.sk.datastream.ByteStream;
+import com.sk.datastream.Stream;
+
+public class DataSource {
 
 	private static final String FILE_MODE = "r";
 
@@ -28,7 +33,7 @@ public class FileSystem {
 	private final File cacheFile, indexFiles[], metaIndexFile;
 	private FileChannel cacheChannel, indexChannels[];
 
-	public FileSystem(File cacheDirectory) throws FileNotFoundException {
+	public DataSource(File cacheDirectory) throws FileNotFoundException {
 		this.cacheDirectory = cacheDirectory;
 		this.cacheFile = new File(this.cacheDirectory, CACHE_FILE);
 		this.metaIndexFile = new File(this.cacheDirectory, META_INDEX_FILE);
@@ -78,7 +83,7 @@ public class FileSystem {
 		}
 	}
 
-	public byte[] readFile(ArchiveMeta query) {
+	public byte[] readArchive(ArchiveRequest query) {
 		int currentChunk = 0;
 		int nextSectorId = query.getStartSector();
 		ByteBuffer outputBuffer = ByteBuffer.allocate(query.getFileSize());

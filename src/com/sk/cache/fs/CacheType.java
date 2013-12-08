@@ -1,10 +1,15 @@
+package com.sk.cache.fs;
 import java.io.IOException;
+
+import com.sk.cache.DataSource;
+import com.sk.cache.meta.ArchiveRequest;
+import com.sk.cache.meta.ReferenceTable;
 
 public class CacheType {
 
 	private final ReferenceTable table;
 	private final IndexFile index;
-	private final FileSystem source;
+	private final DataSource source;
 	private final int id;
 
 	public CacheType(CacheSystem source, int id) {
@@ -22,11 +27,11 @@ public class CacheType {
 	}
 
 	private byte[] getArchiveData(int archive) {
-		ArchiveMeta query = index.getArchiveMeta(archive);
+		ArchiveRequest query = index.getArchiveMeta(archive);
 		if (query == null)
 			return null;
 		else
-			return source.readFile(query);
+			return source.readArchive(query);
 	}
 
 	public ReferenceTable getTable() {
