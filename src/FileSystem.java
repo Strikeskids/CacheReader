@@ -94,9 +94,11 @@ public class FileSystem {
 				throw new RuntimeException();
 			if (!query.checkSector(sector))
 				throw new RuntimeException();
-			outputBuffer.put(sector.getData());
+			outputBuffer.put(sector.getData(), 0, Math.min(sector.getData().length, outputBuffer.remaining()));
 			nextSectorId = sector.getNextSector();
 		}
+		if (outputBuffer.remaining() != 0)
+			throw new RuntimeException();
 		return outputBuffer.array();
 	}
 
