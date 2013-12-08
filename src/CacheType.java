@@ -18,6 +18,7 @@ public class CacheType {
 		byte[] data = getArchiveData(archive);
 		if (data == null)
 			return null;
+		return new Archive(this, archive, data);
 	}
 
 	private byte[] getArchiveData(int archive) {
@@ -35,7 +36,11 @@ public class CacheType {
 	public IndexFile getIndex() {
 		return index;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
 	public boolean init() {
 		try {
 			this.getTable().init();
