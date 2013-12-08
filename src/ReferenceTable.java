@@ -49,17 +49,18 @@ public class ReferenceTable {
 			synchronized (this) {
 				if (entries == null) {
 					entries = new HashMap<>();
-					byte[] data = getTableData();
+					ByteStream compressed = new ByteStream(getTableData());
+					byte[] data = compressed.decompress();
 					decode(new ByteStream(data));
 				}
 			}
 		}
 	}
-	
+
 	private ArchiveMeta getQuery() {
 		return cache.getMetaIndex().getArchiveMeta(id);
 	}
-	
+
 	private byte[] getTableData() {
 		ArchiveMeta query = getQuery();
 		return cache.getSourceSystem().readFile(query);

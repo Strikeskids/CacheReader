@@ -1,5 +1,3 @@
-
-
 import java.nio.BufferUnderflowException;
 import java.util.Arrays;
 import java.util.zip.Inflater;
@@ -188,9 +186,9 @@ public abstract class Stream {
 			return getBytes(new byte[size]);
 		} else {
 			return decompress(compression);
-		}	
+		}
 	}
-	
+
 	private final byte[] decompress(int compression) {
 		int decompressedSize = getInt();
 		if (decompressedSize < 0)
@@ -203,22 +201,22 @@ public abstract class Stream {
 		}
 		return decompressed;
 	}
-	
-	private final void decompressBzip2(byte[] decompressed) {
+
+	private final void decompressBzip2(byte[] compressed) {
 		byte[] payload = getAllBytes();
-		BZip2Decompressor.decompress(decompressed, decompressed.length, payload, 0, 9);
+		BZip2Decompressor.decompress(compressed, compressed.length, payload, 0, 9);
 	}
-	
-	private final void decompressGzip(byte[] decompressed) {
+
+	private final void decompressGzip(byte[] compressed) {
 		byte[] payload = getAllBytes();
 		int location = getLocation();
-		if (payload[location] != 31 || payload[++location] != -117) {
+		if (payload[location] != 31 || payload[location + 1] != -117) {
 			throw new RuntimeException("Invalid GZIP header!");
 		}
 		Inflater inflater = new Inflater(true);
 		try {
 			inflater.setInput(payload, location + 10, getLength() - location - 18);
-			inflater.inflate(decompressed);
+			inflater.inflate(compressed);
 		} catch (Exception ex) {
 			inflater.reset();
 			throw new RuntimeException("Invalid GZIP compressed data!");
