@@ -21,6 +21,10 @@ public class MetaEntry extends MetaChildEntry {
 		return children.get(key);
 	}
 
+	public boolean validateChild(int index) {
+		return getChild(index) != null;
+	}
+
 	public void putChild(int key, MetaChildEntry entry) {
 		children.put(key, entry);
 		maximumKey = Math.max(key, maximumKey);
