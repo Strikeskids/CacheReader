@@ -77,7 +77,7 @@ public class FileSystem {
 		}
 	}
 
-	public byte[] readFile(ArchiveQuery query) {
+	public byte[] readFile(ArchiveMeta query) {
 		int currentChunk = 0;
 		int nextSectorId = query.getStartSector();
 		ByteBuffer outputBuffer = ByteBuffer.allocate(query.getFileSize());

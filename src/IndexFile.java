@@ -9,16 +9,16 @@ public class IndexFile {
 	protected final FileSystem source;
 	protected final int cacheType;
 
-	private ArchiveQuery[] queries;
+	private ArchiveMeta[] metas;
 
 	public IndexFile(FileSystem system, int cacheType) {
 		this.source = system;
 		this.cacheType = cacheType;
 	}
 
-	public ArchiveQuery getQuery(int archive) {
-		if (0 <= archive && archive < queries.length)
-			return queries[archive];
+	public ArchiveMeta getArchiveMeta(int archive) {
+		if (0 <= archive && archive < metas.length)
+			return metas[archive];
 		else
 			return null;
 	}
@@ -28,9 +28,9 @@ public class IndexFile {
 	}
 
 	public void init() throws IOException {
-		if (queries == null) {
+		if (metas == null) {
 			synchronized (this) {
-				if (queries == null) {
+				if (metas == null) {
 					FileChannel channel = source.getIndexChannel(cacheType);
 					int size = (int) channel.size();
 
@@ -47,14 +47,14 @@ public class IndexFile {
 	private void decode(Stream dataStream) {
 		int size = dataStream.getLeft();
 		int queryCount = size / ENTRY_SIZE;
-		queries = new ArchiveQuery[queryCount];
-		for (int i = 0; i < queries.length; ++i) {
-			queries[i] = getQuery(dataStream, i);
+		metas = new ArchiveMeta[queryCount];
+		for (int i = 0; i < metas.length; ++i) {
+			metas[i] = getMeta(dataStream, i);
 		}
 	}
 
-	private ArchiveQuery getQuery(Stream dataStream, int index) {
-		return new ArchiveQuery(cacheType, index, dataStream.getUInt24(), dataStream.getUInt24());
+	private ArchiveMeta getMeta(Stream dataStream, int index) {
+		return new ArchiveMeta(cacheType, index, dataStream.getUInt24(), dataStream.getUInt24());
 	}
 
 }

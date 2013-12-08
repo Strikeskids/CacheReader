@@ -56,12 +56,12 @@ public class ReferenceTable {
 		}
 	}
 	
-	private ArchiveQuery getQuery() {
-		return cache.getMetaIndex().getQuery(id);
+	private ArchiveMeta getQuery() {
+		return cache.getMetaIndex().getArchiveMeta(id);
 	}
 	
 	private byte[] getTableData() {
-		ArchiveQuery query = getQuery();
+		ArchiveMeta query = getQuery();
 		return cache.getSourceSystem().readFile(query);
 	}
 

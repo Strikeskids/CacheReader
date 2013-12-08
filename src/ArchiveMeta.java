@@ -1,11 +1,11 @@
-public class ArchiveQuery {
+public class ArchiveMeta {
 
 	private final int cacheType;
 	private final int fileId;
 	private final int startSector;
 	private final int fileSize;
 
-	public ArchiveQuery(int cacheType, int archiveId, int archiveSize, int startSector) {
+	public ArchiveMeta(int cacheType, int archiveId, int archiveSize, int startSector) {
 		this.cacheType = cacheType;
 		this.fileId = archiveId;
 		this.fileSize = archiveSize;

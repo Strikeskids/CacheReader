@@ -21,7 +21,7 @@ public class CacheType {
 	}
 
 	private byte[] getArchiveData(int archive) {
-		ArchiveQuery query = index.getQuery(archive);
+		ArchiveMeta query = index.getArchiveMeta(archive);
 		if (query == null)
 			return null;
 		else
