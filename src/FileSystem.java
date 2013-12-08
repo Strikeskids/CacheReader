@@ -38,6 +38,7 @@ public class FileSystem {
 		if (!validateFiles())
 			throw new FileNotFoundException("All the required cache files were not found in " + cacheDirectory);
 		this.indexFiles[META_INDEX_FILE_NUM] = metaIndexFile;
+		this.indexChannels = new FileChannel[META_INDEX_FILE_NUM + 1];
 	}
 
 	public FileChannel getCacheChannel() {
