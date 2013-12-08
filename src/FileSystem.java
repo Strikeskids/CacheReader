@@ -41,7 +41,7 @@ public class FileSystem {
 	}
 
 	public FileChannel getCacheChannel() {
-		return cacheChannel = getChannel(cacheFile, cacheChannel);
+		return cacheChannel = refreshBrokenChannel(cacheFile, cacheChannel);
 	}
 
 	public FileChannel getMetaIndexChannel() {
@@ -50,7 +50,7 @@ public class FileSystem {
 
 	public FileChannel getIndexChannel(int type) {
 		if (validateIndexChannel(type))
-			return indexChannels[type] = getChannel(indexFiles[type], indexChannels[type]);
+			return indexChannels[type] = refreshBrokenChannel(indexFiles[type], indexChannels[type]);
 		else
 			return null;
 	}
@@ -59,7 +59,7 @@ public class FileSystem {
 		return 0 <= type && type < indexFiles.length && indexFiles[type] != null;
 	}
 
-	private FileChannel getChannel(File location, FileChannel currentChannel) {
+	private FileChannel refreshBrokenChannel(File location, FileChannel currentChannel) {
 		synchronized (location) {
 			if (currentChannel == null || !currentChannel.isOpen()) {
 				currentChannel = openChannel(location);
