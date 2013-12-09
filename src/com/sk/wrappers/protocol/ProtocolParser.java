@@ -33,8 +33,10 @@ public class ProtocolParser {
 			line = line.trim();
 			LinkedList<String> parts = new LinkedList<>(Arrays.asList(line.split(" ")));
 			String locString = next(parts);
-			if (locString == null)
+			if (locString == null) {
+				System.out.println(line);
 				continue;
+			}
 			List<Integer> locs = parseLocs(locString);
 
 			String out = null;
