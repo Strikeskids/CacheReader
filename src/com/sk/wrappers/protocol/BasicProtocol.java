@@ -7,7 +7,7 @@ public class BasicProtocol extends StaticLocReader {
 	private final FieldExtractor[] extractors;
 
 	public BasicProtocol(StreamExtractor extractor, int... locs) {
-		this(new FieldExtractor[] { new FieldExtractor(extractor) }, locs);
+		this(FieldExtractor.wrap(extractor), locs);
 	}
 
 	public BasicProtocol(FieldExtractor extractor, int... locs) {
