@@ -1,4 +1,4 @@
-package com.sk.wrappers.protocol;
+package com.sk.wrappers.protocol.extractor;
 
 import com.sk.datastream.Stream;
 

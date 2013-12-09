@@ -1,6 +1,7 @@
 package com.sk.wrappers.protocol;
 
 import com.sk.datastream.Stream;
+import com.sk.wrappers.protocol.extractor.StreamExtractor;
 
 public class ArrayProtocol extends StaticLocReader {
 

@@ -6,10 +6,10 @@ import com.sk.wrappers.protocol.BasicSetter;
 import com.sk.wrappers.protocol.BasicSkipper;
 import com.sk.wrappers.protocol.ExtraAttributeReader;
 import com.sk.wrappers.protocol.FieldExtractor;
-import com.sk.wrappers.protocol.ParseType;
 import com.sk.wrappers.protocol.ProtocolGroup;
-import com.sk.wrappers.protocol.SizedStreamExtractor;
-import com.sk.wrappers.protocol.StreamExtractor;
+import com.sk.wrappers.protocol.extractor.ParseType;
+import com.sk.wrappers.protocol.extractor.SizedStreamExtractor;
+import com.sk.wrappers.protocol.extractor.StreamExtractor;
 
 public class ItemDefinition extends ProtocolWrapper<ItemDefinitionLoader> {
 

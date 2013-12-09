@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Scanner;
 
+import com.sk.wrappers.protocol.extractor.ParseType;
+
 public class ProtocolParser {
 
 	public static void main(String[] args) throws IOException {

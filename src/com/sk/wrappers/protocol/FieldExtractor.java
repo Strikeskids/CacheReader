@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import com.sk.datastream.Stream;
+import com.sk.wrappers.protocol.extractor.StreamExtractor;
 
 public class FieldExtractor {
 
