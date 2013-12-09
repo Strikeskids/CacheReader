@@ -1,31 +1,29 @@
 package com.sk.wrappers.protocol;
 
-import java.lang.reflect.Field;
-
 import com.sk.datastream.Stream;
 
 public class BasicReader extends StaticLocReader {
 
-	private final StreamExtractor extractor;
-	private final String fieldName;
+	private final FieldExtractor[] extractors;
+	private final int minLoc;
 
 	public BasicReader(StreamExtractor type, String fieldName, int... locs) {
+		this(new FieldExtractor[] { new FieldExtractor(type, fieldName) }, locs);
+	}
+
+	public BasicReader(FieldExtractor[] extractors, int... locs) {
 		super(locs);
-		this.extractor = type;
-		this.fieldName = fieldName;
+		int min = Integer.MAX_VALUE;
+		for (int loc : locs)
+			min = Math.min(loc, min);
+		this.minLoc = min;
+		this.extractors = extractors;
 	}
 
 	@Override
 	public void read(Object destination, int type, Stream data) {
-		Class<?> clazz = destination.getClass();
-		try {
-			Field field = clazz.getField(fieldName);
-			Object newValue = extractor.get(data);
-			field.set(destination, newValue);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-			throw new RuntimeException(String.format("Failed to read data into destination object %s field %s",
-					destination, fieldName));
+		for (FieldExtractor fe : extractors) {
+			fe.read(destination, minLoc, type, data);
 		}
 	}
 
