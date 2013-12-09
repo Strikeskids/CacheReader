@@ -7,6 +7,22 @@ public class ArrayProtocol extends StaticLocReader {
 	private final StreamExtractor counter;
 	private final ProtocolReader repeat;
 
+	public ArrayProtocol(StreamExtractor counter, StreamExtractor extractor, int... locs) {
+		this(counter, new FieldExtractor[] { new FieldExtractor(extractor) }, locs);
+	}
+
+	public ArrayProtocol(StreamExtractor counter, FieldExtractor extractor, int... locs) {
+		this(counter, new FieldExtractor[] { extractor }, locs);
+	}
+
+	public ArrayProtocol(StreamExtractor counter, StreamExtractor[] extractors, int... locs) {
+		this(counter, FieldExtractor.wrap(extractors), locs);
+	}
+
+	public ArrayProtocol(StreamExtractor counter, FieldExtractor[] extractors, int... locs) {
+		this(counter, new BasicProtocol(extractors, locs), locs);
+	}
+	
 	public ArrayProtocol(StreamExtractor counter, ProtocolReader repeat, int... locs) {
 		super(locs);
 		this.counter = counter;

@@ -15,11 +15,20 @@ public class FieldExtractor {
 		this.extractor = ext;
 	}
 
-	public void read(Object destination, int minLoc, int type, Stream s) {
-		setValue(destination, minLoc, type, fieldName, extractor.get(s));
+	public FieldExtractor(StreamExtractor ext) {
+		this(ext, null);
 	}
-	
+
+	public void read(Object destination, int minLoc, int type, Stream s) {
+		Object newValue = extractor.get(s);
+		if (fieldName != null) {
+			setValue(destination, minLoc, type, fieldName, newValue);
+		}
+	}
+
 	public static void setValue(Object destination, int minLoc, int type, String fieldName, Object newValue) {
+		if (fieldName == null)
+			return;
 		Class<?> clazz = destination.getClass();
 		try {
 			Field field = clazz.getField(fieldName);
@@ -30,8 +39,16 @@ public class FieldExtractor {
 			}
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
-			throw new RuntimeException(String.format("Failed to read data into destination object %s field %s",
+			throw new RuntimeException(String.format("Failed to put data into destination object %s field %s",
 					destination, fieldName));
 		}
+	}
+
+	public static FieldExtractor[] wrap(StreamExtractor... extractors) {
+		FieldExtractor[] ret = new FieldExtractor[extractors.length];
+		for (int i = 0; i < ret.length; ++i) {
+			ret[i] = new FieldExtractor(extractors[i]);
+		}
+		return ret;
 	}
 }
