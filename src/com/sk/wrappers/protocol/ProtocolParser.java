@@ -31,10 +31,11 @@ public class ProtocolParser {
 
 		while ((line = r.readLine()) != null) {
 			line = line.trim();
-			if (line.length() == 0)
-				continue;
 			LinkedList<String> parts = new LinkedList<>(Arrays.asList(line.split(" ")));
-			List<Integer> locs = parseLocs(next(parts));
+			String locString = next(parts);
+			if (locString == null)
+				continue;
+			List<Integer> locs = parseLocs(locString);
 
 			String out = null;
 
