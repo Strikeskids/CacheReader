@@ -43,20 +43,16 @@ public class ProtocolParser {
 				continue;
 
 			if (next.equals("array")) {
-				String counter = getExtractor(parts);
+				String counter = getStreamExtractor(parts);
 				String extractors = getExtractors(parts);
-				out = String.format("new Array%s(%s, %s, ", getType(extractors), counter, extractors);
+				out = String.format("new ArrayProtocol(%s, %s, ", counter, extractors);
 			} else if (next.equals("ea")) {
 				out = "new ExtraAttributeReader(";
 				locs.clear();
-			} else if (next.equals("set")) {
-				String name = next(parts);
-				String value = next(parts);
-				out = String.format("new BasicSetter(\"%s\", %s, ", name, value);
 			} else {
 				parts.addFirst(next);
 				String extractors = getExtractors(parts);
-				out = String.format("new Basic%s(%s, ", getType(extractors), extractors);
+				out = String.format("new BasicProtocol(%s, ", extractors);
 			}
 			if (map.containsKey(out)) {
 				map.get(out).addAll(locs);
@@ -84,38 +80,45 @@ public class ProtocolParser {
 		return ret;
 	}
 
-	public static String getType(String input) {
-		return input.contains("Field") ? "Reader" : "Skipper";
-	}
-
 	public static String getExtractors(Queue<String> parts) {
 		List<String> extractors = new ArrayList<>();
 		String curExtractor;
-		String arrayType = "StreamExtractor";
 		while ((curExtractor = getExtractor(parts)) != null) {
-			if (curExtractor.contains("Field"))
-				arrayType = "FieldExtractor";
 			extractors.add(curExtractor);
 		}
-		return String.format("new %s[]{%s}", arrayType, stringifyCollection(extractors));
+		return String.format("new FieldExtractor[]{%s}", stringifyCollection(extractors));
 	}
 
 	public static String getExtractor(Queue<String> parts) {
+		String baseExtractor = getStreamExtractor(parts);
+		if (baseExtractor == null)
+			return null;
+		String name = next(parts);
+		if (name == null)
+			return String.format("new FieldExtractor(%s)", baseExtractor);
+		else
+			return String.format("new FieldExtractor(%s, \"%s\")", baseExtractor, name);
+	}
+
+	public static String getStreamExtractor(Queue<String> parts) {
 		String type = next(parts);
 		if (type == null)
 			return null;
 		type = type.toUpperCase();
-		String baseExtractor = null;
+		if (type.equals("SET")) {
+			String value = next(parts);
+			return String.format("new StaticExtractor(%s)", value);
+		}
 		try {
 			ParseType.valueOf(type);
-			baseExtractor = "ParseType." + type;
+			return "ParseType." + type;
 		} catch (IllegalArgumentException e) {
-			baseExtractor = String.format("new SizedStreamExtractor(%d)", Integer.parseInt(type));
 		}
-		String name = next(parts);
-		if (name == null)
-			return baseExtractor;
-		return String.format("new FieldExtractor(%s, \"%s\")", baseExtractor, name);
+		try {
+			return String.format("new SizedStreamExtractor(%d)", Integer.parseInt(type));
+		} catch (NumberFormatException e) {
+		}
+		return null;
 	}
 
 	private static String next(Queue<String> parts) {

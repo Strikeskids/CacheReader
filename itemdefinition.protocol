@@ -5,10 +5,10 @@
 6 ushort # modelRotation2
 7 ushort # modelOffset1 # if > 7FFF, subtract 0x10000
 8 ushort # modelOffset2 # if > 7FFF, subtract 0x10000
-11 set stackable true
+11 set true stackable
 12 int value
 13 ubyte slot
-16 set members true
+16 set true members
 23 big_smart # maleEquip1
 24 big_smart # femaleEquip1
 25 big_smart # maleEquip2
