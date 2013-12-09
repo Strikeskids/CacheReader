@@ -53,9 +53,9 @@ public class ItemDefinition extends ProtocolWrapper<ItemDefinitionLoader> {
 				.addSelfToGroup(protocol);
 		new ArraySkipper(ParseType.UBYTE, new StreamExtractor[] { new SizedStreamExtractor(2) }, 132)
 				.addSelfToGroup(protocol);
-		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.SHORT, "actions") }, 35, 36, 37, 38,
+		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "actions") }, 35, 36, 37, 38,
 				39).addSelfToGroup(protocol);
-		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.SHORT, "groundActions") }, 30, 31, 32,
+		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "groundActions") }, 30, 31, 32,
 				33, 34).addSelfToGroup(protocol);
 		new BasicSkipper(new StreamExtractor[] { new SizedStreamExtractor(3) }, 125, 126, 127, 128, 129, 130)
 				.addSelfToGroup(protocol);
@@ -75,7 +75,7 @@ public class ItemDefinition extends ProtocolWrapper<ItemDefinitionLoader> {
 		new BasicSkipper(new StreamExtractor[] { new SizedStreamExtractor(0) }, 65).addSelfToGroup(protocol);
 		new BasicSkipper(new StreamExtractor[] { ParseType.BIG_SMART }, 1, 23, 24, 25, 26, 78, 79, 90, 91, 92, 93)
 				.addSelfToGroup(protocol);
-		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.SHORT, "name") }, 2)
+		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "name") }, 2)
 				.addSelfToGroup(protocol);
 		new BasicReader(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT, "noteTemplateId") }, 98)
 				.addSelfToGroup(protocol);
