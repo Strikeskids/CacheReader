@@ -16,9 +16,12 @@ public class FieldExtractor {
 	}
 
 	public void read(Object destination, int minLoc, int type, Stream s) {
+		setValue(destination, minLoc, type, fieldName, extractor.get(s));
+	}
+	
+	public static void setValue(Object destination, int minLoc, int type, String fieldName, Object newValue) {
 		Class<?> clazz = destination.getClass();
 		try {
-			Object newValue = extractor.get(s);
 			Field field = clazz.getField(fieldName);
 			if (field.getType().isArray()) {
 				Array.set(field.get(destination), type - minLoc, newValue);
