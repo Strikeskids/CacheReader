@@ -1,0 +1,4 @@
+CacheReader
+===========
+
+Reads the jagexcache
