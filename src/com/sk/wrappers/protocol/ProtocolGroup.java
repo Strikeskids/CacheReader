@@ -14,7 +14,7 @@ public class ProtocolGroup extends ProtocolReader {
 			readers.put(loc, reader);
 		}
 	}
-	
+
 	public ProtocolReader getReader(int type) {
 		return readers.get(type);
 	}
@@ -22,7 +22,7 @@ public class ProtocolGroup extends ProtocolReader {
 	@Override
 	public void read(Object destination, int type, Stream data) {
 		if (!validateType(type))
-			throw new IllegalArgumentException("Bad type");
+			throw new IllegalArgumentException("Bad type " + type);
 		readers.get(type).read(destination, type, data);
 	}
 

@@ -33,7 +33,7 @@ public class FieldExtractor {
 		Class<?> clazz = destination.getClass();
 		try {
 			Field field = clazz.getField(fieldName);
-			if (field.getType().isArray()) {
+			if (field.getType().isArray() && (newValue == null || !newValue.getClass().isArray())) {
 				Array.set(field.get(destination), type - minLoc, newValue);
 			} else {
 				field.set(destination, newValue);
