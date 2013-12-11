@@ -1,0 +1,2 @@
+1 ubyte configType , big_smart configId
+2 ubyte lowerBitIndex , ubyte upperBitIndex
