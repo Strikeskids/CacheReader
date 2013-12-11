@@ -13,14 +13,17 @@ import com.sk.wrappers.protocol.extractor.StaticExtractor;
 
 public class ObjectDefinition extends ProtocolWrapper<ObjectDefinitionLoader> {
 
+	public String name;
 	public int type = -1;
 	public int width = 1;
 	public int height = 1;
 	public boolean walkable = false;
 	public boolean walkable2 = false;
 	public String[] actions = new String[5];
+	
+	public int scriptId;
+	public int configId;
 	public int[] childrenIds;
-	public String name;
 
 	public ObjectDefinition(ObjectDefinitionLoader loader, int id) {
 		super(loader, id, protocol);
@@ -61,13 +64,16 @@ public class ObjectDefinition extends ProtocolWrapper<ObjectDefinitionLoader> {
 		new StaticLocReader(77, 92) {
 			@Override
 			public void read(Object obj, int type, Stream s) {
-				s.skip(4);
+				int script = s.getUShort();
+				int config = s.getUShort();
 				int ending = type == 92 ? s.getBigSmart() : -1;
 				int count = s.getUByte() + 1;
 				int[] arr = new int[count + 1];
 				for (int i = 0; i < count; ++i)
 					arr[i] = s.getBigSmart();
 				arr[count] = ending;
+				FieldExtractor.setValue(obj, type, type, "scriptId", script == 0xFFFF ? -1 : script);
+				FieldExtractor.setValue(obj, type, type, "configId", config == 0xFFFF ? -1 : config);
 				FieldExtractor.setValue(obj, type, type, "childrenIds", arr);
 			}
 		}.addSelfToGroup(protocol);
