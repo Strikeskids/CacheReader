@@ -1,9 +1,9 @@
 package com.sk.wrappers;
 
-import com.sk.datastream.Stream;
+import com.sk.wrappers.protocol.BasicProtocol;
 import com.sk.wrappers.protocol.FieldExtractor;
 import com.sk.wrappers.protocol.ProtocolGroup;
-import com.sk.wrappers.protocol.StaticLocReader;
+import com.sk.wrappers.protocol.extractor.ParseType;
 
 
 public class Script extends ProtocolWrapper<ScriptLoader> {
@@ -20,19 +20,7 @@ public class Script extends ProtocolWrapper<ScriptLoader> {
 	private static final ProtocolGroup protocol = new ProtocolGroup();
 	
 	static {
-		new StaticLocReader(1) {
-			@Override
-			public void read(Object destination, int type, Stream s) {
-				FieldExtractor.setValue(destination, type, type, "configType", s.getUByte());
-				FieldExtractor.setValue(destination, type, type, "configId", s.getBigSmart());
-			}
-		}.addSelfToGroup(protocol);
-		new StaticLocReader(2) {
-			@Override
-			public void read(Object destination, int type, Stream s) {
-				FieldExtractor.setValue(destination, type, type, "lowerBitIndex", s.getUByte());
-				FieldExtractor.setValue(destination, type, type, "upperBitIndex", s.getUByte());
-			}
-		}.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "configType"), new FieldExtractor(ParseType.BIG_SMART, "configId")}, 1).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "lowerBitIndex"), new FieldExtractor(ParseType.UBYTE, "upperBitIndex")}, 2).addSelfToGroup(protocol);
 	}
 }
