@@ -133,7 +133,7 @@ public class ProtocolParser {
 			parts.clear();
 			return null;
 		}
-		if (ret.equals(","))
+		if (ret.equals("-") || ret.equals(","))
 			return null;
 		return ret;
 	}

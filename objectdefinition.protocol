@@ -21,8 +21,8 @@
 029 byte
 030-34 String actions
 039 byte
-040 array ubyte ushort , ushort # originalColors , modifiedColors
-041 array ubyte ushort , ushort
+040 array ubyte ushort - ushort # originalColors , modifiedColors
+041 array ubyte ushort - ushort
 042 array ubyte byte
 044 ushort
 045 ushort
@@ -38,7 +38,7 @@
 073 set
 074 set true walkable2
 075 ubyte
-078 ushort , ubyte
+078 ushort - ubyte
 081 ubyte
 082 set
 088 set
@@ -49,19 +49,19 @@
 095 ushort # (> 0x7fff -> -= 0x10000)
 097 set
 098 set
-099 ubyte , ushort
-100 ubyte , ushort
+099 ubyte - ushort
+100 ubyte - ushort
 101 ubyte
 102 ushort
 103 set
 104 ubyte
 105 set
-106 array ubyte big_smart , ubyte
+106 array ubyte big_smart - ubyte
 107 ushort
 150-154 string actions
 160 array ubyte ushort
 162 int
-163 byte , byte , byte , byte
+163 byte - byte - byte - byte
 164 ushort # (> 0x7fff -> -= 0x10000)
 165 ushort # (> 0x7fff -> -= 0x10000)
 166 ushort # (> 0x7fff -> -= 0x10000)
@@ -70,7 +70,7 @@
 169 set
 170 smart
 171 smart
-173 ushort , ushort
+173 ushort - ushort
 177 set
 178 ubyte
 186 ubyte
@@ -84,7 +84,7 @@
 249 ea
 250 ubyte
 251 ubyte
-252 ushort , ushort , ushort
+252 ushort - ushort - ushort
 253 ubyte
 254 ubyte
-255 ushort , ushort , ushort 
+255 ushort - ushort - ushort 

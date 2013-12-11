@@ -15,10 +15,10 @@
 26 big_smart # femaleEquip2
 30-34 string groundActions
 35-39 string actions
-40 array ubyte ushort , ushort # origColors , modColors
+40 array ubyte ushort - ushort # origColors , modColors
 97 ushort noteId
 98 ushort noteTemplateId
-100-109 ushort , ushort # stackId , stackAmount
+100-109 ushort - ushort # stackId , stackAmount
 115 ubyte team
 121 ushort lentId
 122 ushort lentTemplateId
@@ -27,7 +27,7 @@
 14 1
 18 2
 27 1
-41 array ubyte ushort , ushort
+41 array ubyte ushort - ushort
 42 array ubyte 1
 43 4
 44 2
