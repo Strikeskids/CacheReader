@@ -64,7 +64,7 @@ public class ProtocolParser {
 			}
 		}
 		for (Entry<String, List<Integer>> entry : map.entrySet()) {
-			System.out.printf("%s%s).addSelfToGroup(protocol);\n", entry.getKey(),
+			System.out.printf("%s%s).addSelfToGroup(protocol);\n", entry.getKey().replaceAll("XX[0-9]+XX", ""),
 					stringifyCollection(entry.getValue()));
 		}
 	}
@@ -100,7 +100,8 @@ public class ProtocolParser {
 		if (name == null)
 			return String.format("new FieldExtractor(%s)", baseExtractor);
 		else
-			return String.format("new FieldExtractor(%s, \"%s\")", baseExtractor, name);
+			return String.format("new FieldExtractor(%s, \"%s\"XX%dXX)", baseExtractor, name,
+					System.currentTimeMillis());
 	}
 
 	public static String getStreamExtractor(Queue<String> parts) {
