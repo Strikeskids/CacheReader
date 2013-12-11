@@ -1,0 +1,90 @@
+# 1 {1 ubyte i}[{1 byte}({1 ubyte j}[big_smart]*j)]*i
+# 77, 92 {ushort (65535 -> -1)}{ushort (65535 -> -1)}(92 ? big_smart j){ubyte i} [big_smart]*(i+1) + [j] = childrenIds
+# 79 {2 ushort}{2 ushort}{1 ubyte}{1 ubyte i}[2 ushort]*i
+# OLD 1 {1 ubyte i}[3 {2 ushort}{1 ubyte}]*i
+# OLD 24 2 ushort (65535 -> -1)
+# OLD 90 0 set
+# OLD 96 0 set
+002 string name
+005 array ubyte ushort
+014 ubyte width
+015 ubyte height
+017 set false walkable
+018 set false walkable
+019 ubyte type
+021 set
+022 set
+023 set
+024 big_smart
+027 set
+028 byte
+029 byte
+030-34 String actions
+039 byte
+040 array ubyte ushort , ushort # originalColors , modifiedColors
+041 array ubyte ushort , ushort
+042 array ubyte byte
+044 ushort
+045 ushort
+062 set
+064 set
+065 ushort
+066 ushort
+067 ushort
+069 ubyte
+070 ushort # (> 0x7fff -> -= 0x10000)
+071 ushort # (> 0x7fff -> -= 0x10000)
+072 ushort # (> 0x7fff -> -= 0x10000)
+073 set
+074 set true walkable2
+075 ubyte
+078 ushort , ubyte
+081 ubyte
+082 set
+088 set
+089 set
+091 set
+093 ushort
+094 set
+095 ushort # (> 0x7fff -> -= 0x10000)
+097 set
+098 set
+099 ubyte , ushort
+100 ubyte , ushort
+101 ubyte
+102 ushort
+103 set
+104 ubyte
+105 set
+106 array ubyte big_smart , ubyte
+107 ushort
+150-154 string actions
+160 array ubyte ushort
+162 int
+163 byte , byte , byte , byte
+164 ushort # (> 0x7fff -> -= 0x10000)
+165 ushort # (> 0x7fff -> -= 0x10000)
+166 ushort # (> 0x7fff -> -= 0x10000)
+167 ushort
+168 set
+169 set
+170 smart
+171 smart
+173 ushort , ushort
+177 set
+178 ubyte
+186 ubyte
+189 set
+190-195 ushort
+196 byte
+197 byte
+198 set
+199 set
+200 set
+249 ea
+250 ubyte
+251 ubyte
+252 ushort , ushort , ushort
+253 ubyte
+254 ubyte
+255 ushort , ushort , ushort 
