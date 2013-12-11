@@ -1,7 +1,7 @@
 package com.sk.wrappers;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 import com.sk.datastream.Stream;
 
@@ -29,6 +29,7 @@ public abstract class Wrapper<T extends WrapperLoader> {
 	public String toString() {
 		StringBuilder output = new StringBuilder();
 		output.append(getClass().getSimpleName());
+		output.append(" ");
 		output.append(getId());
 		output.append(" {");
 		for (Field f : getClass().getDeclaredFields()) {
@@ -42,8 +43,14 @@ public abstract class Wrapper<T extends WrapperLoader> {
 				continue;
 			output.append(f.getName());
 			output.append(": ");
-			if (o instanceof Object[]) {
-				output.append(Arrays.toString((Object[]) o));
+			if (f.getType().isArray()) {
+				output.append("[");
+				for (int i = 0, len = Array.getLength(o); i < len; ++i) {
+					if (i != 0)
+						output.append(", ");
+					output.append(Array.get(o, i));
+				}
+				output.append("]");
 			} else {
 				output.append(o);
 			}
