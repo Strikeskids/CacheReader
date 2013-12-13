@@ -285,7 +285,7 @@ public class Region extends StreamedWrapper<RegionLoader> {
 	private void setFlag(int lx, int ly, int plane, int flag) {
 		if (lx < 0 || lx >= width || ly < 0 || ly >= height || plane < 0 || plane >= flags.length)
 			return;
-		System.out.printf("Flag %2d %2d %8x %8x %8x\n", lx, ly, flags[plane][lx][ly], flag, flags[plane][lx][ly] | flag);
+//		System.out.printf("Flag %2d %2d %8x %8x %8x\n", lx, ly, flags[plane][lx][ly], flag, flags[plane][lx][ly] | flag);
 		flags[plane][lx][ly] |= flag;
 	}
 }
