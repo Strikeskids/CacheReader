@@ -33,7 +33,6 @@ public class Region extends StreamedWrapper<RegionLoader> {
 				}
 			}
 		}
-		System.out.println(stream.getLeft());
 		for (int plane = 0; plane < 4; plane++) {
 			for (int x = 0; x < 64; x++) {
 				for (int y = 0; y < 64; y++) {
