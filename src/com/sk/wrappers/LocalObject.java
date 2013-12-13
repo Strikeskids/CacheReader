@@ -14,4 +14,22 @@ public class LocalObject {
 		this.type = (byte) type;
 		this.orientation = (byte) orientation;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder ret = new StringBuilder();
+		ret.append("LocalObject ");
+		ret.append(id);
+		ret.append(" (");
+		ret.append(x);
+		ret.append(", ");
+		ret.append(y);
+		ret.append(", ");
+		ret.append(plane);
+		ret.append(") ");
+		ret.append(type);
+		ret.append(" ");
+		ret.append(orientation);
+		return ret.toString();
+	}
 }

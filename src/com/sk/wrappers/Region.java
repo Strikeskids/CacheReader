@@ -5,8 +5,9 @@ import com.sk.datastream.Stream;
 public class Region extends StreamedWrapper<RegionLoader> {
 
 	public int[][][] flags;
-	public final int width = 64;
-	public final int height = 64;
+	public LocalObjects objects;
+	public final static int width = 64;
+	public final static int height = 64;
 	
 	public Region(RegionLoader loader, int id) {
 		super(loader, id);
@@ -20,6 +21,7 @@ public class Region extends StreamedWrapper<RegionLoader> {
 				for (int y = 0; y < 64; y++) {
 					int operation = stream.getUByte();
 					if ((operation & 0x1) != 0) {
+						stream.getUByte();
 						stream.getSmart();
 					}
 					if ((operation & 0x2) != 0)
@@ -31,6 +33,7 @@ public class Region extends StreamedWrapper<RegionLoader> {
 				}
 			}
 		}
+		System.out.println(stream.getLeft());
 		for (int plane = 0; plane < 4; plane++) {
 			for (int x = 0; x < 64; x++) {
 				for (int y = 0; y < 64; y++) {
@@ -49,6 +52,7 @@ public class Region extends StreamedWrapper<RegionLoader> {
 	}
 
 	public void addObjects(LocalObjects objects) {
+		this.objects = objects;
 		for (LocalObject obj : objects.getObjects()) {
 			ObjectDefinition def = this.loader.objectDefinitionLoader.load(obj.id);
 			if (def == null)
@@ -279,8 +283,9 @@ public class Region extends StreamedWrapper<RegionLoader> {
 	}
 
 	private void setFlag(int lx, int ly, int plane, int flag) {
-		if (lx < 0 || lx >= this.width || ly < 0 || ly >= this.height || plane < 0 || plane >= flags.length)
+		if (lx < 0 || lx >= width || ly < 0 || ly >= height || plane < 0 || plane >= flags.length)
 			return;
+		System.out.printf("Flag %2d %2d %8x %8x %8x\n", lx, ly, flags[plane][lx][ly], flag, flags[plane][lx][ly] | flag);
 		flags[plane][lx][ly] |= flag;
 	}
 }

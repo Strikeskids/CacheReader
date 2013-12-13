@@ -27,7 +27,7 @@ public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoad
 		if (regionX < 0 || regionY < 0 || regionX >= 0x3f || regionY >= 0x3f) {
 			throw new IllegalArgumentException("Bad region coordinates");
 		}
-		return load(regionX << 7 | regionY);
+		return load(regionX | regionY << 7);
 	}
 
 	protected Stream getData(int regionHash, int... files) {
