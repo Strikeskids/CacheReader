@@ -22,8 +22,8 @@ public class ObjectDefinition extends ProtocolWrapper<ObjectDefinitionLoader> {
 	public int blockType = 2;
 	public String[] actions = new String[5];
 	
-	public int scriptId;
-	public int configId;
+	public int scriptId = -1;
+	public int configId = -1;
 	public int[] childrenIds;
 
 	public ObjectDefinition(ObjectDefinitionLoader loader, int id) {
