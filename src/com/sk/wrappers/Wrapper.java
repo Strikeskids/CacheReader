@@ -5,8 +5,8 @@ import java.lang.reflect.Field;
 
 public abstract class Wrapper<T extends WrapperLoader> {
 
-	private final T loader;
-	private final int id;
+	protected final T loader;
+	protected final int id;
 
 	public Wrapper(T loader, int id) {
 		this.loader = loader;
