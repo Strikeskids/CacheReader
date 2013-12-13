@@ -30,6 +30,7 @@ public class RegionViewer {
 
 	private static Region region;
 	private static int plane;
+	private static boolean shouldShowObjects = false;
 
 	public static void main(String[] args) throws FileNotFoundException {
 		CacheSystem sys = new CacheSystem(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
@@ -81,7 +82,8 @@ public class RegionViewer {
 
 			@Override
 			public void hoverCell(int x, int y) {
-				if (region == null) return;
+				if (region == null)
+					return;
 				objectModel.clear();
 				for (LocalObject o : region.objects.getObjects()) {
 					if (o.x == x && o.y == y && o.plane == plane) {
@@ -90,7 +92,8 @@ public class RegionViewer {
 				}
 			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
-		frame.getContentPane().add(new JScrollPane(new JList<>(objectModel)), BorderLayout.EAST);
+		if (shouldShowObjects)
+			frame.getContentPane().add(new JScrollPane(new JList<>(objectModel)), BorderLayout.EAST);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
