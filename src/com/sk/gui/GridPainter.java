@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 
@@ -23,13 +26,29 @@ public class GridPainter extends JPanel {
 	private final int CELL_SIZE = 7;
 	private final int CELL_PAD = 3;
 
-	public GridPainter(GridGetter getter, int width, int height) {
+	private Point curCell = new Point(-1, -1);
+
+	public GridPainter(final GridGetter getter, final int width, final int height) {
 		this.rows = height;
 		this.cols = width;
 		Dimension size = new Dimension((width + 1) * CELL_SIZE + (width) * CELL_PAD + 2 * OUTSIDE_PAD,
 				(height + 1) * CELL_SIZE + (height - 1) * CELL_PAD + 2 * OUTSIDE_PAD);
 		this.setPreferredSize(size);
 		this.getter = getter;
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				int xloc = (e.getX() - OUTSIDE_PAD - CELL_SIZE - CELL_PAD) / (CELL_PAD + CELL_SIZE);
+				int yloc = rows - (e.getY() - OUTSIDE_PAD) / (CELL_PAD + CELL_SIZE);
+				if (xloc < 0 || yloc < 0 || xloc >= width || yloc >= height)
+					return;
+				if (curCell.y != yloc || curCell.x != xloc) {
+					getter.hoverCell(xloc, yloc);
+					curCell.x = xloc;
+					curCell.y = yloc;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -65,6 +84,8 @@ public class GridPainter extends JPanel {
 
 	public static interface GridGetter {
 		public Color getColor(int x, int y, Side side);
+
+		public void hoverCell(int x, int y);
 	}
 
 	public enum Side {

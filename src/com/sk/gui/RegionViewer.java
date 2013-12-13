@@ -7,9 +7,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -18,6 +21,8 @@ import com.sk.cache.DataSource;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.gui.GridPainter.GridGetter;
 import com.sk.gui.GridPainter.Side;
+import com.sk.wrappers.LocalObject;
+import com.sk.wrappers.ObjectDefinition;
 import com.sk.wrappers.Region;
 import com.sk.wrappers.RegionLoader;
 
@@ -35,6 +40,7 @@ public class RegionViewer {
 		final JTextField xval = new JTextField(5);
 		final JTextField yval = new JTextField(5);
 		final JTextField pval = new JTextField(5);
+		final DefaultListModel<ObjectDefinition> objectModel = new DefaultListModel<>();
 		JButton update = new JButton("Update");
 		update.addActionListener(new ActionListener() {
 			@Override
@@ -72,7 +78,19 @@ public class RegionViewer {
 					return Color.orange;
 				return null;
 			}
+
+			@Override
+			public void hoverCell(int x, int y) {
+				if (region == null) return;
+				objectModel.clear();
+				for (LocalObject o : region.objects.getObjects()) {
+					if (o.x == x && o.y == y && o.plane == plane) {
+						objectModel.addElement(region.getLoader().objectDefinitionLoader.load(o.id));
+					}
+				}
+			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
+		frame.getContentPane().add(new JScrollPane(new JList<>(objectModel)), BorderLayout.EAST);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
