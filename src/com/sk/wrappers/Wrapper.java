@@ -3,8 +3,6 @@ package com.sk.wrappers;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
-import com.sk.datastream.Stream;
-
 public abstract class Wrapper<T extends WrapperLoader> {
 
 	private final T loader;
@@ -14,8 +12,6 @@ public abstract class Wrapper<T extends WrapperLoader> {
 		this.loader = loader;
 		this.id = id;
 	}
-
-	public abstract void decode(Stream stream);
 
 	public int getId() {
 		return id;

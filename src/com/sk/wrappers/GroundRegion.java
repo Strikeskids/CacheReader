@@ -2,7 +2,7 @@ package com.sk.wrappers;
 
 import com.sk.datastream.Stream;
 
-public class GroundRegion extends Wrapper<GroundLoader> {
+public class GroundRegion extends StreamedWrapper<GroundLoader> {
 
 	public GroundRegion(GroundLoader loader, int id) {
 		super(loader, id);

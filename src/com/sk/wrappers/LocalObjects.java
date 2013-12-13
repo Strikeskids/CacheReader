@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.sk.datastream.Stream;
 
-public class LocalObjects extends Wrapper<LocalObjectLoader> {
+public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 
 	private final List<LocalObject> objects = new ArrayList<>();
 

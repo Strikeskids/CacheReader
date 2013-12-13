@@ -3,7 +3,7 @@ package com.sk.wrappers;
 import com.sk.datastream.Stream;
 import com.sk.wrappers.protocol.ProtocolGroup;
 
-public class ProtocolWrapper<T extends WrapperLoader> extends Wrapper<T> {
+public class ProtocolWrapper<T extends WrapperLoader> extends StreamedWrapper<T> {
 
 	private final ProtocolGroup protocol;
 	
