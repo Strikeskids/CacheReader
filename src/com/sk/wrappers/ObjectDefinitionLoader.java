@@ -34,7 +34,10 @@ public class ObjectDefinitionLoader extends WrapperLoader {
 	}
 
 	private void fixObject(ObjectDefinition ret) {
-		ret.walkable &= !ret.walkable2;
+		if (ret.walkable2) {
+			ret.walkable = false;
+			ret.blockType = 0;
+		}
 	}
 
 }

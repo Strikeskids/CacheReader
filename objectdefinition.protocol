@@ -9,14 +9,14 @@
 005 array ubyte ushort
 014 ubyte width
 015 ubyte height
-017 set false walkable
+017 set false walkable set 0 blockType
 018 set false walkable
 019 ubyte type
 021 set
 022 set
 023 set
 024 big_smart
-027 set
+027 set 1 blockType
 028 byte
 029 byte
 030-34 String actions
