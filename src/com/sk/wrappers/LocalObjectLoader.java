@@ -11,9 +11,13 @@ public class LocalObjectLoader extends RegionDataLoader<LocalObjects> {
 
 	@Override
 	public LocalObjects load(int regionHash) {
-		Stream data = getData(regionHash, 0, 1, 2);
 		LocalObjects ret = new LocalObjects(this, regionHash);
-		ret.decode(data);
+		for (int i = 0; i < 2; ++i) {
+			Stream data = getData(regionHash, i);
+			if (data != null)
+				ret.decode(data);
+		}
 		return ret;
+
 	}
 }
