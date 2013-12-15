@@ -1,61 +1,64 @@
-1 big_smart # modelId
-2 string name
-4 ushort # modelZoom
-5 ushort # modelRotation1
-6 ushort # modelRotation2
-7 ushort # modelOffset1 # if > 7FFF, subtract 0x10000
-8 ushort # modelOffset2 # if > 7FFF, subtract 0x10000
-11 set true stackable
-12 int value
-13 ubyte slot
-16 set true members
-23 big_smart # maleEquip1
-24 big_smart # femaleEquip1
-25 big_smart # maleEquip2
-26 big_smart # femaleEquip2
-30-34 string groundActions
-35-39 string actions
-40 array ubyte ushort - ushort # origColors , modColors
-97 ushort noteId
-98 ushort noteTemplateId
+001 big_smart # modelId
+002 string name
+004 ushort # modelZoom
+005 ushort # modelRotation1
+006 ushort # modelRotation2
+007 ushort # modelOffset1 # if > 7FFF, subtract 0x10000
+008 ushort # modelOffset2 # if > 7FFF, subtract 0x10000
+011 set true stackable
+012 int value
+013 ubyte slot
+014 ubyte
+016 set true members
+018 ushort
+023 big_smart # maleEquip1
+024 big_smart # femaleEquip1
+025 big_smart # maleEquip2
+026 big_smart # femaleEquip2
+027 ubyte
+030-34 string groundActions
+035-39 string actions
+040 array ubyte ushort - ushort # origColors , modColors
+041 array ubyte short - short
+042 array ubyte byte
+043 int
+044 ushort
+045 ushort
+065 set true
+078 big_smart
+079 big_smart
+090 big_smart
+091 big_smart
+092 big_smart
+093 big_smart
+094 ushort
+095 ushort
+096 ubyte
+097 ushort noteId
+098 ushort noteTemplateId
 100-109 ushort - ushort # stackId , stackAmount
+110-112 ushort # resize
+113 byte
+114 byte
 115 ubyte team
 121 ushort lentId
 122 ushort lentTemplateId
+125 byte - byte - byte
+126 byte - byte - byte
+# 127 3
+# 128 3
+# 129 3
+# 130 3
+132 array ubyte ushort
+134 ubyte
+139 ushort
+140 ushort
+142-146 ushort
+150-154 ushort
+156 set false
+157 set true
+161 ushort
+162 ushort
+163 ushort
+164 string
 249 ea
-
-14 1
-18 2
-27 1
-41 array ubyte ushort - ushort
-42 array ubyte 1
-43 4
-44 2
-45 2
-65 0
-78 big_smart
-79 big_smart
-90 big_smart
-91 big_smart
-92 big_smart
-93 big_smart
-94 2
-95 2
-96 1
-110 2
-111 2
-112 2
-113 1
-114 1
-125 3
-126 3
-127 3
-128 3
-129 3
-130 3
-132 array ubyte 2
-134 1
-139 2
-140 2
-142-146 2
-150-154 2
