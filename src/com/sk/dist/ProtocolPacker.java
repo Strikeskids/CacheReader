@@ -22,14 +22,12 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
 	private void initializeFields() {
 		for (Field f : storage.getDeclaredFields()) {
-			if (!f.isAccessible())
-				continue;
-			if (f.getClass().equals(boolean.class)) {
+			if (f.getType().equals(boolean.class)) {
 				this.booleans.add(f);
-			} else if (f.getClass().equals(String.class)) {
+			} else if (f.getType().equals(String.class)) {
 				this.strings.add(f);
-			} else if (f.getClass().equals(byte.class) || f.getClass().equals(short.class)
-					|| f.getClass().equals(int.class)) {
+			} else if (f.getType().equals(byte.class) || f.getType().equals(short.class)
+					|| f.getType().equals(int.class)) {
 				this.integers.add(f);
 			}
 		}
@@ -45,8 +43,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		super(loader, source, storage);
 		this.sourceFields = new HashMap<>();
 		for (Field f : source.getDeclaredFields()) {
-			if (f.isAccessible())
-				sourceFields.put(f.getName(), f);
+			sourceFields.put(f.getName(), f);
 		}
 		initializeFields();
 	}
@@ -61,10 +58,10 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 				size += writeValue(output, packBooleans(input));
 			}
 			for (Field fint : integers) {
-				size += writeValue(output, fint.getInt(input));
+				size += writeValue(output, sourceFields.get(fint.getName()).getInt(input));
 			}
 			for (Field fstr : strings) {
-				size += writeString(output, (String) fstr.get(input));
+				size += writeString(output, (String) sourceFields.get(fstr.getName()).get(input));
 			}
 		} catch (IllegalAccessException ignored) {
 		}
@@ -78,6 +75,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		for (int i = booleans.size() - 1; i >= 0; --i) {
 			Field sourceField = sourceFields.get(booleans.get(i).getName());
 			boolean value = sourceField.getBoolean(input);
+			ret <<= 1;
 			ret |= value ? 1 : 0;
 		}
 		return ret;
