@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		}
 		this.fields = ProtocolType.extractAllFields(storage, false);
 		this.booleans = ProtocolType.BOOLEAN.extractFields(storage);
+		Collections.reverse(this.booleans);
 	}
 
 	@Override
@@ -76,16 +78,19 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
 	private int packBooleans(Wrapper<?> input, OutputStream out) throws IllegalArgumentException,
 			IllegalAccessException, IOException {
-		int packed = 0, ret = 0;
-		for (int i = booleans.size() - 1, count = 0; i >= 0; --i) {
-			Field sourceField = sourceFields.get(booleans.get(i).getField().getName());
-			boolean value = sourceField.getBoolean(input);
+		int packed = 0, ret = 0, count = 0;
+		for (ProtocolField f : booleans) {
+			boolean value = (boolean) getFromSource(input, f.getField());
 			packed <<= 1;
 			packed |= value ? 1 : 0;
-			if (++count % 30 == 0) {
+			if (count++ >= 30) {
 				ret += writeValue(out, packed);
 				packed = 0;
+				count = 0;
 			}
+		}
+		if (count > 0) {
+			ret += writeValue(out, packed);
 		}
 		return ret;
 	}
