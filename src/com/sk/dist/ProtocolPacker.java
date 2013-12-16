@@ -55,6 +55,8 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
 	private int packField(OutputStream out, Object value) throws IOException {
 		int ret = 0;
+		if (value == null)
+			value = "";
 		Class<?> type = value.getClass();
 		if (ProtocolType.ARRAY.isType(type)) {
 			int len = Array.getLength(value);
@@ -64,7 +66,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 			}
 		} else if (ProtocolType.INTEGER.isType(type)) {
 			ret += writeValue(out, (int) value);
-		} else if (ProtocolType.INTEGER.isType(type)) {
+		} else if (ProtocolType.STRING.isType(type)) {
 			ret += writeString(out, String.valueOf(value));
 		}
 		return ret;
