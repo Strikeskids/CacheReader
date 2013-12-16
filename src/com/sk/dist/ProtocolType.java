@@ -9,20 +9,26 @@ public enum ProtocolType {
 	BOOLEAN {
 		@Override
 		public boolean isType(Class<?> type) {
-			return type.equals(boolean.class);
+			return type.equals(boolean.class) || type.equals(Boolean.class);
 		}
 	},
 	INTEGER {
+		private Class<?>[] types = new Class<?>[] { byte.class, short.class, int.class, long.class, Byte.class,
+				Short.class, Integer.class, Long.class };
+
 		@Override
 		public boolean isType(Class<?> type) {
-			return type.equals(byte.class) || type.equals(short.class) || type.equals(int.class)
-					|| type.equals(long.class);
+			for (Class<?> accept : types) {
+				if (accept.isAssignableFrom(type))
+					return true;
+			}
+			return false;
 		}
 	},
 	STRING {
 		@Override
 		public boolean isType(Class<?> type) {
-			return type.equals(String.class);
+			return String.class.isAssignableFrom(type);
 		}
 	},
 	ARRAY {
