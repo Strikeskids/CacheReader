@@ -29,4 +29,9 @@ public class ProtocolField implements Comparable<ProtocolField> {
 			dif = this.field.getName().compareTo(o.field.getName());
 		return dif;
 	}
+
+	@Override
+	public String toString() {
+		return type.name() + " " + field.toString();
+	}
 }
