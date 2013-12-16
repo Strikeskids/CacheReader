@@ -56,26 +56,26 @@ public abstract class Packer<T extends Packed> {
 		return 4;
 	}
 
-	protected int writeValue(OutputStream out, int value) throws IOException {
+	protected int writeValue(OutputStream out, long value) throws IOException {
 		if (value == -1) {
 			out.write(0xff);
 			return 1;
 		} else if (value <= 0x3f) {
-			out.write(value);
+			out.write((int) value);
 			return 1;
 		}
 		int size = 1;
 		int type = 0;
 		for (; (value >>> (size * 8 - 2)) != 0; size *= 2, ++type) {
 			int shift = size * 8 - 2;
-			int shifted = value >>> shift;
+			long shifted = value >>> shift;
 			if (shifted == 0)
 				break;
 		}
-		int keyByte = (value >>> (size - 1) * 8) & 0x3f | type << 6;
+		int keyByte = (int) ((value >>> (size - 1) * 8) & 0x3f) | type << 6;
 		out.write(keyByte);
 		for (int i = 1, shift = (size - 2) * 8; i < size; ++i, shift -= 8) {
-			out.write(value >>> shift);
+			out.write((int) (value >>> shift));
 		}
 		return size;
 	}

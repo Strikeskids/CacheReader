@@ -73,16 +73,16 @@ public abstract class Unpacker<T extends Packed> {
 		return ret;
 	}
 
-	protected int readValue(InputStream in) throws IOException {
+	protected long readValue(InputStream in) throws IOException {
 		int first = in.read();
 		if (first == 0xff)
 			return -1;
 		int type = (first >> 6) & 0x3;
-		int ret = first & ~0xc0;
+		long ret = first & ~0xc0;
 		int count = (int) Math.pow(type, 2);
 		for (int i = 1; i < count; ++i) {
 			ret <<= 8;
-			ret |= in.read();
+			ret |= in.read() & 0xff;
 		}
 		return ret;
 	}
