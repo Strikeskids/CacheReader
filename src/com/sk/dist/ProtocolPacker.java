@@ -65,7 +65,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 				ret += packField(out, Array.get(value, i));
 			}
 		} else if (ProtocolType.INTEGER.isType(type)) {
-			ret += writeValue(out, (int) value);
+			ret += writeValue(out, (long) value);
 		} else if (ProtocolType.STRING.isType(type)) {
 			ret += writeString(out, String.valueOf(value));
 		}

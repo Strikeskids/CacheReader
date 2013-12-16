@@ -66,10 +66,10 @@ public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
 	private void unpackBooleans(Packed pack, InputStream data) throws IllegalArgumentException,
 			IllegalAccessException, IOException {
 		int passed = 0;
-		int value = 0;
-		for (ProtocolField bool : fields) {
+		long value = 0;
+		for (ProtocolField bool : booleans) {
 			Field field = bool.getField();
-			if (passed++ % 30 == 0)
+			if (passed++ % 62 == 0)
 				value = readValue(data);
 			field.setBoolean(pack, (value & 1) == 1);
 			value >>= 1;
