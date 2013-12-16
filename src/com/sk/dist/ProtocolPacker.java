@@ -1,11 +1,9 @@
 package com.sk.dist;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,29 +13,9 @@ import com.sk.wrappers.WrapperLoader;
 
 public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
-	private final List<Field> booleans = new ArrayList<>();
-	private final List<Field> strings = new ArrayList<>();
-	private final List<Field> integers = new ArrayList<>();
+	private final List<ProtocolField> booleans;
+	private final List<ProtocolField> fields;
 	private final Map<String, Field> sourceFields;
-
-	private void initializeFields() {
-		for (Field f : storage.getDeclaredFields()) {
-			if (f.getType().equals(boolean.class)) {
-				this.booleans.add(f);
-			} else if (f.getType().equals(String.class)) {
-				this.strings.add(f);
-			} else if (f.getType().equals(byte.class) || f.getType().equals(short.class)
-					|| f.getType().equals(int.class)) {
-				this.integers.add(f);
-			}
-		}
-	}
-
-	public ProtocolPacker(Class<T> storage, RandomAccessFile src) {
-		super(storage, src);
-		this.sourceFields = null;
-		initializeFields();
-	}
 
 	public <E extends WrapperLoader> ProtocolPacker(E loader, Class<? extends Wrapper<E>> source, Class<T> storage) {
 		super(loader, source, storage);
@@ -45,7 +23,8 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		for (Field f : source.getDeclaredFields()) {
 			sourceFields.put(f.getName(), f);
 		}
-		initializeFields();
+		this.fields = ProtocolType.extractAllFields(storage, false);
+		this.booleans = ProtocolType.BOOLEAN.extractFields(storage);
 	}
 
 	@Override
@@ -55,64 +34,59 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		int size = 0;
 		try {
 			if (booleans.size() > 0) {
-				size += writeValue(output, packBooleans(input));
+				size += packBooleans(input, output);
 			}
-			for (Field fint : integers) {
-				size += writeValue(output, sourceFields.get(fint.getName()).getInt(input));
-			}
-			for (Field fstr : strings) {
-				size += writeString(output, (String) sourceFields.get(fstr.getName()).get(input));
+			for (ProtocolField f : fields) {
+				packField(input, output, f);
 			}
 		} catch (IllegalAccessException ignored) {
+			ignored.printStackTrace();
 		}
 		return size;
 	}
 
-	private int packBooleans(Wrapper<?> input) throws IllegalArgumentException, IllegalAccessException {
-		if (booleans.size() > 30)
-			throw new IllegalArgumentException("Too many booleans");
+	private int packField(Wrapper<?> input, OutputStream out, ProtocolField field)
+			throws IllegalArgumentException, IllegalAccessException, IOException {
+		Object value = getFromSource(input, field.getField());
+		return packField(out, value);
+	}
+
+	private int packField(OutputStream out, Object value) throws IOException {
 		int ret = 0;
-		for (int i = booleans.size() - 1; i >= 0; --i) {
-			Field sourceField = sourceFields.get(booleans.get(i).getName());
+		Class<?> type = value.getClass();
+		if (ProtocolType.ARRAY.isType(type)) {
+			int len = Array.getLength(value);
+			ret += writeValue(out, Array.getLength(value));
+			for (int i = 0; i < len; ++i) {
+				ret += packField(out, Array.get(value, i));
+			}
+		} else if (ProtocolType.INTEGER.isType(type)) {
+			ret += writeValue(out, (int) value);
+		} else if (ProtocolType.INTEGER.isType(type)) {
+			ret += writeString(out, String.valueOf(value));
+		}
+		return ret;
+	}
+
+	private Object getFromSource(Wrapper<?> source, Field field) throws IllegalArgumentException,
+			IllegalAccessException {
+		Field sourceField = sourceFields.get(field.getName());
+		return sourceField.get(source);
+	}
+
+	private int packBooleans(Wrapper<?> input, OutputStream out) throws IllegalArgumentException,
+			IllegalAccessException, IOException {
+		int packed = 0, ret = 0;
+		for (int i = booleans.size() - 1, count = 0; i >= 0; --i) {
+			Field sourceField = sourceFields.get(booleans.get(i).getField().getName());
 			boolean value = sourceField.getBoolean(input);
-			ret <<= 1;
-			ret |= value ? 1 : 0;
+			packed <<= 1;
+			packed |= value ? 1 : 0;
+			if (++count % 30 == 0) {
+				ret += writeValue(out, packed);
+				packed = 0;
+			}
 		}
 		return ret;
-	}
-
-	@Override
-	public Packed unpack(byte[] input) throws IOException {
-		ByteArrayInputStream bais = new ByteArrayInputStream(input);
-		Packed ret = null;
-		try {
-			ret = storage.newInstance();
-			if (booleans.size() > 0) {
-				unpackBooleans(ret, readValue(bais));
-			}
-			for (Field fint : integers) {
-				int value = readValue(bais);
-				if (fint.getClass().equals(byte.class)) {
-					fint.setByte(ret, (byte) value);
-				} else if (fint.getClass().equals(short.class)) {
-					fint.setShort(ret, (short) value);
-				} else {
-					fint.setInt(ret, value);
-				}
-			}
-			for (Field fstr : strings) {
-				String value = readString(bais);
-				fstr.set(ret, value);
-			}
-		} catch (IllegalAccessException | InstantiationException ignored) {
-		}
-		return ret;
-	}
-
-	private void unpackBooleans(Packed pack, int value) throws IllegalArgumentException, IllegalAccessException {
-		for (Field bool : booleans) {
-			bool.setBoolean(pack, (value & 1) == 1);
-			value >>= 1;
-		}
 	}
 }
