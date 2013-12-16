@@ -34,7 +34,7 @@ public enum ProtocolType {
 
 	public List<ProtocolField> extractFields(Class<?> clazz) {
 		List<ProtocolField> ret = new ArrayList<>();
-		for (Field f : clazz.getFields()) {
+		for (Field f : clazz.getDeclaredFields()) {
 			if (this.isType(f.getType()))
 				ret.add(new ProtocolField(this, f));
 		}
