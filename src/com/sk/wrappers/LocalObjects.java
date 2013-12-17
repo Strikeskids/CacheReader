@@ -1,6 +1,7 @@
 package com.sk.wrappers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.sk.datastream.Stream;
@@ -8,6 +9,8 @@ import com.sk.datastream.Stream;
 public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 
 	private final List<LocalObject> objects = new ArrayList<>();
+	@SuppressWarnings("unchecked")
+	private final List<LocalObject> located[][][] = new List[3][64][64];
 
 	public LocalObjects(LocalObjectLoader loader, int regionHash) {
 		super(loader, regionHash);
@@ -26,9 +29,24 @@ public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 				int data = stream.getUByte();
 				int type = data >> 2;
 				int orientation = data & 0x3;
-				objects.add(new LocalObject(id, lx, ly, plane, type, orientation));
+				addObject(new LocalObject(id, lx, ly, plane, type, orientation));
 			}
 		}
+	}
+
+	private void addObject(LocalObject o) {
+		objects.add(o);
+		if (located[o.plane][o.x][o.y] == null)
+			located[o.plane][o.x][o.y] = new ArrayList<>(2);
+		located[o.plane][o.x][o.y].add(o);
+	}
+
+	public List<LocalObject> getObjectsAt(int x, int y, int plane) {
+		List<LocalObject> ret = located[plane][x][y];
+		if (ret == null)
+			return Arrays.asList();
+		else
+			return ret;
 	}
 
 	public List<LocalObject> getObjects() {
