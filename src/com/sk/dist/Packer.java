@@ -10,16 +10,15 @@ import com.sk.wrappers.WrapperLoader;
 public abstract class Packer<T extends Packed> {
 
 	protected final WrapperLoader loader;
-	protected final Class<? extends Wrapper<?>> source;
+	protected final Class<?> source;
 	protected final Class<T> storage;
 	protected final int endId;
 
-	public <E extends WrapperLoader> Packer(E loader, Class<? extends Wrapper<E>> source, Class<T> storage) {
+	public Packer(WrapperLoader loader, Class<?> source, Class<T> storage) {
 		this(loader, source, storage, -1);
 	}
 
-	public <E extends WrapperLoader> Packer(E loader, Class<? extends Wrapper<E>> source, Class<T> storage,
-			int endId) {
+	public Packer(WrapperLoader loader, Class<?> source, Class<T> storage, int endId) {
 		this.loader = loader;
 		this.source = source;
 		this.storage = storage;
@@ -34,8 +33,10 @@ public abstract class Packer<T extends Packed> {
 			if (id != 0 && id % 10 == 0)
 				System.out.println();
 			System.out.print(id + " ");
-			Wrapper<?> wrap = getWrapper(id);
+			Object wrap = getWrapper(id);
 			if (wrap == null && endId == -1)
+				break;
+			if (!checkInput(wrap))
 				break;
 			writeIndex(indices, wrap == null ? -1 : index);
 			int count = wrap == null ? 0 : pack(wrap, output);
@@ -97,10 +98,10 @@ public abstract class Packer<T extends Packed> {
 		}
 	}
 
-	public boolean checkWrapper(Wrapper<?> input) {
-		return source.isInstance(input);
+	public boolean checkInput(Object wrap) {
+		return source.isInstance(wrap);
 	}
 
-	public abstract int pack(Wrapper<?> input, OutputStream output) throws IOException;
+	public abstract int pack(Object input, OutputStream output) throws IOException;
 
 }

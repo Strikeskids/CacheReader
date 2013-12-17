@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sk.wrappers.Wrapper;
 import com.sk.wrappers.WrapperLoader;
 
 public class ProtocolPacker<T extends Packed> extends Packer<T> {
@@ -18,7 +17,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 	private final List<ProtocolField> fields;
 	private final Map<String, Field> sourceFields;
 
-	public <E extends WrapperLoader> ProtocolPacker(E loader, Class<? extends Wrapper<E>> source, Class<T> storage) {
+	public ProtocolPacker(WrapperLoader loader, Class<?> source, Class<T> storage) {
 		super(loader, source, storage);
 		this.sourceFields = new HashMap<>();
 		for (Field f : source.getDeclaredFields()) {
@@ -30,8 +29,8 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 	}
 
 	@Override
-	public int pack(Wrapper<?> input, OutputStream output) throws IOException {
-		if (!checkWrapper(input))
+	public int pack(Object input, OutputStream output) throws IOException {
+		if (!checkInput(input))
 			throw new IllegalArgumentException("Bad wrapper type");
 		int size = 0;
 		try {
@@ -47,7 +46,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		return size;
 	}
 
-	private int packField(Wrapper<?> input, OutputStream out, ProtocolField field)
+	private int packField(Object input, OutputStream out, ProtocolField field)
 			throws IllegalArgumentException, IllegalAccessException, IOException {
 		Object value = getFromSource(input, field.getField());
 		return packField(out, value);
@@ -74,7 +73,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		return ret;
 	}
 
-	private Object getFromSource(Wrapper<?> source, Field field) throws IllegalArgumentException,
+	private Object getFromSource(Object source, Field field) throws IllegalArgumentException,
 			IllegalAccessException {
 		Field sourceField = sourceFields.get(field.getName());
 		Object value = sourceField.get(source);
@@ -90,7 +89,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		return value;
 	}
 
-	private int packBooleans(Wrapper<?> input, OutputStream out) throws IllegalArgumentException,
+	private int packBooleans(Object input, OutputStream out) throws IllegalArgumentException,
 			IllegalAccessException, IOException {
 		int packed = 0, ret = 0, count = 0;
 		for (ProtocolField f : booleans) {
