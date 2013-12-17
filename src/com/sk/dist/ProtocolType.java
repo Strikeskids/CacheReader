@@ -2,6 +2,7 @@ package com.sk.dist;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public enum ProtocolType {
 	public List<ProtocolField> extractFields(Class<?> clazz) {
 		List<ProtocolField> ret = new ArrayList<>();
 		for (Field f : clazz.getDeclaredFields()) {
-			if (this.isType(f.getType()))
+			if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) == 0 && this.isType(f.getType()))
 				ret.add(new ProtocolField(this, f));
 		}
 		Collections.sort(ret);
