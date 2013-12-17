@@ -30,8 +30,6 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
 	@Override
 	public int pack(Object input, OutputStream output) throws IOException {
-		if (!checkInput(input))
-			throw new IllegalArgumentException("Bad wrapper type");
 		int size = 0;
 		try {
 			if (booleans.size() > 0) {

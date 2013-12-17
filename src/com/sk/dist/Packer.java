@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.sk.wrappers.Wrapper;
 import com.sk.wrappers.WrapperLoader;
 
 public abstract class Packer<T extends Packed> {
@@ -37,7 +36,8 @@ public abstract class Packer<T extends Packed> {
 			if (wrap == null && endId == -1)
 				break;
 			if (!checkInput(wrap))
-				break;
+				throw new RuntimeException("Bad input object at index " + id);
+			wrap = sanitize(wrap);
 			writeIndex(indices, wrap == null ? -1 : index);
 			int count = wrap == null ? 0 : pack(wrap, output);
 			index += count;
@@ -90,7 +90,7 @@ public abstract class Packer<T extends Packed> {
 		return bytes.length + 1;
 	}
 
-	private Wrapper<?> getWrapper(int id) {
+	private Object getWrapper(int id) {
 		try {
 			return loader.load(id);
 		} catch (IllegalArgumentException ex) {
@@ -100,6 +100,10 @@ public abstract class Packer<T extends Packed> {
 
 	public boolean checkInput(Object wrap) {
 		return source.isInstance(wrap);
+	}
+
+	public Object sanitize(Object wrap) {
+		return wrap;
 	}
 
 	public abstract int pack(Object input, OutputStream output) throws IOException;
