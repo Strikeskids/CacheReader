@@ -39,7 +39,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 				size += packBooleans(input, output);
 			}
 			for (ProtocolField f : fields) {
-				packField(input, output, f);
+				size += packField(input, output, f);
 			}
 		} catch (IllegalAccessException ignored) {
 			ignored.printStackTrace();
@@ -75,7 +75,17 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 	private Object getFromSource(Wrapper<?> source, Field field) throws IllegalArgumentException,
 			IllegalAccessException {
 		Field sourceField = sourceFields.get(field.getName());
-		return sourceField.get(source);
+		Object value = sourceField.get(source);
+		if (value == null) {
+			return "";
+		}
+		if (ProtocolType.INTEGER.isType(value.getClass())) {
+			if (Number.class.isAssignableFrom(value.getClass())) {
+				value = ((Number) value).longValue();
+			}
+			value = (long) value;
+		}
+		return value;
 	}
 
 	private int packBooleans(Wrapper<?> input, OutputStream out) throws IllegalArgumentException,

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
@@ -30,25 +31,30 @@ public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
 				unpackBooleans(ret, data);
 			}
 			for (ProtocolField pf : fields) {
-				unpack(ret, pf.getField(), data);
+				unpack(ret, pf, data);
 			}
 		} catch (IllegalAccessException | InstantiationException ignored) {
 		}
 		return ret;
 	}
 
-	private void unpack(Packed store, Field field, InputStream input) throws IOException,
+	private void unpack(Packed store, ProtocolField pf, InputStream input) throws IOException,
 			IllegalArgumentException, IllegalAccessException {
+		Field field = pf.getField();
 		Class<?> type = field.getType();
 		Object value = unpack(type, input);
-		if (!type.isAssignableFrom(value.getClass()))
-			throw new IllegalArgumentException("Failed to unpack correct type");
+
 		field.set(store, value);
 	}
 
 	private Object unpack(Class<?> type, InputStream input) throws IOException {
 		if (ProtocolType.INTEGER.isType(type)) {
-			return readValue(input);
+			Object ret = readValue(input);
+			try {
+				return ProtocolType.EXTRACTORS.get(type).invoke(ret);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		} else if (ProtocolType.ARRAY.isType(type)) {
 			long size = readValue(input);
 			Class<?> subType = type.getComponentType();

@@ -79,7 +79,7 @@ public abstract class Unpacker<T extends Packed> {
 			return -1;
 		int type = (first >> 6) & 0x3;
 		long ret = first & ~0xc0;
-		int count = (int) Math.pow(type, 2);
+		int count = (int) Math.pow(2, type);
 		for (int i = 1; i < count; ++i) {
 			ret <<= 8;
 			ret |= in.read() & 0xff;

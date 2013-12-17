@@ -1,9 +1,12 @@
 package com.sk.dist;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum ProtocolType {
 	BOOLEAN {
@@ -59,6 +62,18 @@ public enum ProtocolType {
 				ret.addAll(type.extractFields(clazz));
 		}
 		return ret;
+	}
+
+	public static Map<Class<?>, Method> EXTRACTORS = new HashMap<>();
+	static {
+		try {
+			EXTRACTORS.put(byte.class, Number.class.getMethod("byteValue"));
+			EXTRACTORS.put(short.class, Number.class.getMethod("shortValue"));
+			EXTRACTORS.put(int.class, Number.class.getMethod("intValue"));
+			EXTRACTORS.put(long.class, Number.class.getMethod("longValue"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public abstract boolean isType(Class<?> type);
