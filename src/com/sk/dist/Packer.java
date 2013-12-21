@@ -91,6 +91,8 @@ public abstract class Packer<T extends Packed> {
 	}
 
 	private Object getWrapper(int id) {
+		if (!loader.canLoad(id))
+			return null;
 		try {
 			return loader.load(id);
 		} catch (IllegalArgumentException ex) {
