@@ -30,7 +30,7 @@ public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoad
 	protected Stream getData(int regionHash, int file) {
 		Archive archive = cache.getArchive(regionHash);
 		if (archive == null)
-			throw new IllegalArgumentException("Bad region hash");
+			return null;
 		FileData data = archive.getFile(file);
 		if (data == null)
 			return null;

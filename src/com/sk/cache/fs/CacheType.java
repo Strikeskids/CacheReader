@@ -1,7 +1,9 @@
 package com.sk.cache.fs;
+
 import java.io.IOException;
 
 import com.sk.cache.DataSource;
+import com.sk.cache.meta.ArchiveMeta;
 import com.sk.cache.meta.ArchiveRequest;
 import com.sk.cache.meta.ReferenceTable;
 
@@ -28,7 +30,8 @@ public class CacheType {
 
 	private byte[] getArchiveData(int archive) {
 		ArchiveRequest query = index.getArchiveMeta(archive);
-		if (query == null)
+		ArchiveMeta meta = table.getEntry(archive);
+		if (query == null || meta == null)
 			return null;
 		else
 			return source.readArchive(query);
