@@ -101,7 +101,7 @@ public abstract class Packer<T extends Packed> {
 	}
 
 	public boolean checkInput(Object wrap) {
-		return source.isInstance(wrap);
+		return wrap == null || source.isInstance(wrap);
 	}
 
 	public Object sanitize(Object wrap) {

@@ -17,8 +17,8 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 	private final List<ProtocolField> fields;
 	private final Map<String, Field> sourceFields;
 
-	public ProtocolPacker(WrapperLoader loader, Class<?> source, Class<T> storage) {
-		super(loader, source, storage);
+	public ProtocolPacker(WrapperLoader loader, Class<?> source, Class<T> storage, int endId) {
+		super(loader, source, storage, endId);
 		this.sourceFields = new HashMap<>();
 		for (Field f : source.getDeclaredFields()) {
 			sourceFields.put(f.getName(), f);
@@ -26,6 +26,11 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		this.fields = ProtocolType.extractAllFields(storage, false);
 		this.booleans = ProtocolType.BOOLEAN.extractFields(storage);
 		Collections.reverse(this.booleans);
+
+	}
+
+	public ProtocolPacker(WrapperLoader loader, Class<?> source, Class<T> storage) {
+		this(loader, source, storage, -1);
 	}
 
 	@Override
@@ -44,8 +49,8 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		return size;
 	}
 
-	private int packField(Object input, OutputStream out, ProtocolField field)
-			throws IllegalArgumentException, IllegalAccessException, IOException {
+	private int packField(Object input, OutputStream out, ProtocolField field) throws IllegalArgumentException,
+			IllegalAccessException, IOException {
 		Object value = getFromSource(input, field.getField());
 		return packField(out, value);
 	}
