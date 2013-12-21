@@ -2,40 +2,25 @@ package com.sk.wrappers;
 
 import java.util.Arrays;
 
-import com.sk.cache.fs.Archive;
 import com.sk.cache.fs.CacheSystem;
-import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 
-public class ItemDefinitionLoader extends WrapperLoader {
+public class ItemDefinitionLoader extends ProtocolWrapperLoader {
 
 	private static final String[] antiEdible = { "Burnt", "Rotten", "Poison", "Fish-like thing",
 			"Dwarven rock cake" };
 
-	private CacheType cache;
-
 	public ItemDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem);
-		this.cache = cacheSystem.getCacheType(19);
+		super(cacheSystem,cacheSystem.getCacheType(19));
 	}
 
 	@Override
 	public ItemDefinition load(int id) {
-		FileData data = loadData(id);
+		FileData data = getValidFile(id);
 		ItemDefinition ret = new ItemDefinition(this, id);
 		ret.decode(data.getDataAsStream());
 		fixItem(ret);
 		return ret;
-	}
-
-	private FileData loadData(int id) {
-		Archive archive = cache.getArchive(id >>> 8);
-		if (archive == null)
-			throw new IllegalArgumentException("Bad item id");
-		FileData data = archive.getFile(id & 0xff);
-		if (data == null)
-			throw new IllegalArgumentException("Bad item id");
-		return data;
 	}
 
 	private void fixItem(ItemDefinition item) {
