@@ -31,9 +31,8 @@ public class SanitizedRegion {
 		}
 		flags = new byte[source.flags.length][Region.width][Region.height];
 		for (int plane = 0; plane < source.flags.length; plane++) {
-			boolean differentRows = false;
+			boolean different = false;
 			for (int x = 0; x < source.flags[plane].length; ++x) {
-				boolean different = false;
 				for (int y = 0; y < source.flags[plane][x].length; ++y) {
 					flags[plane][x][y] = (byte) source.flags[plane][x][y];
 					if ((source.flags[plane][x][y] & 0x200100) != 0)
@@ -41,12 +40,8 @@ public class SanitizedRegion {
 					if (flags[plane][x][y] != 0 && flags[plane][x][y] != -1)
 						different = true;
 				}
-				if (!different)
-					flags[plane][x] = null;
-				else
-					differentRows = true;
 			}
-			if (!differentRows)
+			if (!different)
 				flags[plane] = null;
 		}
 		for (LocalObject o : removed) {
