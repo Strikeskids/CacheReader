@@ -61,7 +61,10 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 			ret += writeValue(out, 0);
 		} else {
 			Class<?> type = value.getClass();
-			if (ProtocolType.ARRAY.isType(type)) {
+			if (ProtocolType.BYTE.isType(type)) {
+				out.write((byte) value);
+				ret++;
+			} else if (ProtocolType.ARRAY.isType(type)) {
 				int len = Array.getLength(value);
 				ret += writeValue(out, Array.getLength(value));
 				for (int i = 0; i < len; ++i) {

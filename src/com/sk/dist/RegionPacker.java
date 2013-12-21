@@ -6,7 +6,7 @@ import com.sk.wrappers.region.RegionLoader;
 public class RegionPacker extends ProtocolPacker<PackedRegion> {
 
 	public RegionPacker(RegionLoader loader) {
-		super(loader, SanitizedRegion.class, PackedRegion.class, 0xfff);
+		super(loader, SanitizedRegion.class, PackedRegion.class, 0x3fff);
 	}
 
 	@Override

@@ -40,6 +40,13 @@ public enum ProtocolType {
 		public boolean isType(Class<?> type) {
 			return type.isArray();
 		}
+	}, BYTE {
+
+		@Override
+		public boolean isType(Class<?> type) {
+			return Byte.TYPE.equals(type) || Byte.class.equals(type);
+		}
+		
 	};
 
 	public List<ProtocolField> extractFields(Class<?> clazz) {

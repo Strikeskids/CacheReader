@@ -72,7 +72,7 @@ public abstract class Unpacker<T extends Packed> {
 		}
 		return ret;
 	}
-
+	
 	protected long readValue(InputStream in) throws IOException {
 		int first = in.read();
 		if (first == 0xff)

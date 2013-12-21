@@ -48,7 +48,9 @@ public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
 	}
 
 	private Object unpack(Class<?> type, InputStream input) throws IOException {
-		if (ProtocolType.INTEGER.isType(type)) {
+		if (ProtocolType.BYTE.isType(type)) {
+			return (byte) input.read();
+		} else if (ProtocolType.INTEGER.isType(type)) {
 			Object ret = readValue(input);
 			try {
 				return ProtocolType.EXTRACTORS.get(type).invoke(ret);

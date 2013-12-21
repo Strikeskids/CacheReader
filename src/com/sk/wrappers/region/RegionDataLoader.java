@@ -21,7 +21,7 @@ public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoad
 	public abstract T load(int regionHash);
 
 	public T load(int regionX, int regionY) {
-		if (regionX < 0 || regionY < 0 || regionX > 0x3f || regionY > 0x3f) {
+		if (regionX < 0 || regionY < 0 || regionX > 0x7f || regionY > 0x7f) {
 			throw new IllegalArgumentException("Bad region coordinates");
 		}
 		return load(regionX | regionY << 7);

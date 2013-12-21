@@ -1,5 +1,8 @@
 package com.sk.dist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sk.wrappers.ObjectDefinition;
 import com.sk.wrappers.region.Flagger;
 import com.sk.wrappers.region.LocalObject;
@@ -16,9 +19,11 @@ public class SanitizedRegion {
 
 	private void initialize(Region source) {
 		LocalObjects objs = source.objects;
+		List<LocalObject> removed = new ArrayList<>();
 		for (LocalObject obj : objs.getObjects()) {
 			ObjectDefinition def = source.getLoader().objectDefinitionLoader.load(obj.id);
 			if (checkName(def) && checkActions(def)) {
+				removed.add(obj);
 				Flagger flagger = obj.createFlagger(source);
 				if (flagger != null)
 					flagger.unflag(source);
@@ -44,7 +49,11 @@ public class SanitizedRegion {
 			if (!differentRows)
 				flags[plane] = null;
 		}
-		source.addObjects(objs);
+		for (LocalObject o : removed) {
+			Flagger f = o.createFlagger(source);
+			if (f != null)
+				f.flag(source);
+		}
 	}
 
 	private boolean checkName(ObjectDefinition def) {
