@@ -23,4 +23,9 @@ public class ScriptLoader extends WrapperLoader {
 		return ret;
 	}
 
+	@Override
+	public boolean canLoad(int id) {
+		return source.getFile(id) != null;
+	}
+
 }

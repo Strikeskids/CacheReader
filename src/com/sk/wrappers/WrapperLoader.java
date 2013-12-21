@@ -15,5 +15,7 @@ public abstract class WrapperLoader {
 	}
 
 	public abstract Wrapper<?> load(int id);
+	
+	public abstract boolean canLoad(int id);
 
 }
