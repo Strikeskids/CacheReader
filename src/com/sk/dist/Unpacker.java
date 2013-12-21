@@ -4,12 +4,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 public abstract class Unpacker<T extends Packed> {
 
 	private final RandomAccessFile src;
 	private final int metaStart;
 	protected final Class<T> storage;
+
+	private byte[] buffer = new byte[8192];
+	private ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
+	private Inflater inflater = new Inflater();
 
 	public Unpacker(Class<T> storage, RandomAccessFile src) throws IOException {
 		this.storage = storage;
@@ -49,10 +55,27 @@ public abstract class Unpacker<T extends Packed> {
 	private byte[] readPackedSource(int[] indices) throws IOException {
 		if (indices == null)
 			return null;
-		byte[] ret = new byte[indices[1] - indices[0]];
-		this.src.seek(indices[0]);
+		byte[] ret = new byte[(indices[1] & ~0x80000000) - (indices[0] & ~0x80000000)];
+		this.src.seek(indices[0] & ~0x80000000);
 		this.src.readFully(ret);
-		return ret;
+		if ((indices[0] & 0x80000000) != 0) {
+			synchronized (inflater) {
+				inflater.reset();
+				inflater.setInput(ret);
+				bufferStream.reset();
+				int curSize;
+				try {
+					while ((curSize = inflater.inflate(buffer)) != 0 || !inflater.needsInput()) {
+						bufferStream.write(buffer, 0, curSize);
+					}
+				} catch (DataFormatException e) {
+					e.printStackTrace();
+				}
+				return bufferStream.toByteArray();
+			}
+		} else {
+			return ret;
+		}
 	}
 
 	private int unpackIndex(long loc) {
@@ -72,7 +95,7 @@ public abstract class Unpacker<T extends Packed> {
 		}
 		return ret;
 	}
-	
+
 	protected long readValue(InputStream in) throws IOException {
 		int first = in.read();
 		if (first == 0xff)
