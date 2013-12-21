@@ -8,7 +8,6 @@ import com.sk.datastream.Stream;
 import com.sk.wrappers.Wrapper;
 import com.sk.wrappers.WrapperLoader;
 
-
 public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoader {
 
 	protected final CacheType cache;
@@ -17,10 +16,10 @@ public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoad
 		super(cacheSystem);
 		this.cache = cacheSystem.getCacheType(5);
 	}
-	
+
 	@Override
 	public abstract T load(int regionHash);
-	
+
 	public T load(int regionX, int regionY) {
 		if (regionX < 0 || regionY < 0 || regionX > 0x3f || regionY > 0x3f) {
 			throw new IllegalArgumentException("Bad region coordinates");
@@ -36,6 +35,11 @@ public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoad
 		if (data == null)
 			return null;
 		return data.getDataAsStream();
+	}
+
+	@Override
+	public boolean canLoad(int id) {
+		return getData(id, 0) != null && getData(id, 3) != null;
 	}
 
 }
