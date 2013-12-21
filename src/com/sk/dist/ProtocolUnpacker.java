@@ -21,10 +21,10 @@ public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
 	}
 
 	@Override
-	public Packed unpack(byte[] input) throws IOException {
+	public T unpack(byte[] input) throws IOException {
 
 		ByteArrayInputStream data = new ByteArrayInputStream(input);
-		Packed ret = null;
+		T ret = null;
 		try {
 			ret = storage.newInstance();
 			if (booleans.size() > 0) {

@@ -17,7 +17,7 @@ public abstract class Unpacker<T extends Packed> {
 		this.metaStart = (int) (this.src.length() - unpackIndex(this.src.length() - 4) - 4);
 	}
 
-	public Packed unpack(int id) {
+	public T unpack(int id) {
 		if (this.src == null)
 			throw new RuntimeException("Must set packed source first");
 		int metaLoc = this.metaStart + id * 4;
@@ -28,7 +28,7 @@ public abstract class Unpacker<T extends Packed> {
 			byte[] data = readPackedSource(indices);
 			if (data == null)
 				return null;
-			Packed ret = unpack(data);
+			T ret = unpack(data);
 			ret.id = id;
 			return ret;
 		} catch (IOException ex) {
@@ -96,6 +96,6 @@ public abstract class Unpacker<T extends Packed> {
 		return new String(baos.toByteArray(), "UTF-8");
 	}
 
-	public abstract Packed unpack(byte[] input) throws IOException;
+	public abstract T unpack(byte[] input) throws IOException;
 
 }
