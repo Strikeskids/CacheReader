@@ -21,10 +21,10 @@ import com.sk.cache.DataSource;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.gui.GridPainter.GridGetter;
 import com.sk.gui.GridPainter.Side;
-import com.sk.wrappers.LocalObject;
 import com.sk.wrappers.ObjectDefinition;
-import com.sk.wrappers.Region;
-import com.sk.wrappers.RegionLoader;
+import com.sk.wrappers.region.LocalObject;
+import com.sk.wrappers.region.Region;
+import com.sk.wrappers.region.RegionLoader;
 
 public class RegionViewer {
 

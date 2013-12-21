@@ -1,10 +1,11 @@
-package com.sk.wrappers;
+package com.sk.wrappers.region;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.sk.datastream.Stream;
+import com.sk.wrappers.StreamedWrapper;
 
 public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 

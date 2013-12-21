@@ -1,6 +1,7 @@
-package com.sk.wrappers;
+package com.sk.wrappers.region;
 
 import com.sk.cache.fs.CacheSystem;
+import com.sk.wrappers.ObjectDefinitionLoader;
 
 public class RegionLoader extends RegionDataLoader<Region> {
 

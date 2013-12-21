@@ -1,10 +1,12 @@
-package com.sk.wrappers;
+package com.sk.wrappers.region;
 
 import com.sk.cache.fs.Archive;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 import com.sk.datastream.Stream;
+import com.sk.wrappers.Wrapper;
+import com.sk.wrappers.WrapperLoader;
 
 
 public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoader {
