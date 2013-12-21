@@ -35,9 +35,9 @@ public abstract class Packer<T extends Packed> {
 			Object wrap = getWrapper(id);
 			if (wrap == null && endId == -1)
 				break;
+			wrap = sanitize(wrap);
 			if (!checkInput(wrap))
 				throw new RuntimeException("Bad input object at index " + id);
-			wrap = sanitize(wrap);
 			writeIndex(indices, wrap == null ? -1 : index);
 			int count = wrap == null ? 0 : pack(wrap, output);
 			index += count;

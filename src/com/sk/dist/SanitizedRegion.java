@@ -1,6 +1,7 @@
 package com.sk.dist;
 
 import com.sk.wrappers.ObjectDefinition;
+import com.sk.wrappers.region.Flagger;
 import com.sk.wrappers.region.LocalObject;
 import com.sk.wrappers.region.LocalObjects;
 import com.sk.wrappers.region.Region;
@@ -17,8 +18,11 @@ public class SanitizedRegion {
 		LocalObjects objs = source.objects;
 		for (LocalObject obj : objs.getObjects()) {
 			ObjectDefinition def = source.getLoader().objectDefinitionLoader.load(obj.id);
-			if (checkName(def) && checkActions(def))
-				obj.createFlagger(source).unflag(source);
+			if (checkName(def) && checkActions(def)) {
+				Flagger flagger = obj.createFlagger(source);
+				if (flagger != null)
+					flagger.unflag(source);
+			}
 		}
 		flags = new byte[source.flags.length][Region.width][Region.height];
 		for (int plane = 0; plane < source.flags.length; plane++) {

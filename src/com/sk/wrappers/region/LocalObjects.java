@@ -11,7 +11,7 @@ public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 
 	private final List<LocalObject> objects = new ArrayList<>();
 	@SuppressWarnings("unchecked")
-	private final List<LocalObject> located[][][] = new List[3][64][64];
+	private final List<LocalObject> located[][][] = new List[4][64][64];
 
 	public LocalObjects(LocalObjectLoader loader, int regionHash) {
 		super(loader, regionHash);
@@ -37,9 +37,11 @@ public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 
 	private void addObject(LocalObject o) {
 		objects.add(o);
-		if (located[o.plane][o.x][o.y] == null)
-			located[o.plane][o.x][o.y] = new ArrayList<>(2);
-		located[o.plane][o.x][o.y].add(o);
+		if (o.plane < located.length) {
+			if (located[o.plane][o.x][o.y] == null)
+				located[o.plane][o.x][o.y] = new ArrayList<>(2);
+			located[o.plane][o.x][o.y].add(o);
+		}
 	}
 
 	public List<LocalObject> getObjectsAt(int x, int y, int plane) {

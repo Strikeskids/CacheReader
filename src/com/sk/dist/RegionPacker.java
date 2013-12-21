@@ -11,6 +11,8 @@ public class RegionPacker extends ProtocolPacker<PackedRegion> {
 
 	@Override
 	public SanitizedRegion sanitize(Object o) {
+		if (o == null || !(o instanceof Region))
+			return null;
 		return new SanitizedRegion((Region) o);
 	}
 }
