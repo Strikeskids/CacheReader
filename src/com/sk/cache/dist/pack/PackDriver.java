@@ -1,4 +1,5 @@
 package com.sk.cache.dist.pack;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +20,7 @@ public class PackDriver {
 	public static void main(String[] args) throws Exception {
 		long start = System.currentTimeMillis();
 		CacheSystem sys = new CacheSystem(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
-		File out = new File("packed" + System.currentTimeMillis() + ".zip");
+		File out = new File("packed" + System.currentTimeMillis() + ".zip").getAbsoluteFile();
 		zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(out)));
 		pack(new RegionPacker(new RegionLoader(sys)));
 		pack(new ObjectPacker(new ObjectDefinitionLoader(sys)));
@@ -27,6 +28,7 @@ public class PackDriver {
 		zos.close();
 		System.out.println("Finished all packing");
 		System.out.println("Took " + (System.currentTimeMillis() - start) + " millis");
+		Runtime.getRuntime().exec("cp " + out + " " + new File(out.getParent(), "packed.zip"));
 	}
 
 	private static void pack(Packer<?> pckr) throws IOException {
