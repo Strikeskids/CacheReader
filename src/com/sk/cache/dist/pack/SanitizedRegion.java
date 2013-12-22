@@ -62,13 +62,13 @@ public class SanitizedRegion {
 			byte flag = 1;
 			if (downstairs.contains(o))
 				flag |= 2;
-			stairs.add(new byte[] { o.x, o.y, (byte) o.getSize().width, (byte) o.getSize().height, flag });
+			stairs.add(new byte[] { o.x, o.y, o.plane, (byte) o.getSize().width, (byte) o.getSize().height, flag });
 		}
 		for (LocalObject o : downstairs) {
 			if (upstairs.contains(o))
 				continue;
 			byte flag = 2;
-			stairs.add(new byte[] { o.x, o.y, (byte) o.getSize().width, (byte) o.getSize().height, flag });
+			stairs.add(new byte[] { o.x, o.y, o.plane, (byte) o.getSize().width, (byte) o.getSize().height, flag });
 		}
 		this.stairs = stairs.toArray(new byte[stairs.size()][]);
 		flags = new byte[source.flags.length][Region.width][Region.height];
