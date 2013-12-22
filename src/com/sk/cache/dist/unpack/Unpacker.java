@@ -27,7 +27,9 @@ public abstract class Unpacker<T extends Packed> {
 		if (this.src == null)
 			throw new RuntimeException("Must set packed source first");
 		int metaLoc = this.metaStart + id * 4;
-		try (RACInputStream indexStream = new RACInputStream(this.src, metaLoc)) {
+		RACInputStream indexStream = null;
+		try {
+			indexStream = new RACInputStream(this.src, metaLoc);
 			if (metaLoc >= this.src.length() - 8)
 				return null;
 			int[] indices = readDelimiters(indexStream);
@@ -39,6 +41,11 @@ public abstract class Unpacker<T extends Packed> {
 			return ret;
 		} catch (IOException ex) {
 			return null;
+		} finally {
+			try {
+				indexStream.close();
+			} catch (IOException ignored) {
+			}
 		}
 	}
 

@@ -50,7 +50,7 @@ public enum ProtocolType {
 	};
 
 	public List<ProtocolField> extractFields(Class<?> clazz) {
-		List<ProtocolField> ret = new ArrayList<>();
+		List<ProtocolField> ret = new ArrayList<ProtocolField>();
 		for (Field f : clazz.getDeclaredFields()) {
 			if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) == 0 && this.isType(f.getType()))
 				ret.add(new ProtocolField(this, f));
@@ -64,7 +64,7 @@ public enum ProtocolType {
 	}
 
 	public static List<ProtocolField> extractAllFields(Class<?> clazz, boolean includeBoolean) {
-		List<ProtocolField> ret = new ArrayList<>();
+		List<ProtocolField> ret = new ArrayList<ProtocolField>();
 		for (ProtocolType type : values()) {
 			if (includeBoolean || type != ProtocolType.BOOLEAN)
 				ret.addAll(type.extractFields(clazz));
@@ -72,7 +72,7 @@ public enum ProtocolType {
 		return ret;
 	}
 
-	public static Map<Class<?>, Method> EXTRACTORS = new HashMap<>();
+	public static Map<Class<?>, Method> EXTRACTORS = new HashMap<Class<?>, Method>();
 	static {
 		try {
 			EXTRACTORS.put(byte.class, Number.class.getMethod("byteValue"));

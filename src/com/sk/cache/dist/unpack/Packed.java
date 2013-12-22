@@ -17,7 +17,9 @@ public abstract class Packed {
 			Object o;
 			try {
 				o = f.get(this);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			} catch (IllegalAccessException e) {
+				continue;
+			} catch (IllegalArgumentException e) {
 				continue;
 			}
 			if (o == null)
