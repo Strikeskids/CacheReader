@@ -10,9 +10,9 @@ import com.sk.cache.wrappers.WrapperLoader;
 
 public abstract class Packer<T extends Packed> {
 
-	protected final WrapperLoader loader;
-	protected final Class<?> source;
-	protected final Class<T> storage;
+	private final WrapperLoader loader;
+	private final Class<?> source;
+	private final Class<T> storage;
 	protected final int endId;
 
 	public Packer(WrapperLoader loader, Class<?> source, Class<T> storage) {
@@ -27,7 +27,7 @@ public abstract class Packer<T extends Packed> {
 	}
 
 	public void pack(OutputStream output) throws IOException {
-		System.out.println("Packing " + source.getName());
+		System.out.println("Packing " + getSource().getName());
 		ByteArrayOutputStream indices = new ByteArrayOutputStream();
 		ByteArrayOutputStream wrapperStream = new ByteArrayOutputStream();
 		int index = 0;
@@ -113,17 +113,17 @@ public abstract class Packer<T extends Packed> {
 	}
 
 	private Object getWrapper(int id) {
-		if (!loader.canLoad(id))
+		if (!getLoader().canLoad(id))
 			return null;
 		try {
-			return loader.load(id);
+			return getLoader().load(id);
 		} catch (IllegalArgumentException ex) {
 			return null;
 		}
 	}
 
 	public boolean checkInput(Object wrap) {
-		return wrap == null || source.isInstance(wrap);
+		return wrap == null || getSource().isInstance(wrap);
 	}
 
 	public Object sanitize(Object wrap) {
@@ -131,5 +131,17 @@ public abstract class Packer<T extends Packed> {
 	}
 
 	public abstract int pack(Object input, OutputStream output) throws IOException;
+
+	public Class<T> getStorage() {
+		return storage;
+	}
+
+	public Class<?> getSource() {
+		return source;
+	}
+
+	public WrapperLoader getLoader() {
+		return loader;
+	}
 
 }
