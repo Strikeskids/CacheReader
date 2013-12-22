@@ -1,5 +1,7 @@
 package com.sk.cache.wrappers.region;
 
+import java.awt.Dimension;
+
 import com.sk.cache.wrappers.ObjectDefinition;
 
 public class LocalObject {
@@ -7,6 +9,7 @@ public class LocalObject {
 	public final int id;
 	public final byte x, y, plane;
 	public final byte type, orientation;
+	private Dimension dim;
 
 	public LocalObject(int id, int lx, int ly, int plane, int type, int orientation) {
 		this.id = id;
@@ -32,11 +35,16 @@ public class LocalObject {
 		} else if (9 <= type && type <= 21 && def.blockType != 0) {
 			int lenx = def.type % 2 != 0 ? def.width : def.height;
 			int leny = def.type % 2 != 0 ? def.height : def.width;
+			this.dim = new Dimension(lenx, leny);
 			return getInteractiveFlagger(x, lenx, y, leny, plane, def.walkable, !def.walkable2);
 		} else if (0 <= type && type <= 3) {
 			return getBoundaryFlagger(x, y, plane, type, orientation, def.walkable, !def.walkable2);
 		}
 		return null;
+	}
+	
+	public Dimension getSize() {
+		return this.dim;
 	}
 
 	private int flipDirection(int dir) {
