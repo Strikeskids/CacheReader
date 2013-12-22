@@ -45,6 +45,8 @@ public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 	}
 
 	public List<LocalObject> getObjectsAt(int x, int y, int plane) {
+		if (x < 0 || y < 0 || plane < 0 || plane >= located.length || x >= Region.width || y >= Region.height)
+			return Arrays.asList();
 		List<LocalObject> ret = located[plane][x][y];
 		if (ret == null)
 			return Arrays.asList();

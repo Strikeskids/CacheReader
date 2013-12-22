@@ -2,6 +2,7 @@ package com.sk.cache.dist.unpack;
 
 public class PackedRegion extends Packed {
 	public byte[][][] flags;
+	public byte[][] stairs;
 
 	public static final int WIDTH = 64, HEIGHT = 64;
 	private static final byte[][] empty = new byte[WIDTH][];
