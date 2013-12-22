@@ -1,4 +1,4 @@
-package com.sk.dist;
+package com.sk.dist.pack;
 
 import java.util.ArrayList;
 import java.util.List;

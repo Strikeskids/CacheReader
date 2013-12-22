@@ -1,4 +1,4 @@
-package com.sk.dist;
+package com.sk.dist.unpack;
 
 public class PackedRegion extends Packed {
 	public byte[][][] flags;

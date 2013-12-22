@@ -1,4 +1,4 @@
-package com.sk.dist;
+package com.sk.dist.pack;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sk.dist.unpack.Packed;
+import com.sk.dist.unpack.ProtocolField;
+import com.sk.dist.unpack.ProtocolType;
 import com.sk.wrappers.WrapperLoader;
 
 public class ProtocolPacker<T extends Packed> extends Packer<T> {

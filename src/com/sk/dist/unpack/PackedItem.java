@@ -1,4 +1,4 @@
-package com.sk.dist;
+package com.sk.dist.unpack;
 
 public class PackedItem extends Packed {
 	public boolean stackable, members, edible, noted, lent;

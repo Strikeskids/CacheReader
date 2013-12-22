@@ -1,4 +1,4 @@
-package com.sk.dist;
+package com.sk.dist.unpack;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

@@ -1,5 +1,6 @@
-package com.sk.dist;
+package com.sk.dist.pack;
 
+import com.sk.dist.unpack.PackedRegion;
 import com.sk.wrappers.region.Region;
 import com.sk.wrappers.region.RegionLoader;
 

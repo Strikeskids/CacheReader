@@ -20,9 +20,9 @@ import javax.swing.WindowConstants;
 
 import com.sk.cache.DataSource;
 import com.sk.cache.fs.CacheSystem;
-import com.sk.dist.PackedRegion;
-import com.sk.dist.ProtocolUnpacker;
-import com.sk.dist.Unpacker;
+import com.sk.dist.unpack.PackedRegion;
+import com.sk.dist.unpack.ProtocolUnpacker;
+import com.sk.dist.unpack.Unpacker;
 import com.sk.gui.GridPainter.GridGetter;
 import com.sk.gui.GridPainter.Side;
 import com.sk.wrappers.ObjectDefinition;

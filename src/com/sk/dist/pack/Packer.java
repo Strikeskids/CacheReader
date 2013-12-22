@@ -1,10 +1,11 @@
-package com.sk.dist;
+package com.sk.dist.pack;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.Deflater;
 
+import com.sk.dist.unpack.Packed;
 import com.sk.wrappers.WrapperLoader;
 
 public abstract class Packer<T extends Packed> {
