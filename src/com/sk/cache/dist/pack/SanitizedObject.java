@@ -6,12 +6,14 @@ import com.sk.cache.wrappers.ScriptLoader;
 
 public class SanitizedObject {
 	public String name;
+	public String[] actions;
 	public int settingId = -1;
 	public byte lowSettingBit = -1, highSettingBit = -1;
 	public int[] childrenIds;
 
 	public SanitizedObject(ObjectDefinition source) {
 		this.name = source.name;
+		this.actions = source.actions;
 		if (source.configId != -1) {
 			this.settingId = source.configId;
 		} else if (source.scriptId != -1) {
