@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,7 +37,7 @@ public class RegionViewer {
 	private static PackedRegion packedRegion;
 	private static int plane;
 	private static boolean shouldShowObjects = false;
-	private static boolean unpack = true;
+	private static boolean unpack = false;
 
 	public static void main(String[] args) throws IOException {
 		CacheSystem sys = new CacheSystem(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
@@ -49,6 +50,7 @@ public class RegionViewer {
 		final JTextField xval = new JTextField(5);
 		final JTextField yval = new JTextField(5);
 		final JTextField pval = new JTextField(5);
+		final JLabel landscape = new JLabel();
 		final DefaultListModel<ObjectDefinition> objectModel = new DefaultListModel<>();
 		JButton update = new JButton("Update");
 		update.addActionListener(new ActionListener() {
@@ -74,6 +76,7 @@ public class RegionViewer {
 		top.add(yval);
 		top.add(pval);
 		top.add(update);
+		top.add(landscape);
 		frame.getContentPane().add(top, BorderLayout.NORTH);
 		frame.getContentPane().add(new GridPainter(new GridGetter() {
 			@Override
@@ -106,6 +109,7 @@ public class RegionViewer {
 			public void hoverCell(int x, int y) {
 				if (region == null)
 					return;
+				landscape.setText(Integer.toHexString(region.landscapeData[plane][x][y]));
 				objectModel.clear();
 				for (LocalObject o : region.objects.getObjects()) {
 					if (o.x == x && o.y == y && o.plane == plane) {
