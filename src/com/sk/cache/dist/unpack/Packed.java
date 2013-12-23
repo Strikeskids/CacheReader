@@ -6,6 +6,10 @@ import java.lang.reflect.Field;
 public abstract class Packed {
 	public int id;
 
+	public void initialize() {
+		
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder output = new StringBuilder();

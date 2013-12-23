@@ -38,6 +38,7 @@ public abstract class Unpacker<T extends Packed> {
 				return null;
 			T ret = unpack(data);
 			ret.id = id;
+			ret.initialize();
 			return ret;
 		} catch (IOException ex) {
 			return null;
