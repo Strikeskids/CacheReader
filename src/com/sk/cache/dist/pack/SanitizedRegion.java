@@ -79,7 +79,7 @@ public class SanitizedRegion {
 					flags[plane][x][y] = (byte) source.flags[plane][x][y];
 					if ((source.flags[plane][x][y] & 0x200100) != 0)
 						flags[plane][x][y] = -1;
-					if (flags[plane][x][y] != 0 && flags[plane][x][y] != -1)
+					if (flags[plane][x][y] != 0)
 						different = true;
 				}
 			}

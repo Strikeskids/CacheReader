@@ -67,14 +67,14 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 			if (ProtocolType.BYTE.isType(type)) {
 				out.write((byte) value);
 				ret++;
+			} else if (ProtocolType.INTEGER.isType(type)) {
+				ret += writeValue(out, ((Number) value).longValue());
 			} else if (ProtocolType.ARRAY.isType(type)) {
 				int len = Array.getLength(value);
 				ret += writeValue(out, Array.getLength(value));
 				for (int i = 0; i < len; ++i) {
 					ret += packField(out, Array.get(value, i));
 				}
-			} else if (ProtocolType.INTEGER.isType(type)) {
-				ret += writeValue(out, ((Number) value).longValue());
 			} else if (ProtocolType.STRING.isType(type)) {
 				ret += writeString(out, String.valueOf(value));
 			}
