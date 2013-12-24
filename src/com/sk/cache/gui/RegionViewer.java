@@ -37,12 +37,12 @@ public class RegionViewer {
 	private static PackedRegion packedRegion;
 	private static int plane;
 	private static boolean shouldShowObjects = false;
-	private static boolean unpack = false;
+	private static boolean unpack = true;
 
 	public static void main(String[] args) throws IOException {
 		CacheSystem sys = new CacheSystem(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
 		final Unpacker<PackedRegion> unpckr = new ProtocolUnpacker<>(PackedRegion.class, new RandomAccessFile(
-				"region.packed", "r"));
+				"packed/PackedRegion.packed", "r"));
 		final RegionLoader rl = new RegionLoader(sys);
 		final JFrame frame = new JFrame("Regions");
 		frame.getContentPane().setLayout(new BorderLayout());
@@ -62,6 +62,7 @@ public class RegionViewer {
 					public void run() {
 						int x = Integer.parseInt(xval.getText());
 						int y = Integer.parseInt(yval.getText());
+						System.out.println(x | y << 7);
 						if (unpack) {
 							packedRegion = unpckr.unpack(x | y << 7);
 						} else {
