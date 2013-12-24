@@ -48,7 +48,7 @@ public class PackedRegion extends Packed {
 
 	@Override
 	public void initialize() {
-		if (stairMap == null)
+		if (stairMap != null)
 			return;
 		stairMap = new HashMap<Integer, byte[]>();
 		for (byte[] stair : stairs) {
