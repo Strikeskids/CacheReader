@@ -51,6 +51,7 @@ public class RegionViewer {
 		final JTextField yval = new JTextField(5);
 		final JTextField pval = new JTextField(5);
 		final JLabel landscape = new JLabel();
+		final JLabel coords = new JLabel();
 		final DefaultListModel<ObjectDefinition> objectModel = new DefaultListModel<>();
 		JButton update = new JButton("Update");
 		update.addActionListener(new ActionListener() {
@@ -77,6 +78,7 @@ public class RegionViewer {
 		top.add(pval);
 		top.add(update);
 		top.add(landscape);
+		top.add(coords);
 		frame.getContentPane().add(top, BorderLayout.NORTH);
 		frame.getContentPane().add(new GridPainter(new GridGetter() {
 			@Override
@@ -111,6 +113,7 @@ public class RegionViewer {
 					return;
 				landscape.setText(Integer.toHexString(region.landscapeData[plane][x][y]));
 				objectModel.clear();
+				coords.setText(x + " " + y);
 				for (LocalObject o : region.objects.getObjects()) {
 					if (o.x == x && o.y == y && o.plane == plane) {
 						objectModel.addElement(region.getLoader().objectDefinitionLoader.load(o.id));
