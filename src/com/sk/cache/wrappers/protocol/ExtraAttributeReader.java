@@ -1,16 +1,14 @@
 package com.sk.cache.wrappers.protocol;
 
 import com.sk.Debug;
+import com.sk.cache.wrappers.ProtocolWrapper;
 import com.sk.datastream.Stream;
 
-public class ExtraAttributeReader extends ProtocolGroup {
+public class ExtraAttributeReader extends ProtocolReader {
 
 	private static final int TYPE = 249;
 
-	public ExtraAttributeReader(ProtocolReader... reader) {
-		for (ProtocolReader r : reader) {
-			r.addSelfToGroup(this);
-		}
+	public ExtraAttributeReader() {
 	}
 
 	@Override
@@ -20,10 +18,13 @@ public class ExtraAttributeReader extends ProtocolGroup {
 		for (int attr = 0; attr < count; ++attr) {
 			boolean flag = s.getUByte() == 1;
 			int index = s.getUInt24();
-			if (!super.validateType(index)) {
-				formatAttribute(output, index, flag ? s.getString() : s.getInt());
-			} else {
-				getReader(index).read(destination, index, s);
+			Object gotten = flag ? s.getString() : s.getInt();
+			if (Debug.on) {
+				formatAttribute(output, index, gotten);
+			}
+			if (destination instanceof ProtocolWrapper) {
+				ProtocolWrapper<?> wrap = (ProtocolWrapper<?>) destination;
+				wrap.attributes.put(index, gotten);
 			}
 		}
 		if (output.length() > 0) {
