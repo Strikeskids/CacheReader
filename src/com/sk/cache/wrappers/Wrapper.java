@@ -2,6 +2,8 @@ package com.sk.cache.wrappers;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class Wrapper<T extends WrapperLoader> {
 
@@ -19,6 +21,20 @@ public abstract class Wrapper<T extends WrapperLoader> {
 
 	public T getLoader() {
 		return loader;
+	}
+
+	public Map<String, Object> getDeclaredFields() {
+		Map<String, Object> ret = new LinkedHashMap<>();
+		for (Field f : getClass().getDeclaredFields()) {
+			Object o;
+			try {
+				o = f.get(this);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				o = null;
+			}
+			ret.put(f.getName(), o);
+		}
+		return ret;
 	}
 
 	@Override
