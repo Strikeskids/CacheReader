@@ -24,7 +24,8 @@ public class ExtraAttributeReader extends ProtocolReader {
 			}
 			if (destination instanceof ProtocolWrapper) {
 				ProtocolWrapper<?> wrap = (ProtocolWrapper<?>) destination;
-				wrap.attributes.put(index, gotten);
+				if (wrap.attributes != null)
+					wrap.attributes.put(index, gotten);
 			}
 		}
 		if (output.length() > 0) {
