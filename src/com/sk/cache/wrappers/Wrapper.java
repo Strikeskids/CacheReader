@@ -2,6 +2,7 @@ package com.sk.cache.wrappers;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,6 +46,8 @@ public abstract class Wrapper<T extends WrapperLoader> {
 		output.append(getId());
 		output.append(" {");
 		for (Field f : getClass().getDeclaredFields()) {
+			if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0)
+				continue;
 			Object o;
 			try {
 				o = f.get(this);
