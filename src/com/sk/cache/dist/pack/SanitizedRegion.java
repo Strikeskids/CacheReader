@@ -27,7 +27,7 @@ public class SanitizedRegion {
 		Set<LocalObject> upstairs = new HashSet<>();
 		Set<LocalObject> downstairs = new HashSet<>();
 		for (LocalObject obj : objs.getObjects()) {
-			ObjectDefinition def = source.getLoader().objectDefinitionLoader.load(obj.id);
+			ObjectDefinition def = source.getLoader().getCacheSystem().objectLoader.load(obj.id);
 			if (checkName(def, names) && checkActions(def, actions)) {
 				removed.add(obj);
 				Flagger flagger = obj.createFlagger(source);

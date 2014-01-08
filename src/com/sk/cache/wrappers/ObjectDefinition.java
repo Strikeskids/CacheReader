@@ -12,7 +12,7 @@ import com.sk.cache.wrappers.protocol.extractor.ParseType;
 import com.sk.cache.wrappers.protocol.extractor.StaticExtractor;
 import com.sk.datastream.Stream;
 
-public class ObjectDefinition extends ProtocolWrapper<ObjectDefinitionLoader> {
+public class ObjectDefinition extends ProtocolWrapper {
 
 	public String name;
 	public int type = -1;

@@ -1,15 +1,16 @@
 package com.sk.cache.wrappers.loaders;
 
 import com.sk.cache.fs.Archive;
-import com.sk.cache.fs.CacheSource;
+import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
+import com.sk.cache.wrappers.ProtocolWrapper;
 
-public abstract class ProtocolWrapperLoader extends WrapperLoader {
+public abstract class ProtocolWrapperLoader<T extends ProtocolWrapper> extends WrapperLoader<T> {
 
 	protected final CacheType cache;
 
-	public ProtocolWrapperLoader(CacheSource cacheSystem, CacheType cache) {
+	public ProtocolWrapperLoader(CacheSystem cacheSystem, CacheType cache) {
 		super(cacheSystem);
 		this.cache = cache;
 	}

@@ -3,9 +3,9 @@ package com.sk.cache.wrappers;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
 import com.sk.datastream.Stream;
 
-public abstract class StreamedWrapper<T extends WrapperLoader> extends Wrapper<T> {
+public abstract class StreamedWrapper extends Wrapper {
 
-	public StreamedWrapper(T loader, int id) {
+	public StreamedWrapper(WrapperLoader<?> loader, int id) {
 		super(loader, id);
 	}
 

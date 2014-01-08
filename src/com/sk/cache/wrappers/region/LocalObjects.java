@@ -8,7 +8,7 @@ import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.loaders.LocalObjectLoader;
 import com.sk.datastream.Stream;
 
-public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
+public class LocalObjects extends StreamedWrapper {
 
 	private final List<LocalObject> objects = new ArrayList<>();
 	@SuppressWarnings("unchecked")
@@ -31,7 +31,7 @@ public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {
 				int data = stream.getUByte();
 				int type = data >> 2;
 				int orientation = data & 0x3;
-				addObject(new LocalObject(id, lx, ly, plane, type, orientation));
+				addObject(new LocalObject(this.getLoader(), id, lx, ly, plane, type, orientation));
 			}
 		}
 	}

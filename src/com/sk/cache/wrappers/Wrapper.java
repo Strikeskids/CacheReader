@@ -8,12 +8,12 @@ import java.util.Map;
 
 import com.sk.cache.wrappers.loaders.WrapperLoader;
 
-public abstract class Wrapper<T extends WrapperLoader> {
+public abstract class Wrapper {
 
-	protected final T loader;
+	protected final WrapperLoader<?> loader;
 	protected final int id;
 
-	public Wrapper(T loader, int id) {
+	public Wrapper(WrapperLoader<?> loader, int id) {
 		this.loader = loader;
 		this.id = id;
 	}
@@ -22,7 +22,7 @@ public abstract class Wrapper<T extends WrapperLoader> {
 		return id;
 	}
 
-	public T getLoader() {
+	public WrapperLoader<?> getLoader() {
 		return loader;
 	}
 

@@ -9,7 +9,7 @@ import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.ParseType;
 import com.sk.cache.wrappers.protocol.extractor.StaticExtractor;
 
-public class ItemDefinition extends ProtocolWrapper<ItemDefinitionLoader> {
+public class ItemDefinition extends ProtocolWrapper {
 
 	public boolean stackable;
 	public boolean members;

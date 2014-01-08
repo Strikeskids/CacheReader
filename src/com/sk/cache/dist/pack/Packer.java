@@ -10,16 +10,16 @@ import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 public abstract class Packer<T extends Packed> {
 
-	private final WrapperLoader loader;
+	private final WrapperLoader<?> loader;
 	private final Class<?> source;
 	private final Class<T> storage;
 	protected final int endId;
 
-	public Packer(WrapperLoader loader, Class<?> source, Class<T> storage) {
+	public Packer(WrapperLoader<?> loader, Class<?> source, Class<T> storage) {
 		this(loader, source, storage, -1);
 	}
 
-	public Packer(WrapperLoader loader, Class<?> source, Class<T> storage, int endId) {
+	public Packer(WrapperLoader<?> loader, Class<?> source, Class<T> storage, int endId) {
 		this.loader = loader;
 		this.source = source;
 		this.storage = storage;
@@ -140,7 +140,7 @@ public abstract class Packer<T extends Packed> {
 		return source;
 	}
 
-	public WrapperLoader getLoader() {
+	public WrapperLoader<?> getLoader() {
 		return loader;
 	}
 

@@ -4,7 +4,7 @@ import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.datastream.Stream;
 
-public class Region extends StreamedWrapper<RegionLoader> {
+public class Region extends StreamedWrapper {
 
 	public int[][][] flags = new int[4][width][height];
 	public byte[][][] landscapeData = new byte[4][width][height];

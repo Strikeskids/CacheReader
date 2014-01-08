@@ -20,7 +20,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 	private final List<ProtocolField> fields;
 	private final Map<String, Field> sourceFields;
 
-	public ProtocolPacker(WrapperLoader loader, Class<?> source, Class<T> storage, int endId) {
+	public ProtocolPacker(WrapperLoader<?> loader, Class<?> source, Class<T> storage, int endId) {
 		super(loader, source, storage, endId);
 		this.sourceFields = new HashMap<>();
 		for (Field f : source.getDeclaredFields()) {
@@ -32,7 +32,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
 	}
 
-	public ProtocolPacker(WrapperLoader loader, Class<?> source, Class<T> storage) {
+	public ProtocolPacker(WrapperLoader<?> loader, Class<?> source, Class<T> storage) {
 		this(loader, source, storage, -1);
 	}
 

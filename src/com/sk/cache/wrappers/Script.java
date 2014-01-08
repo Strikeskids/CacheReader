@@ -7,7 +7,7 @@ import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.ParseType;
 
 
-public class Script extends ProtocolWrapper<ScriptLoader> {
+public class Script extends ProtocolWrapper {
 
 	public int configId = -1;
 	public int configType = -1;

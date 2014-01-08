@@ -1,23 +1,36 @@
 package com.sk.cache.wrappers.region;
 
 import java.awt.Dimension;
+import java.lang.ref.SoftReference;
 
 import com.sk.cache.wrappers.ObjectDefinition;
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 public class LocalObject {
 
+	private WrapperLoader<?> loader;
 	public final int id;
 	public final byte x, y, plane;
 	public final byte type, orientation;
+	private SoftReference<ObjectDefinition> def = new SoftReference<>(null);
 	private Dimension dim;
 
-	public LocalObject(int id, int lx, int ly, int plane, int type, int orientation) {
+	public LocalObject(WrapperLoader<?> loader, int id, int lx, int ly, int plane, int type, int orientation) {
 		this.id = id;
 		this.x = (byte) lx;
 		this.y = (byte) ly;
 		this.plane = (byte) plane;
 		this.type = (byte) type;
 		this.orientation = (byte) orientation;
+	}
+	
+	public ObjectDefinition getDefinition() {
+		ObjectDefinition ret = def.get();
+		if (ret == null) {
+			ret = loader.getCacheSystem().objectLoader.load(this.id);
+		}
+		def = new SoftReference<>(ret);
+		return ret;
 	}
 
 	public Flagger createFlagger(Region r) {
@@ -27,7 +40,7 @@ public class LocalObject {
 		}
 		if (plane < 0)
 			return Flagger.DEFAULT;
-		ObjectDefinition def = r.getLoader().objectDefinitionLoader.load(this.id);
+		ObjectDefinition def = getDefinition();
 		if (def == null)
 			return null;
 		if (type == 22 && def.blockType == 1) {
