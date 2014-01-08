@@ -27,7 +27,7 @@ public class SanitizedRegion {
 		Set<LocalObject> upstairs = new HashSet<>();
 		Set<LocalObject> downstairs = new HashSet<>();
 		for (LocalObject obj : objs.getObjects()) {
-			ObjectDefinition def = source.getLoader().getCacheSystem().objectLoader.load(obj.id);
+			ObjectDefinition def = obj.getDefinition();
 			if (checkName(def, names) && checkActions(def, actions)) {
 				removed.add(obj);
 				Flagger flagger = obj.createFlagger(source);
@@ -42,7 +42,7 @@ public class SanitizedRegion {
 				outer: for (int x = 0; x < size.width; ++x) {
 					for (int y = 0; y < size.height; ++y) {
 						for (LocalObject possible : objs.getObjectsAt(x + obj.x, y + obj.y, obj.plane + 1)) {
-							ObjectDefinition pdef = source.getLoader().objectDefinitionLoader.load(possible.id);
+							ObjectDefinition pdef = possible.getDefinition();
 							if (checkName(pdef, floorNames) && checkActions(pdef, "climb-down")
 									&& possible.getSize() != null) {
 								opposite = possible;

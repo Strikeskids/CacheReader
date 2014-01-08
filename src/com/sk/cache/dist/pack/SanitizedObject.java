@@ -2,7 +2,6 @@ package com.sk.cache.dist.pack;
 
 import com.sk.cache.wrappers.ObjectDefinition;
 import com.sk.cache.wrappers.Script;
-import com.sk.cache.wrappers.loaders.ScriptLoader;
 
 public class SanitizedObject {
 	public String name;
@@ -17,7 +16,7 @@ public class SanitizedObject {
 		if (source.configId != -1) {
 			this.settingId = source.configId;
 		} else if (source.scriptId != -1) {
-			Script loaded = new ScriptLoader(source.getLoader().getCacheSystem()).load(source.scriptId);
+			Script loaded = source.getLoader().getCacheSystem().scriptLoader.load(source.scriptId);
 			this.settingId = loaded.configId;
 			this.lowSettingBit = (byte) loaded.lowerBitIndex;
 			this.highSettingBit = (byte) loaded.upperBitIndex;

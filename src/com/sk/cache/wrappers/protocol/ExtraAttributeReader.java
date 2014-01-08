@@ -23,7 +23,7 @@ public class ExtraAttributeReader extends ProtocolReader {
 				formatAttribute(output, index, gotten);
 			}
 			if (destination instanceof ProtocolWrapper) {
-				ProtocolWrapper<?> wrap = (ProtocolWrapper<?>) destination;
+				ProtocolWrapper wrap = (ProtocolWrapper) destination;
 				if (wrap.attributes != null)
 					wrap.attributes.put(index, gotten);
 			}

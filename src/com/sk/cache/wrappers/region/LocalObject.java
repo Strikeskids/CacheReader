@@ -8,7 +8,7 @@ import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 public class LocalObject {
 
-	private WrapperLoader<?> loader;
+	private final WrapperLoader<?> loader;
 	public final int id;
 	public final byte x, y, plane;
 	public final byte type, orientation;
@@ -22,9 +22,12 @@ public class LocalObject {
 		this.plane = (byte) plane;
 		this.type = (byte) type;
 		this.orientation = (byte) orientation;
+		this.loader = loader;
 	}
-	
+
 	public ObjectDefinition getDefinition() {
+		if (loader == null)
+			return null;
 		ObjectDefinition ret = def.get();
 		if (ret == null) {
 			ret = loader.getCacheSystem().objectLoader.load(this.id);
@@ -55,7 +58,7 @@ public class LocalObject {
 		}
 		return null;
 	}
-	
+
 	public Dimension getSize() {
 		return this.dim;
 	}

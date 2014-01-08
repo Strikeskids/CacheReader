@@ -19,11 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import com.sk.cache.DataSource;
 import com.sk.cache.dist.unpack.PackedRegion;
 import com.sk.cache.dist.unpack.ProtocolUnpacker;
 import com.sk.cache.dist.unpack.Unpacker;
-import com.sk.cache.fs.CacheSource;
+import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.gui.GridPainter.GridGetter;
 import com.sk.cache.gui.GridPainter.Side;
 import com.sk.cache.wrappers.ObjectDefinition;
@@ -40,7 +39,7 @@ public class RegionViewer {
 	private static boolean unpack = true;
 
 	public static void main(String[] args) throws IOException {
-		CacheSource sys = new CacheSource(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
+		CacheSystem sys = new CacheSystem(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE"));
 		final Unpacker<PackedRegion> unpckr = new ProtocolUnpacker<>(PackedRegion.class, new RandomAccessFile(
 				"packed/PackedRegion.packed", "r"));
 		final RegionLoader rl = new RegionLoader(sys);
@@ -117,7 +116,7 @@ public class RegionViewer {
 				coords.setText(x + " " + y);
 				for (LocalObject o : region.objects.getObjects()) {
 					if (o.x == x && o.y == y && o.plane == plane) {
-						objectModel.addElement(region.getLoader().objectDefinitionLoader.load(o.id));
+						objectModel.addElement(region.getLoader().getCacheSystem().objectLoader.load(o.id));
 					}
 				}
 			}
