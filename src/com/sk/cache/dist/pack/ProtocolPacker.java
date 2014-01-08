@@ -12,7 +12,7 @@ import java.util.Map;
 import com.sk.cache.dist.unpack.Packed;
 import com.sk.cache.dist.unpack.ProtocolField;
 import com.sk.cache.dist.unpack.ProtocolType;
-import com.sk.cache.wrappers.WrapperLoader;
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 public class ProtocolPacker<T extends Packed> extends Packer<T> {
 

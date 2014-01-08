@@ -1,11 +1,12 @@
-package com.sk.cache.wrappers.region;
+package com.sk.cache.wrappers.loaders;
 
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
+import com.sk.cache.wrappers.region.LocalObjects;
 import com.sk.datastream.Stream;
 
 public class LocalObjectLoader extends RegionDataLoader<LocalObjects> {
 
-	public LocalObjectLoader(CacheSystem cacheSystem) {
+	public LocalObjectLoader(CacheSource cacheSystem) {
 		super(cacheSystem);
 	}
 

@@ -8,10 +8,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.sk.cache.DataSource;
-import com.sk.cache.fs.CacheSystem;
-import com.sk.cache.wrappers.ItemDefinitionLoader;
-import com.sk.cache.wrappers.ObjectDefinitionLoader;
-import com.sk.cache.wrappers.region.RegionLoader;
+import com.sk.cache.fs.CacheSource;
+import com.sk.cache.wrappers.loaders.ItemDefinitionLoader;
+import com.sk.cache.wrappers.loaders.ObjectDefinitionLoader;
+import com.sk.cache.wrappers.loaders.RegionLoader;
 
 public class PackDriver {
 
@@ -19,7 +19,7 @@ public class PackDriver {
 
 	public static void main(String[] args) throws Exception {
 		long start = System.currentTimeMillis();
-		CacheSystem sys = new CacheSystem(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
+		CacheSource sys = new CacheSource(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
 		File out = new File("packed" + System.currentTimeMillis() + ".zip").getAbsoluteFile();
 		zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(out)));
 		pack(new RegionPacker(new RegionLoader(sys)));

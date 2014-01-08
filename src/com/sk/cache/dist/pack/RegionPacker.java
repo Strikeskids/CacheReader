@@ -1,8 +1,8 @@
 package com.sk.cache.dist.pack;
 
 import com.sk.cache.dist.unpack.PackedRegion;
+import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.region.Region;
-import com.sk.cache.wrappers.region.RegionLoader;
 
 public class RegionPacker extends ProtocolPacker<PackedRegion> {
 

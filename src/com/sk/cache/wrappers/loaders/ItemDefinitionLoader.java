@@ -1,16 +1,17 @@
-package com.sk.cache.wrappers;
+package com.sk.cache.wrappers.loaders;
 
 import java.util.Arrays;
 
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
 import com.sk.cache.fs.FileData;
+import com.sk.cache.wrappers.ItemDefinition;
 
 public class ItemDefinitionLoader extends ProtocolWrapperLoader {
 
 	private static final String[] antiEdible = { "Burnt", "Rotten", "Poison", "Fish-like thing",
 			"Dwarven rock cake" };
 
-	public ItemDefinitionLoader(CacheSystem cacheSystem) {
+	public ItemDefinitionLoader(CacheSource cacheSystem) {
 		super(cacheSystem,cacheSystem.getCacheType(19));
 	}
 

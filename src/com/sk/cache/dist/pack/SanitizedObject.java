@@ -2,7 +2,7 @@ package com.sk.cache.dist.pack;
 
 import com.sk.cache.wrappers.ObjectDefinition;
 import com.sk.cache.wrappers.Script;
-import com.sk.cache.wrappers.ScriptLoader;
+import com.sk.cache.wrappers.loaders.ScriptLoader;
 
 public class SanitizedObject {
 	public String name;

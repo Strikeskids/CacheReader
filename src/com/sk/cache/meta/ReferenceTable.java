@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
 import com.sk.datastream.ByteStream;
 import com.sk.datastream.Stream;
 
@@ -11,7 +11,7 @@ public class ReferenceTable {
 
 	private static final int MINIMUM_FORMAT_FOR_VERSION = 6;
 	private static final int FLAG_IDENTIFIERS = 0x1, FLAG_WHIRLPOOL = 0x2;
-	private final CacheSystem cache;
+	private final CacheSource cache;
 	private final int id;
 
 	private int flags;
@@ -24,7 +24,7 @@ public class ReferenceTable {
 	private int[] ids;
 	private int[][] children;
 
-	public ReferenceTable(CacheSystem cache, int id) {
+	public ReferenceTable(CacheSource cache, int id) {
 		this.cache = cache;
 		this.id = id;
 	}

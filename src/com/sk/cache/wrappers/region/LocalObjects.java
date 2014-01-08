@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.sk.cache.wrappers.StreamedWrapper;
+import com.sk.cache.wrappers.loaders.LocalObjectLoader;
 import com.sk.datastream.Stream;
 
 public class LocalObjects extends StreamedWrapper<LocalObjectLoader> {

@@ -1,11 +1,12 @@
-package com.sk.cache.wrappers;
+package com.sk.cache.wrappers.loaders;
 
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
 import com.sk.cache.fs.FileData;
+import com.sk.cache.wrappers.ObjectDefinition;
 
 public class ObjectDefinitionLoader extends ProtocolWrapperLoader {
 
-	public ObjectDefinitionLoader(CacheSystem cacheSystem) {
+	public ObjectDefinitionLoader(CacheSource cacheSystem) {
 		super(cacheSystem, cacheSystem.getCacheType(16));
 	}
 

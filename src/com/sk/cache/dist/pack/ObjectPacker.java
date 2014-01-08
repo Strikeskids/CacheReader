@@ -2,7 +2,7 @@ package com.sk.cache.dist.pack;
 
 import com.sk.cache.dist.unpack.PackedObject;
 import com.sk.cache.wrappers.ObjectDefinition;
-import com.sk.cache.wrappers.ObjectDefinitionLoader;
+import com.sk.cache.wrappers.loaders.ObjectDefinitionLoader;
 
 public class ObjectPacker extends ProtocolPacker<PackedObject> {
 

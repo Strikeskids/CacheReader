@@ -4,13 +4,13 @@ import java.io.IOException;
 import com.sk.cache.DataSource;
 import com.sk.cache.meta.ReferenceTable;
 
-public class CacheSystem {
+public class CacheSource {
 
 	private final DataSource source;
 	private final CacheType[] types = new CacheType[DataSource.MAX_INDEX_FILES];
 	private final IndexFile metaIndex;
 
-	public CacheSystem(DataSource source) {
+	public CacheSource(DataSource source) {
 		this.source = source;
 		this.metaIndex = new MetaIndexFile(source);
 	}

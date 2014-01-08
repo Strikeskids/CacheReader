@@ -2,6 +2,7 @@ package com.sk.cache.wrappers;
 
 import java.util.Map;
 
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.datastream.Stream;
 

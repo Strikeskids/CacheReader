@@ -1,6 +1,7 @@
 package com.sk.cache.wrappers.region;
 
 import com.sk.cache.wrappers.StreamedWrapper;
+import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.datastream.Stream;
 
 public class Region extends StreamedWrapper<RegionLoader> {

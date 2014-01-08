@@ -1,5 +1,6 @@
 package com.sk.cache.wrappers;
 
+import com.sk.cache.wrappers.loaders.ItemDefinitionLoader;
 import com.sk.cache.wrappers.protocol.ArrayProtocol;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ExtraAttributeReader;

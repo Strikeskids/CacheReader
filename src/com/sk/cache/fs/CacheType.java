@@ -18,7 +18,7 @@ public class CacheType {
 	private final DataSource source;
 	private final int id;
 
-	public CacheType(CacheSystem source, int id) {
+	public CacheType(CacheSource source, int id) {
 		this.source = source.getSourceSystem();
 		this.id = id;
 		this.table = new ReferenceTable(source, id);

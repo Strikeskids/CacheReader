@@ -1,14 +1,15 @@
-package com.sk.cache.wrappers;
+package com.sk.cache.wrappers.loaders;
 
 import com.sk.cache.fs.Archive;
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
 import com.sk.cache.fs.FileData;
+import com.sk.cache.wrappers.Script;
 
 public class ScriptLoader extends WrapperLoader {
 
 	private final Archive source;
 
-	public ScriptLoader(CacheSystem cacheSystem) {
+	public ScriptLoader(CacheSource cacheSystem) {
 		super(cacheSystem);
 		this.source = cacheSystem.getCacheType(2).getArchive(69);
 	}

@@ -23,13 +23,13 @@ import com.sk.cache.DataSource;
 import com.sk.cache.dist.unpack.PackedRegion;
 import com.sk.cache.dist.unpack.ProtocolUnpacker;
 import com.sk.cache.dist.unpack.Unpacker;
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
 import com.sk.cache.gui.GridPainter.GridGetter;
 import com.sk.cache.gui.GridPainter.Side;
 import com.sk.cache.wrappers.ObjectDefinition;
+import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.Region;
-import com.sk.cache.wrappers.region.RegionLoader;
 
 public class RegionViewer {
 
@@ -40,7 +40,7 @@ public class RegionViewer {
 	private static boolean unpack = true;
 
 	public static void main(String[] args) throws IOException {
-		CacheSystem sys = new CacheSystem(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
+		CacheSource sys = new CacheSource(new DataSource(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE")));
 		final Unpacker<PackedRegion> unpckr = new ProtocolUnpacker<>(PackedRegion.class, new RandomAccessFile(
 				"packed/PackedRegion.packed", "r"));
 		final RegionLoader rl = new RegionLoader(sys);

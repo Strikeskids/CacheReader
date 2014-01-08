@@ -1,18 +1,17 @@
-package com.sk.cache.wrappers.region;
+package com.sk.cache.wrappers.loaders;
 
 import com.sk.cache.fs.Archive;
-import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheSource;
 import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 import com.sk.cache.wrappers.Wrapper;
-import com.sk.cache.wrappers.WrapperLoader;
 import com.sk.datastream.Stream;
 
 public abstract class RegionDataLoader<T extends Wrapper<?>> extends WrapperLoader {
 
 	protected final CacheType cache;
 
-	public RegionDataLoader(CacheSystem cacheSystem) {
+	public RegionDataLoader(CacheSource cacheSystem) {
 		super(cacheSystem);
 		this.cache = cacheSystem.getCacheType(5);
 	}

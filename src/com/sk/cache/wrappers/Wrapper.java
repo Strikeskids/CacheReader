@@ -6,6 +6,8 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.sk.cache.wrappers.loaders.WrapperLoader;
+
 public abstract class Wrapper<T extends WrapperLoader> {
 
 	protected final T loader;

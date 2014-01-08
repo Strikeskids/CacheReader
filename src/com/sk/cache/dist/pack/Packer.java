@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.zip.Deflater;
 
 import com.sk.cache.dist.unpack.Packed;
-import com.sk.cache.wrappers.WrapperLoader;
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 public abstract class Packer<T extends Packed> {
 
