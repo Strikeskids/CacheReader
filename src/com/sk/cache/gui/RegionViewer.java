@@ -120,6 +120,11 @@ public class RegionViewer {
 					}
 				}
 			}
+
+			@Override
+			public void clickCell(int x, int y) {
+				
+			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
 		if (shouldShowObjects)
 			frame.getContentPane().add(new JScrollPane(new JList<>(objectModel)), BorderLayout.EAST);

@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
@@ -38,17 +39,31 @@ public class GridPainter extends JPanel {
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				int xloc = (e.getX() - OUTSIDE_PAD - CELL_SIZE - CELL_PAD) / (CELL_PAD + CELL_SIZE);
-				int yloc = rows - (e.getY() - OUTSIDE_PAD) / (CELL_PAD + CELL_SIZE);
-				if (xloc < 0 || yloc < 0 || xloc >= width || yloc >= height)
-					return;
-				if (curCell.y != yloc || curCell.x != xloc) {
-					getter.hoverCell(xloc, yloc);
-					curCell.x = xloc;
-					curCell.y = yloc;
+				if (updateCurrentCell(e.getPoint())) {
+					getter.hoverCell(curCell.x, curCell.y);
 				}
 			}
 		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				updateCurrentCell(e.getPoint());
+				getter.clickCell(curCell.x, curCell.y);
+			}
+		});
+	}
+
+	public boolean updateCurrentCell(Point mouse) {
+		int xloc = (mouse.x - OUTSIDE_PAD - CELL_SIZE - CELL_PAD) / (CELL_PAD + CELL_SIZE);
+		int yloc = rows - (mouse.y - OUTSIDE_PAD) / (CELL_PAD + CELL_SIZE);
+		if (xloc < 0 || yloc < 0 || xloc >= cols || yloc >= rows)
+			return false;
+		if (curCell.y != yloc || curCell.x != xloc) {
+			curCell.x = xloc;
+			curCell.y = yloc;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -86,6 +101,8 @@ public class GridPainter extends JPanel {
 		public Color getColor(int x, int y, Side side);
 
 		public void hoverCell(int x, int y);
+
+		public void clickCell(int x, int y);
 	}
 
 	public enum Side {

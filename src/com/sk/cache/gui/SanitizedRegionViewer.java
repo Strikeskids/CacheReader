@@ -29,11 +29,13 @@ import com.sk.cache.gui.GridPainter.GridGetter;
 import com.sk.cache.gui.GridPainter.Side;
 import com.sk.cache.wrappers.ObjectDefinition;
 import com.sk.cache.wrappers.loaders.RegionLoader;
+import com.sk.cache.wrappers.region.LocalObjects;
 import com.sk.cache.wrappers.region.Region;
 
 public class SanitizedRegionViewer {
 
 	private static SanitizedRegion region;
+	private static LocalObjects objects;
 	private static int plane;
 	private static boolean shouldShowObjects = false;
 
@@ -59,6 +61,7 @@ public class SanitizedRegionViewer {
 						int y = Integer.parseInt(yval.getText());
 						System.out.println(x | y << 7);
 						Region r = rl.load(x, y);
+						objects = r == null ? null : r.objects;
 						region = r == null ? null : new SanitizedRegion(r);
 						frame.repaint();
 					}
@@ -127,7 +130,12 @@ public class SanitizedRegionViewer {
 
 			@Override
 			public void hoverCell(int x, int y) {
+				
+			}
 
+			@Override
+			public void clickCell(int x, int y) {
+				System.out.println(objects.getObjectsAt(x, y, plane));
 			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
 		if (shouldShowObjects)
