@@ -23,8 +23,6 @@ public class LocalObject {
 		this.type = (byte) type;
 		this.orientation = (byte) orientation;
 		this.loader = loader;
-		if (ly == 9 && lx == 30 || ly <= 8 && ly >= 7 && lx >= 4 && lx <= 5)
-			System.out.println(this + " " + getDefinition());
 	}
 
 	public ObjectDefinition getDefinition() {
@@ -61,19 +59,16 @@ public class LocalObject {
 
 	public Dimension getSize() {
 		if (this.dim == null) {
-			this.dim = createSize();
+			ObjectDefinition def = getDefinition();
+			if (def != null) {
+				int lenx = orientation % 2 == 0 ? def.width : def.height;
+				int leny = orientation % 2 == 0 ? def.height : def.width;
+				this.dim = new Dimension(lenx, leny);
+			} else {
+				return new Dimension(1, 1);
+			}
 		}
 		return this.dim;
-	}
-
-	private Dimension createSize() {
-		ObjectDefinition def = getDefinition();
-		if (def != null) {
-			int lenx = orientation % 2 == 0 ? def.width : def.height;
-			int leny = orientation % 2 == 0 ? def.height : def.width;
-			return new Dimension(lenx, leny);
-		}
-		return new Dimension(1, 1);
 	}
 
 	private int flipDirection(int dir) {
@@ -172,7 +167,11 @@ public class LocalObject {
 		ret.append(y);
 		ret.append(", ");
 		ret.append(plane);
-		ret.append(") ");
+		ret.append(")[");
+		ret.append(getSize().width);
+		ret.append(" x ");
+		ret.append(getSize().height);
+		ret.append("]");
 		ret.append(type);
 		ret.append(" ");
 		ret.append(orientation);
