@@ -23,7 +23,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 	public ProtocolPacker(WrapperLoader<?> loader, Class<?> source, Class<T> storage, int endId) {
 		super(loader, source, storage, endId);
 		this.sourceFields = new HashMap<>();
-		for (Field f : source.getDeclaredFields()) {
+		for (Field f : source.getFields()) {
 			sourceFields.put(f.getName(), f);
 		}
 		this.fields = ProtocolType.extractAllFields(storage, false);
