@@ -23,6 +23,8 @@ public class LocalObject {
 		this.type = (byte) type;
 		this.orientation = (byte) orientation;
 		this.loader = loader;
+		if (ly == 9 && lx == 30 || ly <= 8 && ly >= 7 && lx >= 4 && lx <= 5)
+			System.out.println(this + " " + getDefinition());
 	}
 
 	public ObjectDefinition getDefinition() {
@@ -49,10 +51,8 @@ public class LocalObject {
 		if (type == 22 && def.blockType == 1) {
 			return getFloorFlagger(x, y, plane);
 		} else if (9 <= type && type <= 21 && def.blockType != 0) {
-			int lenx = def.type % 2 != 0 ? def.width : def.height;
-			int leny = def.type % 2 != 0 ? def.height : def.width;
-			this.dim = new Dimension(lenx, leny);
-			return getInteractiveFlagger(x, lenx, y, leny, plane, def.walkable, !def.walkable2);
+			Dimension size = getSize();
+			return getInteractiveFlagger(x, size.width, y, size.height, plane, def.walkable, !def.walkable2);
 		} else if (0 <= type && type <= 3) {
 			return getBoundaryFlagger(x, y, plane, type, orientation, def.walkable, !def.walkable2);
 		}
@@ -60,7 +60,20 @@ public class LocalObject {
 	}
 
 	public Dimension getSize() {
+		if (this.dim == null) {
+			this.dim = createSize();
+		}
 		return this.dim;
+	}
+
+	private Dimension createSize() {
+		ObjectDefinition def = getDefinition();
+		if (def != null) {
+			int lenx = orientation % 2 == 0 ? def.width : def.height;
+			int leny = orientation % 2 == 0 ? def.height : def.width;
+			return new Dimension(lenx, leny);
+		}
+		return new Dimension(1, 1);
 	}
 
 	private int flipDirection(int dir) {
