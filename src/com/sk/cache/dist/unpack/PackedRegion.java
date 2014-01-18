@@ -1,13 +1,8 @@
 package com.sk.cache.dist.unpack;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class PackedRegion extends Packed {
 	public byte[][][] flags;
-	public byte[][] stairs;
-
-	public Map<Integer, byte[]> stairMap;
 
 	public static final int WIDTH = 64, HEIGHT = 64;
 	private static final byte[][] empty = new byte[WIDTH][];
@@ -42,23 +37,7 @@ public class PackedRegion extends Packed {
 			return 0xff;
 	}
 
-	public byte[] getStairData(int x, int y, int z) {
-		return stairMap.get(x | (y << 6) | (z << 12));
-	}
-
 	@Override
 	public void initialize() {
-		if (stairMap != null)
-			return;
-		stairMap = new HashMap<Integer, byte[]>();
-		for (byte[] stair : stairs) {
-			for (int dx = 0; dx < stair[3]; ++dx) {
-				for (int dy = 0; dy < stair[4]; ++dy) {
-					stairMap.put((stair[0] + dx) | (stair[1] + dy) << 6 | (stair[2]) << 12, new byte[] { stair[3],
-							stair[4], (byte) dx, (byte) dy, stair[5] });
-				}
-			}
-		}
-		stairs = null;
 	}
 }
