@@ -63,12 +63,30 @@ public class Archive {
 		children = new HashMap<>();
 		
 		createDecompressedStream();
+		
+		if (metaData.getChildCount() > 1) {
+			unpackMultipleChildren();
+		} else {
+			unpackSingleChild();
+		}
+		
+		data = null;
+	}
+	
+	private void unpackSingleChild() {
+		addFile(data.getAllBytes(), 0);
+	}
+	
+	private void unpackMultipleChildren() {
 		getPartitions();
 		byte[][] childBuffers = initializeTemporaryChildBuffers();
 		transferDataToBuffers(childBuffers);
 		createFiles(childBuffers);
-		
-		data = null;
+	}
+
+	private void createDecompressedStream() {
+		byte[] decompressed = new ByteStream(wrapped).decompress();
+		data = new ByteStream(decompressed);
 	}
 
 	private void getPartitions() {
@@ -116,13 +134,12 @@ public class Archive {
 	
 	private void createFiles(byte[][] buffers) {
 		for (int i = 0; i < buffers.length; ++i) {
-			int index = metaData.getChildIndex(i);
-			addFile(new FileData(this, index, metaData.getChild(index).getIdentifier(), buffers[i]));
+			addFile(buffers[i], i);
 		}
 	}
-
-	private void createDecompressedStream() {
-		byte[] decompressed = new ByteStream(wrapped).decompress();
-		data = new ByteStream(decompressed);
+	
+	private void addFile(byte[] data, int i) {
+		int index = metaData.getChildIndex(i);
+		addFile(new FileData(this, index, metaData.getChild(index).getIdentifier(), data));
 	}
 }
