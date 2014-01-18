@@ -1,0 +1,18 @@
+01 jag_string name
+02 jag_string
+03 array ubyte ushort configId int configStartValue int configEndValue
+04 array ubyte ushort scriptId int scriptStartValue int scriptEndValue
+05 ushort
+06 ubyte
+07 ubyte
+08 set true
+09 ubyte difficulty
+10 array ubyte int -
+12 int
+13 array ubyte ushort -
+14 array ubyte ubyte - ubyte -
+15 ushort
+17 big_smart
+18 array ubyte int - int - int - string -
+19 array ubyte int - int - int - string -
+249 ea

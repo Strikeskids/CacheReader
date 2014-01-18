@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
+import com.sk.Debug;
 import com.sk.cache.wrappers.protocol.extractor.StreamExtractor;
 import com.sk.datastream.Stream;
 
@@ -25,6 +26,8 @@ public class FieldExtractor {
 		Object newValue = extractor.get(s);
 		if (fieldName != null) {
 			setValue(destination, minLoc, type, fieldName, newValue);
+		} else if (Debug.on) {
+			System.out.println(type + " " + newValue);
 		}
 	}
 

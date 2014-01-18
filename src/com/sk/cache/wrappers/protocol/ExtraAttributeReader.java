@@ -29,7 +29,7 @@ public class ExtraAttributeReader extends ProtocolReader {
 			}
 		}
 		if (output.length() > 0) {
-			System.out.printf("Skip 249 %d [%s]%n", count, output);
+			System.out.printf("249 %d [%s]%n", count, output);
 		}
 	}
 

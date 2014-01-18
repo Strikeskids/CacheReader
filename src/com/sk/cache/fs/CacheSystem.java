@@ -12,6 +12,7 @@ import com.sk.cache.wrappers.Wrapper;
 import com.sk.cache.wrappers.loaders.ItemDefinitionLoader;
 import com.sk.cache.wrappers.loaders.LocalObjectLoader;
 import com.sk.cache.wrappers.loaders.ObjectDefinitionLoader;
+import com.sk.cache.wrappers.loaders.QuestDefinitionLoader;
 import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.loaders.ScriptLoader;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
@@ -25,6 +26,7 @@ public class CacheSystem {
 	public final ScriptLoader scriptLoader;
 	public final RegionLoader regionLoader;
 	public final LocalObjectLoader localObjectLoader;
+	public final QuestDefinitionLoader questLoader;
 
 	public CacheSystem(CacheSource cache) {
 		this.cache = cache;
@@ -33,6 +35,7 @@ public class CacheSystem {
 		addLoader(scriptLoader = new ScriptLoader(this));
 		addLoader(regionLoader = new RegionLoader(this));
 		addLoader(localObjectLoader = new LocalObjectLoader(this));
+		addLoader(questLoader = new QuestDefinitionLoader(this));
 	}
 
 	public CacheSystem(DataSource source) {
