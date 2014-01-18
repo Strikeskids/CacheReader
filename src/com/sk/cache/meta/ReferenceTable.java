@@ -201,5 +201,9 @@ public class ReferenceTable {
 			entries.get(entryId).getChild(childId).setIdentifier(data.getInt());
 		}
 	}
+	
+	public Map<Integer, ArchiveMeta> getEntries() {
+		return entries;
+	}
 
 }

@@ -1,4 +1,5 @@
 package com.sk.cache.meta;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,11 +35,11 @@ public class ArchiveMeta extends FileMeta {
 		maximumKey = Math.max(key, maximumKey);
 		childIndexOrder.add(key);
 	}
-	
+
 	public void addChild(int key) {
 		putChild(key, new FileMeta(key));
 	}
-	
+
 	public int getChildIndex(int order) {
 		return childIndexOrder.get(order);
 	}
@@ -93,6 +94,10 @@ public class ArchiveMeta extends FileMeta {
 
 	public void setChildCount(int childCount) {
 		this.childCount = childCount;
+	}
+
+	public Map<Integer, FileMeta> getChildren() {
+		return children;
 	}
 
 }
