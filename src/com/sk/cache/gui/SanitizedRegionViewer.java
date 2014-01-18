@@ -29,12 +29,14 @@ import com.sk.cache.gui.GridPainter.GridGetter;
 import com.sk.cache.gui.GridPainter.Side;
 import com.sk.cache.wrappers.ObjectDefinition;
 import com.sk.cache.wrappers.loaders.RegionLoader;
+import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.LocalObjects;
 import com.sk.cache.wrappers.region.Region;
 
 public class SanitizedRegionViewer {
 
 	private static SanitizedRegion region;
+	private static Region source;
 	private static LocalObjects objects;
 	private static int plane;
 	private static boolean shouldShowObjects = false;
@@ -60,9 +62,9 @@ public class SanitizedRegionViewer {
 						int x = Integer.parseInt(xval.getText());
 						int y = Integer.parseInt(yval.getText());
 						System.out.println(x | y << 7);
-						Region r = rl.load(x, y);
-						objects = r == null ? null : r.objects;
-						region = r == null ? null : new SanitizedRegion(r);
+						source = rl.load(x, y);
+						objects = source == null ? null : source.objects;
+						region = source == null ? null : new SanitizedRegion(source);
 						frame.repaint();
 					}
 				});
@@ -77,7 +79,7 @@ public class SanitizedRegionViewer {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_UP) {
-					if (plane < 4)
+					if (plane < 3)
 						plane++;
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					if (plane > 0)
@@ -130,12 +132,15 @@ public class SanitizedRegionViewer {
 
 			@Override
 			public void hoverCell(int x, int y) {
-				
+
 			}
 
 			@Override
 			public void clickCell(int x, int y) {
-				System.out.println(objects.getObjectsAt(x, y, plane));
+				for (LocalObject o : objects.getObjectsAt(x, y, plane)) {
+					System.out.println(o + " " + o.getDefinition());
+				}
+				System.out.println(Integer.toHexString(source.landscapeData[plane][x][y]));
 			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
 		if (shouldShowObjects)
