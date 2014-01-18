@@ -167,11 +167,11 @@ public class LocalObject {
 		ret.append(y);
 		ret.append(", ");
 		ret.append(plane);
-		ret.append(")[");
-		ret.append(getSize().width);
-		ret.append(" x ");
-		ret.append(getSize().height);
-		ret.append("]");
+		ret.append(") - (");
+		ret.append(getSize().width + x - 1);
+		ret.append(", ");
+		ret.append(getSize().height + y - 1);
+		ret.append(") ");
 		ret.append(type);
 		ret.append(" ");
 		ret.append(orientation);
