@@ -2,6 +2,7 @@ package com.sk.cache.wrappers.protocol;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 import com.sk.cache.wrappers.protocol.extractor.StreamExtractor;
 import com.sk.datastream.Stream;
@@ -27,6 +28,7 @@ public class FieldExtractor {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void setValue(Object destination, int minLoc, int type, String fieldName, Object newValue) {
 		if (fieldName == null)
 			return;
@@ -35,6 +37,9 @@ public class FieldExtractor {
 			Field field = clazz.getField(fieldName);
 			if (field.getType().isArray() && (newValue == null || !newValue.getClass().isArray())) {
 				Array.set(field.get(destination), type - minLoc, newValue);
+			} else if (Collection.class.isAssignableFrom(field.getType())
+					&& (newValue == null || !newValue.getClass().equals(field.getType()))) {
+				((Collection) field.get(destination)).add(newValue);
 			} else {
 				field.set(destination, newValue);
 			}
