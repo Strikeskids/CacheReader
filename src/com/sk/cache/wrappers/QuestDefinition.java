@@ -13,7 +13,7 @@ public class QuestDefinition extends ProtocolWrapper {
 
 	public String name;
 	public int scriptId, scriptStartValue, scriptEndValue, configId, configStartValue, configEndValue;
-	public int difficulty;
+	public int questPoints;
 
 	public QuestDefinition(QuestDefinitionLoader loader, int id) {
 		super(loader, id, protocol);
@@ -27,7 +27,7 @@ public class QuestDefinition extends ProtocolWrapper {
 
 	private static final ProtocolGroup protocol = new ProtocolGroup();
 	static {
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "difficulty")}, 9).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "questPoints")}, 9).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.JAG_STRING, "name")}, 1).addSelfToGroup(protocol);
 		new ExtraAttributeReader().addSelfToGroup(protocol);
 		new ArrayProtocol(ParseType.UBYTE, new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE), new FieldExtractor(ParseType.UBYTE)}, 14).addSelfToGroup(protocol);

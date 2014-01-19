@@ -6,7 +6,7 @@
 06 ubyte
 07 ubyte
 08 set true
-09 ubyte difficulty
+09 ubyte questPoints
 10 array ubyte int -
 12 int
 13 array ubyte ushort -
