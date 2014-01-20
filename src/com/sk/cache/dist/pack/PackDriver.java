@@ -4,6 +4,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -27,7 +29,7 @@ public class PackDriver {
 		zos.close();
 		System.out.println("Finished all packing");
 		System.out.println("Took " + (System.currentTimeMillis() - start) + " millis");
-		Runtime.getRuntime().exec("cp " + out + " " + new File(out.getParent(), "packed.zip"));
+		Files.copy(out.toPath(), new File(out.getParent(), "packed.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	private static void pack(Packer<?> pckr) throws IOException {
