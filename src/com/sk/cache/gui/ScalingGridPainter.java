@@ -5,11 +5,15 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.EnumSet;
 
 import javax.swing.JPanel;
@@ -21,15 +25,25 @@ public abstract class ScalingGridPainter extends JPanel {
 	private Point bottomCorner = new Point(3000, 3000);
 	private static final Color DEFAULT_WALL_COLOR = new Color(150, 150, 150, 50);
 
-	private Point dragStart = null, dragCenter = null;
+	private AffineTransform transform = new AffineTransform();
+
+	private int scaleAmount = 0;
+	private BufferedImage transformImage;
+	private Point dragStart = null;
 
 	public ScalingGridPainter() {
 		addMouseWheelListener(new MouseWheelListener() {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				if (e.getScrollAmount() != 0) {
-					if (zoom(e.getPoint(), e.getWheelRotation()))
+					scaleAmount -= e.getWheelRotation();
+					createTransform(e.getPoint());
+					repaint();
+					if ((e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) == 0) {
+						finishTransform(e.getPoint());
 						repaint();
+					}
+					e.consume();
 				}
 			}
 		});
@@ -37,11 +51,9 @@ public abstract class ScalingGridPainter extends JPanel {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if (dragStart != null) {
-					Point next = e.getPoint();
-					int xdif = next.x - dragStart.x;
-					int ydif = next.y - dragStart.y;
-					bottomCorner.move(dragCenter.x - xdif / cellSize, dragCenter.y + ydif / cellSize);
+					createTransform(e.getPoint());
 					repaint();
+					e.consume();
 				}
 			}
 		});
@@ -49,53 +61,78 @@ public abstract class ScalingGridPainter extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					dragStart = e.getPoint();
-					dragCenter = new Point(bottomCorner);
+					createTransform(e.getPoint());
+					e.consume();
 				}
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				dragStart = null;
-				dragCenter = null;
+				if (dragStart != null) {
+					finishTransform(e.getPoint());
+					e.consume();
+				}
 			}
 		});
 	}
 
-	private boolean zoom(Point around, int amount) {
-		if (amount == 0)
-			return false;
-		int offX = around.x;
-		int offY = getHeight() - around.y;
-		Point cell = getCellAtPoint(around);
-		if (!changeScale(-amount))
-			return false;
-		bottomCorner.move(cell.x, cell.y);
-		int cellX = offX / cellSize, cellY = offY / cellSize;
-		bottomCorner.translate(-cellX, -cellY);
-		return true;
+	private void finishTransform(Point end) {
+		if (dragStart == null)
+			return;
+		int xdif = end.x - dragStart.x;
+		int ydif = end.y - dragStart.y;
+		int newSize = changeScale(scaleAmount);
+		if (newSize != cellSize) {
+			Point cell = getCellAtPoint(dragStart);
+			cell.translate(-bottomCorner.x, -bottomCorner.y);
+			bottomCorner.translate(cell.x - cell.x * cellSize / newSize, cell.y - cell.y * cellSize / newSize);
+		}
+		bottomCorner.translate(-xdif / cellSize, ydif / cellSize);
+
+		cellSize = newSize;
+		scaleAmount = 0;
+		dragStart = null;
+		transform.setToIdentity();
+		repaint();
 	}
 
-	private boolean changeScale(int dif) {
-		int start = cellSize;
-		cellSize += dif * 2;
+	private void createTransform(Point current) {
+		initializeDrag(current);
+		transform.setToIdentity();
+		transform.translate(current.x, current.y);
+		if (scaleAmount != 0) {
+			double newSize = changeScale(scaleAmount);
+			transform.scale(newSize / cellSize, newSize / cellSize);
+		}
+		transform.translate(-dragStart.x, -dragStart.y);
+	}
+
+	private void initializeDrag(Point start) {
+		if (dragStart == null)
+			dragStart = start;
+	}
+
+	private int changeScale(int dif) {
+		int cellSize = this.cellSize + dif * 2;
 		if (cellSize < 3)
 			cellSize = 3;
 		if (cellSize > 31)
 			cellSize = 31;
-		return start != cellSize;
+		return cellSize;
 	}
 
-	@Override
-	public void paintComponent(Graphics g1) {
+	public void paintGrid(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
+		Rectangle bounds = g1.getClipBounds();
+		if (bounds == null)
+			bounds = new Rectangle(0, 0, getWidth(), getHeight());
 		g.setColor(Color.black);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		Dimension cells = getCellCount();
+		g.fill(bounds);
+		Dimension cells = getCellCount(bounds.getSize());
 		long start = System.currentTimeMillis();
 		for (Point cell = new Point(bottomCorner); cell.y < cells.height + bottomCorner.y; ++cell.y) {
 			for (cell.x = bottomCorner.x; cell.x < cells.width + bottomCorner.x; ++cell.x) {
-				Point curPoint = getTopLeftCellPoint(cell);
+				Point curPoint = getTopLeftCellPoint(cell, bounds);
 				for (CellPart part : CellPart.values()) {
 					Color cur = getColor(part, cell.x, cell.y);
 					if (cur == null) {
@@ -113,9 +150,40 @@ public abstract class ScalingGridPainter extends JPanel {
 		System.out.println("Paint time " + (System.currentTimeMillis() - start));
 	}
 
+	private void resizeTransformImage() {
+		if (transformImage == null || transformImage.getWidth() != getWidth()
+				|| transformImage.getHeight() != getHeight()) {
+			transformImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		}
+	}
+
+	private void paintToTransformImage() {
+		resizeTransformImage();
+		Graphics2D g = transformImage.createGraphics();
+		paintGrid(g);
+		g.dispose();
+	}
+
+	@Override
+	public void paintComponent(Graphics g1) {
+		super.paintComponent(g1);
+		if (transformImage == null || dragStart == null) {
+			resizeTransformImage();
+			paintToTransformImage();
+		}
+		Graphics2D g = (Graphics2D) g1;
+		if (transform != null)
+			g.setTransform(transform);
+		g.drawImage(transformImage, 0, 0, null);
+	}
+
 	public Dimension getCellCount() {
-		int width = getWidth();
-		int height = getHeight();
+		return getCellCount(getSize());
+	}
+
+	public Dimension getCellCount(Dimension size) {
+		int width = size.width;
+		int height = size.height;
 		if (width % cellSize != 0)
 			width += cellSize;
 		if (height % cellSize != 0)
@@ -129,9 +197,11 @@ public abstract class ScalingGridPainter extends JPanel {
 		return new Point(bottomCorner.x + ofx / cellSize, bottomCorner.y + ofy / cellSize);
 	}
 
-	public Point getTopLeftCellPoint(Point cell) {
-		return new Point((cell.x - bottomCorner.x) * cellSize, getHeight() - (cell.y - bottomCorner.y + 1)
+	public Point getTopLeftCellPoint(Point cell, Rectangle bounds) {
+		Point ret = new Point(bounds.getLocation());
+		ret.translate((cell.x - bottomCorner.x) * cellSize, bounds.height - (cell.y - bottomCorner.y + 1)
 				* cellSize);
+		return ret;
 	}
 
 	public abstract Color getColor(CellPart part, int x, int y);
