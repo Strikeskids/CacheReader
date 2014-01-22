@@ -12,7 +12,7 @@ import com.sk.cache.wrappers.region.Region;
 
 public class SanitizedRegion extends PackedRegion {
 
-	private Region source;
+	public Region source;
 	private List<LocalObject> removed;
 	private List<LocalObject> tmpList;
 	public List<StairPair> stairs = new ArrayList<>();
@@ -36,7 +36,6 @@ public class SanitizedRegion extends PackedRegion {
 		removed = new ArrayList<>();
 		tmpList = new ArrayList<>();
 		simplify();
-		this.source = null;
 		this.removed = null;
 		this.tmpList = null;
 	}
