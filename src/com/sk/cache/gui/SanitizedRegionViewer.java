@@ -28,7 +28,6 @@ import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.gui.GridPainter.GridGetter;
 import com.sk.cache.gui.GridPainter.Side;
 import com.sk.cache.wrappers.ObjectDefinition;
-import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.LocalObjects;
 import com.sk.cache.wrappers.region.Region;
@@ -40,10 +39,20 @@ public class SanitizedRegionViewer {
 	private static LocalObjects objects;
 	private static int plane;
 	private static boolean shouldShowObjects = false;
+	private static int x, y;
+	private static CacheSystem sys;
+
+	private static void reloadRegion() {
+		if (source == null || source.getId() != (x | y << 7) && sys.regionLoader.canLoad(x | y << 7)) {
+			System.out.println(x + " " + y);
+			source = sys.regionLoader.load(x, y);
+			objects = source == null ? null : source.objects;
+			region = source == null ? null : new SanitizedRegion(source);
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
-		CacheSystem sys = new CacheSystem(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE"));
-		final RegionLoader rl = new RegionLoader(sys);
+		sys = new CacheSystem(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE"));
 		final JFrame frame = new JFrame("Regions");
 		frame.getContentPane().setLayout(new BorderLayout());
 		JPanel top = new JPanel();
@@ -59,12 +68,9 @@ public class SanitizedRegionViewer {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						int x = Integer.parseInt(xval.getText());
-						int y = Integer.parseInt(yval.getText());
-						System.out.println(x | y << 7);
-						source = rl.load(x, y);
-						objects = source == null ? null : source.objects;
-						region = source == null ? null : new SanitizedRegion(source);
+						x = Integer.parseInt(xval.getText());
+						y = Integer.parseInt(yval.getText());
+						reloadRegion();
 						frame.repaint();
 					}
 				});
@@ -78,13 +84,31 @@ public class SanitizedRegionViewer {
 		KeyListener k = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_UP) {
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_UP:
 					if (plane < 3)
 						plane++;
-				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					break;
+				case KeyEvent.VK_DOWN:
 					if (plane > 0)
 						plane--;
+					break;
+				case KeyEvent.VK_W:
+					y++;
+					break;
+				case KeyEvent.VK_A:
+					x--;
+					break;
+				case KeyEvent.VK_D:
+					x++;
+					break;
+				case KeyEvent.VK_S:
+					y--;
+					break;
+				default:
+					return;
 				}
+				reloadRegion();
 				frame.repaint();
 			}
 		};
@@ -140,7 +164,12 @@ public class SanitizedRegionViewer {
 				for (LocalObject o : objects.getObjectsAt(x, y, plane)) {
 					System.out.println(o + " " + o.getDefinition());
 				}
-				System.out.println(Integer.toHexString(source.landscapeData[plane][x][y]));
+				System.out.print(Integer.toHexString(source.landscapeData[plane][x][y]));
+				for (int i = 0; i < 5; ++i) {
+					System.out.print(" ");
+					System.out.print(Integer.toHexString(source.extraData[plane][x][y][i]));
+				}
+				System.out.println();
 			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
 		if (shouldShowObjects)
