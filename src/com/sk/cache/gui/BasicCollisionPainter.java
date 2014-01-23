@@ -1,13 +1,14 @@
 package com.sk.cache.gui;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.awt.event.ActionEvent;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JFrame;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 import com.sk.cache.dist.pack.SanitizedRegion;
 import com.sk.cache.fs.CacheSystem;
@@ -15,21 +16,32 @@ import com.sk.cache.fs.CacheSystem;
 @SuppressWarnings("serial")
 public class BasicCollisionPainter extends ScalingGridPainter {
 
-	public static void main(String... args) throws FileNotFoundException {
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(500, 500);
-		frame.setContentPane(new BasicCollisionPainter(new CacheSystem(new File(
-				"/Users/Strikeskids/jagexcache/Runescape/LIVE"))));
-		frame.setVisible(true);
-	}
-
 	private Map<Integer, SoftReference<SanitizedRegion>> regions = new HashMap<>();
 	private final CacheSystem cache;
 	private int plane = 0;
 
 	public BasicCollisionPainter(CacheSystem cache) {
 		this.cache = cache;
+		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"), "planeUp");
+		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"), "planeDown");
+		getActionMap().put("planeUp", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (plane < 3) {
+					plane++;
+					repaint();
+				}
+			}
+		});
+		getActionMap().put("planeDown", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (plane > 0) {
+					plane--;
+					repaint();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -110,6 +122,10 @@ public class BasicCollisionPainter extends ScalingGridPainter {
 			}
 		}
 		return reg;
+	}
+
+	public int getPlane() {
+		return plane;
 	}
 
 }
