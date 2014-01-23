@@ -129,7 +129,6 @@ public abstract class ScalingGridPainter extends JPanel {
 		g.setColor(Color.black);
 		g.fill(bounds);
 		Dimension cells = getCellCount(bounds.getSize());
-		long start = System.currentTimeMillis();
 		for (Point cell = new Point(bottomCorner); cell.y < cells.height + bottomCorner.y; ++cell.y) {
 			for (cell.x = bottomCorner.x; cell.x < cells.width + bottomCorner.x; ++cell.x) {
 				Point curPoint = getTopLeftCellPoint(cell, bounds);
@@ -147,7 +146,6 @@ public abstract class ScalingGridPainter extends JPanel {
 				}
 			}
 		}
-		System.out.println("Paint time " + (System.currentTimeMillis() - start));
 	}
 
 	private void resizeTransformImage() {
