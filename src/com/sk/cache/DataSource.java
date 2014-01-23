@@ -45,6 +45,27 @@ public class DataSource {
 		this.indexFiles[META_INDEX_FILE_NUM] = metaIndexFile;
 		this.indexChannels = new FileChannel[META_INDEX_FILE_NUM + 1];
 	}
+	
+	public static File getDefaultCacheDirectory() {
+        	String rootDirectory = System.getProperty("user.home");
+        	if (rootDirectory != null) {
+        	    rootDirectory = rootDirectory + "/";
+        	}
+        	if (rootDirectory == null) {
+        	    if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+        	        rootDirectory = System.getenv("USERPROFILE");
+        	    } else {
+        	        rootDirectory = System.getenv("HOME");
+        	    }
+        	}
+	        if (rootDirectory != null) {
+        	    rootDirectory = rootDirectory + "/";
+        	}
+        	if (rootDirectory == null) {
+        	    rootDirectory = "~/";
+        	}
+        	return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + "runescape" + File.separatorChar + "LIVE" + File.separatorChar);
+        }
 
 	public FileChannel getCacheChannel() {
 		return cacheChannel = refreshBrokenChannel(cacheFile, cacheChannel);
