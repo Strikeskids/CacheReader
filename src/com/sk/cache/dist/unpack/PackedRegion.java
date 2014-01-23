@@ -20,10 +20,9 @@ public class PackedRegion extends Packed {
 	}
 
 	private byte[][] getFlags(int plane) {
-		if (plane < flags.length && plane >= 0)
+		if (plane < flags.length && plane >= 0 && flags[plane] != null)
 			return flags[plane];
-		else
-			return empty;
+		return empty;
 	}
 
 	private byte[] getFlagRow(int plane, int x) {
