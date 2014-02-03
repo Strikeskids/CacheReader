@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.sk.cache.DataSource;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.wrappers.loaders.ItemDefinitionLoader;
 import com.sk.cache.wrappers.loaders.ObjectDefinitionLoader;
@@ -20,7 +21,7 @@ public class PackDriver {
 
 	public static void main(String[] args) throws Exception {
 		long start = System.currentTimeMillis();
-		CacheSystem sys = new CacheSystem(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE"));
+		CacheSystem sys = new CacheSystem(DataSource.getDefaultCacheDirectory());
 		File out = new File("packed" + System.currentTimeMillis() + ".zip").getAbsoluteFile();
 		zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(out)));
 		pack(new RegionPacker(new RegionLoader(sys)));
