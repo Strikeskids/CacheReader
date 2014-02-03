@@ -45,11 +45,7 @@ public class ProtocolParser {
 			if (next == null)
 				continue;
 
-			if (next.equals("array")) {
-				String counter = getStreamExtractor(parts);
-				String extractors = getExtractors(parts);
-				out = String.format("new ArrayProtocol(%s, %s, ", counter, extractors);
-			} else if (next.equals("ea")) {
+			if (next.equals("ea")) {
 				out = "new ExtraAttributeReader(";
 				locs.clear();
 			} else {
@@ -83,7 +79,7 @@ public class ProtocolParser {
 		return ret;
 	}
 
-	public static String getExtractors(Queue<String> parts) {
+	public static String getExtractors(LinkedList<String> parts) {
 		List<String> extractors = new ArrayList<>();
 		String curExtractor;
 		while ((curExtractor = getExtractor(parts)) != null) {
@@ -92,7 +88,14 @@ public class ProtocolParser {
 		return String.format("new FieldExtractor[]{%s}", stringifyCollection(extractors));
 	}
 
-	public static String getExtractor(Queue<String> parts) {
+	public static String getExtractor(LinkedList<String> parts) {
+		String tmp = next(parts);
+		if (tmp == null)
+			return null;
+		if (tmp.equals("array")) {
+			return getArrayExtractor(parts);
+		}
+		parts.addFirst(tmp);
 		String baseExtractor = getStreamExtractor(parts);
 		if (baseExtractor == null)
 			return null;
@@ -102,6 +105,32 @@ public class ProtocolParser {
 		else
 			return String.format("new FieldExtractor(%s, \"%s\"XX%dXX)", baseExtractor, name,
 					System.currentTimeMillis());
+	}
+
+	private static String getArrayExtractor(LinkedList<String> parts) {
+		String counter = getStreamExtractor(parts);
+		int extra = 0;
+		if (counter == null) {
+			extra = Integer.parseInt(next(parts));
+			counter = getStreamExtractor(parts);
+		}
+		List<String> streams = new ArrayList<String>();
+		List<String> fields = new ArrayList<String>();
+		boolean nonNull = false;
+		String stream;
+		while ((stream = getStreamExtractor(parts)) != null) {
+			streams.add(stream);
+			String name = next(parts);
+			if (name == null)
+				fields.add(null);
+			else {
+				nonNull = true;
+				fields.add("\"" + name + "\"XX" + System.currentTimeMillis() + "XX");
+			}
+		}
+		String fieldNames = nonNull ? "new String[]{" + stringifyCollection(fields) + "}" : "null";
+		return String.format("new ArrayExtractor(%s,%d,new StreamExtractor[]{%s}, %s)", counter, extra,
+				stringifyCollection(streams), fieldNames);
 	}
 
 	public static String getStreamExtractor(Queue<String> parts) {

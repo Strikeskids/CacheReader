@@ -1,11 +1,10 @@
-package com.sk.cache.wrappers.protocol;
+package com.sk.cache.wrappers.protocol.extractor;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
 import com.sk.Debug;
-import com.sk.cache.wrappers.protocol.extractor.StreamExtractor;
 import com.sk.datastream.Stream;
 
 public class FieldExtractor {
@@ -43,6 +42,13 @@ public class FieldExtractor {
 			} else if (Collection.class.isAssignableFrom(field.getType())
 					&& (newValue == null || !newValue.getClass().equals(field.getType()))) {
 				((Collection) field.get(destination)).add(newValue);
+			} else if (newValue.getClass().equals(Object[].class) && field.getType().isArray()) {
+				int length = Array.getLength(newValue);
+				Object copiedArr = Array.newInstance(field.getType().getComponentType(), length);
+				for (int i = 0; i < length; ++i) {
+					Array.set(copiedArr, i, Array.get(newValue, i));
+				}
+				field.set(destination, copiedArr);
 			} else {
 				field.set(destination, newValue);
 			}

@@ -1,5 +1,6 @@
 package com.sk.cache.wrappers.protocol;
 
+import com.sk.cache.wrappers.protocol.extractor.FieldExtractor;
 import com.sk.cache.wrappers.protocol.extractor.StreamExtractor;
 import com.sk.datastream.Stream;
 

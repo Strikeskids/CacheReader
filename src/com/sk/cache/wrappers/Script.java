@@ -2,8 +2,8 @@ package com.sk.cache.wrappers;
 
 import com.sk.cache.wrappers.loaders.ScriptLoader;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
-import com.sk.cache.wrappers.protocol.FieldExtractor;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
+import com.sk.cache.wrappers.protocol.extractor.FieldExtractor;
 import com.sk.cache.wrappers.protocol.extractor.ParseType;
 
 

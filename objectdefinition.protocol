@@ -1,6 +1,5 @@
 # 1 {1 ubyte i}[{1 byte}({1 ubyte j}[big_smart]*j)]*i
 # 77, 92 {ushort (65535 -> -1)}{ushort (65535 -> -1)}(92 ? big_smart j){ubyte i} [big_smart]*(i+1) + [j] = childrenIds
-# 79 {2 ushort}{2 ushort}{1 ubyte}{1 ubyte i}[2 ushort]*i
 # OLD 1 {1 ubyte i}[3 {2 ushort}{1 ubyte}]*i
 # OLD 24 2 ushort (65535 -> -1)
 # OLD 90 0 set
@@ -39,6 +38,7 @@
 074 set true walkable2
 075 ubyte
 078 ushort - ubyte
+079 ushort - ushort - ubyte - array ubyte ushort -
 081 ubyte
 082 set
 088 set

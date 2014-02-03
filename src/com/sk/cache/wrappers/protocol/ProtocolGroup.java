@@ -23,7 +23,8 @@ public class ProtocolGroup extends ProtocolReader {
 	public void read(Object destination, int type, Stream data) {
 		if (!validateType(type))
 			throw new IllegalArgumentException("Bad type " + type);
-		readers.get(type).read(destination, type, data);
+		ProtocolReader reader = readers.get(type);
+		reader.read(destination, type, data);
 	}
 
 	@Override
