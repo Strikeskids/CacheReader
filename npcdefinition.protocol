@@ -1,0 +1,59 @@
+# npcs
+1 array ubyte big_smart -
+2 string name
+12 ubyte
+30-34 string actions
+39 ubyte # * 5?
+40 array ubyte ushort - ushort -
+41 array ubyte short - short -
+42 array ubyte byte -
+44 ushort # intricate
+45 ushort # intricate
+60 array ubyte big_smart
+93 set false visible
+95 ushort combatLevel
+97 ushort
+98 ushort
+99 set true
+100 ubyte # + 64
+101 ubyte # * 5
+# 102 ubyte # see more!!!
+103 ushort
+# 106 ushort - ushort - array ubyte ushort - USED FOR CHILDREN
+# 118 ushort - ushort - ushort - array ubyte ushort -
+107 set false clickable
+109 set false
+111 set false
+113 ushort - ushort
+114 byte - byte
+119 ubyte
+121 array ubyte ubyte - byte - byte - byte -
+123 ushort
+125 byte
+127 ushort
+128 ubyte
+134 ushort - ushort - ushort - ushort - ubyte
+137 ushort
+138 big_smart headIcon
+139 big_smart
+140 ubyte
+141 set true
+142 ushort
+143 set true
+150-154 string actions
+155 byte - byte - byte - byte -
+158 set 1
+159 set 0
+160 array ubyte ushort
+162 set true
+163 ubyte
+164 ushort - ushort -
+165 ubyte
+168 ubyte
+169 set false
+170-175 ushort
+178 set false
+179 smart - smart - smart - smart - smart - smart - # complicated...
+180 ubyte # * 1000 / 50
+181 ushort - ubyte
+249 ea
