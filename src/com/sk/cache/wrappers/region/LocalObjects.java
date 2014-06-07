@@ -8,6 +8,7 @@ import java.util.List;
 import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.loaders.LocalObjectLoader;
 import com.sk.datastream.Stream;
+import com.sk.util.ArrayHelper;
 
 public class LocalObjects extends StreamedWrapper {
 
@@ -49,7 +50,7 @@ public class LocalObjects extends StreamedWrapper {
 	}
 
 	private void addObject(LocalObject o, int plane, int x, int y) {
-		if (plane < located.length) {
+		if (ArrayHelper.checkInBounds(located, plane, x, y)) {
 			if (located[plane][x][y] == null)
 				located[plane][x][y] = new ArrayList<>(3);
 			located[plane][x][y].add(o);
@@ -57,7 +58,7 @@ public class LocalObjects extends StreamedWrapper {
 	}
 
 	public List<LocalObject> getObjectsAt(int x, int y, int plane) {
-		if (x < 0 || y < 0 || plane < 0 || plane >= located.length || x >= Region.width || y >= Region.height)
+		if (!ArrayHelper.checkInBounds(located, plane, x, y))
 			return Arrays.asList();
 		List<LocalObject> ret = located[plane][x][y];
 		if (ret == null)

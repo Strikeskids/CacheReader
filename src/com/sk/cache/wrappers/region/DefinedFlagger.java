@@ -1,8 +1,10 @@
 package com.sk.cache.wrappers.region;
 
+import com.sk.util.ArrayHelper;
+
 public class DefinedFlagger implements Flagger {
 	private final int x, y, plane, flag;
-	
+
 	public DefinedFlagger(int x, int y, int plane, int flag) {
 		this.x = x;
 		this.y = y;
@@ -11,13 +13,7 @@ public class DefinedFlagger implements Flagger {
 	}
 
 	private boolean checkBounds(Region r) {
-		if (plane < 0 || plane >= r.flags.length)
-			return false;
-		if (x < 0 || x >= r.flags[plane].length)
-			return false;
-		if (y < 0 || y >= r.flags[plane][x].length)
-			return false;
-		return true;
+		return ArrayHelper.checkInBounds(r.flags, plane, x, y);
 	}
 
 	public void flag(Region r) {

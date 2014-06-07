@@ -3,6 +3,7 @@ package com.sk.cache.wrappers.region;
 import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.datastream.Stream;
+import com.sk.util.ArrayHelper;
 
 public class Region extends StreamedWrapper {
 
@@ -62,8 +63,7 @@ public class Region extends StreamedWrapper {
 	}
 
 	private void setFlag(int lx, int ly, int plane, int flag) {
-		if (lx < 0 || lx >= width || ly < 0 || ly >= height || plane < 0 || plane >= flags.length)
-			return;
-		flags[plane][lx][ly] |= flag;
+		if (ArrayHelper.checkInBounds(flags, plane, lx, ly))
+			flags[plane][lx][ly] |= flag;
 	}
 }
