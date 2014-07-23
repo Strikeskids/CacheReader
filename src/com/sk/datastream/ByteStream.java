@@ -30,8 +30,6 @@ public class ByteStream extends Stream {
 
 	@Override
 	public void seek(int loc) {
-		if (loc >= payload.length || loc < 0)
-			throw new IllegalArgumentException();
 		offset = loc;
 	}
 
