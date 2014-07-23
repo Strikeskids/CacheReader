@@ -1,4 +1,5 @@
 package com.sk.datastream;
+
 import java.nio.BufferUnderflowException;
 import java.util.Arrays;
 import java.util.zip.Inflater;
@@ -56,60 +57,60 @@ public abstract class Stream {
 		return byteLeft >= num;
 	}
 
-	public final long getLong() {
-		return getUInt() << 32 | getUInt();
+	public final int getUByte() {
+		return getByte() & BYTE_MASK;
+	}
+
+	public final int getUShort() {
+		return getUByte() << BYTE_SIZE | getUByte();
+	}
+
+	public final int getUInt24() {
+		return getUByte() << BYTE_SIZE * 2 | getUByte() << BYTE_SIZE | getUByte();
 	}
 
 	public final long getUInt() {
 		return getInt() & INT_MASK;
 	}
 
-	public final int getInt() {
-		return joinBytes(getBytes(new byte[NUM_INT_BYTES]));
-	}
-
-	public final int getUShort() {
-		return getShort() & SHORT_MASK;
-	}
-
 	public final short getShort() {
-		return (short) joinBytes(getBytes(new byte[NUM_SHORT_BYTES]));
+		return (short) getUShort();
 	}
 
-	public final int getUByte() {
-		return getByte() & BYTE_MASK;
+	public final int getInt() {
+		return getUByte() << BYTE_SIZE * 3 | getUByte() << BYTE_SIZE * 2 | getUByte() << BYTE_SIZE | getUByte();
 	}
 
-	public final int getUInt24() {
-		return joinBytes(getBytes(new byte[24 / BYTE_SIZE]));
+	public final long getLong() {
+		return getUInt() << INT_SIZE | getUInt();
 	}
 
 	public final int getReferenceTableSmart() {
-		return getSmart(NUM_SHORT_BYTES, NUM_INT_BYTES);
+		return getSmart(NUM_SHORT_BYTES, NUM_INT_BYTES, false);
 	}
 
 	public final int getBigSmart() {
-		byte[] smartBytes = getSmartBytes(NUM_SHORT_BYTES, NUM_INT_BYTES);
-		int joined = joinBytes(smartBytes);
-		if (smartBytes.length == NUM_SHORT_BYTES && joined == MAX_NOSIGN_SHORT)
-			return -1;
+		int first = getUByte(), joined = 0;
+		if ((first & BYTE_SIGN_BIT) != BYTE_SIGN_BIT) {
+			joined = joinSmart(first, NUM_SHORT_BYTES, false);
+			if (joined == MAX_NOSIGN_SHORT)
+				joined = -1;
+		} else {
+			joined = joinSmart(first, NUM_INT_BYTES, false);
+		}
 		return joined;
 	}
 
 	public final int getSmart() {
-		return getSmart(1, NUM_SHORT_BYTES);
+		return getSmart(1, NUM_SHORT_BYTES, false);
 	}
 
-	private final int getSmart(int smallSize, int bigSize) {
-		return joinBytes(getSmartBytes(smallSize, bigSize));
+	public final int getSignedSmart() {
+		return getSmart(1, NUM_SHORT_BYTES, true);
 	}
 
-	private final byte[] getSmartBytes(int smallSize, int bigSize) {
-		byte first = getByte();
-		int size = (first & BYTE_SIGN_BIT) == BYTE_SIGN_BIT ? bigSize : smallSize;
-		byte[] inputBytes = new byte[size];
-		inputBytes[0] = (byte) (first & ~BYTE_SIGN_BIT);
-		return getBytes(inputBytes, 1, size - 1);
+	public int getSmartMinusOne() {
+		return getSmart() - 1;
 	}
 
 	public final int getSmarts() {
@@ -118,6 +119,27 @@ public abstract class Stream {
 			j = getSmart();
 		}
 		return i;
+	}
+
+	protected final int getSmart(int smallSize, int bigSize, boolean signed) {
+		int num = getUByte();
+		int size = ((num & BYTE_SIGN_BIT) == BYTE_SIGN_BIT ? bigSize : smallSize);
+		return joinSmart(num, size, signed);
+	}
+
+	protected final int joinSmart(int first, int size, boolean signed) {
+		int num = first & ~BYTE_SIGN_BIT;
+		for (int i = 1; i < size; ++i) {
+			num = (num << BYTE_SIZE) | getUByte();
+		}
+		if (signed) {
+			num -= (1 << size * BYTE_SIZE - 2);
+		}
+		return num;
+	}
+
+	protected final int joinSmart(int size, boolean signed) {
+		return getSmart(getUByte(), size, signed);
 	}
 
 	public byte[] getAllBytes() {
@@ -228,28 +250,6 @@ public abstract class Stream {
 	public void skip(int num) {
 		assertLeft(num);
 		seek(num + getLocation());
-	}
-
-	public static final int joinBytes(byte... bytes) {
-		if (bytes.length > 4)
-			throw new IllegalArgumentException();
-		int joined = 0;
-		for (int i = 0; i < bytes.length; ++i) {
-			joined <<= BYTE_SIZE;
-			joined |= bytes[i] & BYTE_MASK;
-		}
-		return joined;
-	}
-
-	public static final int joinBytes(int... bytes) {
-		if (bytes.length > 4)
-			throw new IllegalArgumentException();
-		int joined = 0;
-		for (int i = 0; i < bytes.length; ++i) {
-			joined <<= BYTE_SIZE;
-			joined |= bytes[i] & BYTE_MASK;
-		}
-		return joined;
 	}
 
 	public static byte[] unwrapBuffer(Object o, boolean copy) {
