@@ -14,7 +14,7 @@ public class Model extends StreamedWrapper {
 	public Model(ModelLoader loader, int id) {
 		super(loader, id);
 	}
-	
+
 	public int vertexCount;
 	public int triangleCount;
 	public int texTriangleCount;
@@ -32,10 +32,10 @@ public class Model extends StreamedWrapper {
 	public int[] triangleColors;
 	public int[] trianglePriorities;
 	public int[] triangleSkins;
-	
+
 	public int _jet;
 	public int _jev;
-	public byte[] _jgh;
+	public byte[] texTrianglesType;
 	public int _jgz;
 	public int[] _jfn;
 	public int _jfq;
@@ -62,7 +62,7 @@ public class Model extends StreamedWrapper {
 
 	private final void init(Stream al) {
 		final int G = 26;
-		final int J = 3;
+		final int initialBytesCount = 3;
 		final int B = -1;
 		final int E = 65535;
 		final int I = 65535;
@@ -85,22 +85,22 @@ public class Model extends StreamedWrapper {
 		this.vertexCount = W.getUShort();
 		this.triangleCount = W.getUShort();
 		this.texTriangleCount = W.getUShort();
-		int an = W.getUByte();
-		boolean aJ = (an & 1) == 1;
-		boolean bG = (an & 2) == 2;
-		boolean av = (an & 4) == 4;
-		boolean aG = (an & 16) == 16;
-		boolean aq = (an & 32) == 32;
-		boolean X = (an & 64) == 64;
-		boolean aA = (an & 128) == 128;
+		int mainFlags = W.getUByte();
+		boolean aJ = (mainFlags & 1) == 1;
+		boolean bG = (mainFlags & 2) == 2;
+		boolean av = (mainFlags & 4) == 4;
+		boolean aG = (mainFlags & 16) == 16;
+		boolean aq = (mainFlags & 32) == 32;
+		boolean X = (mainFlags & 64) == 64;
+		boolean aA = (mainFlags & 128) == 128;
 		int af = W.getUByte();
 		int aB = W.getUByte();
 		int at = W.getUByte();
 		int aH = W.getUByte();
 		int O = W.getUByte();
-		int bg = W.getUShort();
-		int bm = W.getUShort();
-		int bB = W.getUShort();
+		int verticesXDataSize = W.getUShort();
+		int verticesYDataSize = W.getUShort();
+		int verticesZDataSize = W.getUShort();
 		int aZ = W.getUShort();
 		int bi = W.getUShort();
 		int bF = W.getUShort();
@@ -121,10 +121,10 @@ public class Model extends StreamedWrapper {
 		}
 		int a6 = 0, aK = 0, a5 = 0;
 		if (this.texTriangleCount > 0) {
-			this._jgh = new byte[this.texTriangleCount];
-			W.seek(J);
+			this.texTrianglesType = new byte[this.texTriangleCount];
+			W.seek(initialBytesCount);
 			for (aC = 0; aC < this.texTriangleCount; aC++) {
-				byte aI = this._jgh[aC] = W.getByte();
+				byte aI = this.texTrianglesType[aC] = W.getByte();
 				if (aI == 0) {
 					a6++;
 				}
@@ -136,28 +136,28 @@ public class Model extends StreamedWrapper {
 				}
 			}
 		}
-		int offsetAccum = J + this.texTriangleCount;
-		int aT = offsetAccum;
+		int offsetAccum = initialBytesCount + this.texTriangleCount;
+		int verticesMaskDataOffset = offsetAccum;
 		offsetAccum += this.vertexCount;
 		int ao = offsetAccum;
 		if (aJ) {
 			offsetAccum += this.triangleCount;
 		}
-		int aV = offsetAccum;
+		int triangleTypeDataOffset = offsetAccum;
 		offsetAccum += this.triangleCount;
-		int am = offsetAccum;
+		int trianglePrioritiesDataOffset = offsetAccum;
 		if (af == 255) {
 			offsetAccum += this.triangleCount;
 		}
-		int aj = offsetAccum;
+		int triangleSkinsDataOffset = offsetAccum;
 		offsetAccum += a7;
 		int aP = offsetAccum;
 		offsetAccum += bF;
-		int ak = offsetAccum;
+		int triangleAlphasDataOffset = offsetAccum;
 		if (aB == 1) {
 			offsetAccum += this.triangleCount;
 		}
-		int aW = offsetAccum;
+		int triangleDataOffset = offsetAccum;
 		offsetAccum += aZ;
 		int ai = offsetAccum;
 		if (aH == 1) {
@@ -167,12 +167,12 @@ public class Model extends StreamedWrapper {
 		offsetAccum += bi;
 		int ap = offsetAccum;
 		offsetAccum += this.triangleCount * 2;
-		int aS = offsetAccum;
-		offsetAccum += bg;
-		int aR = offsetAccum;
-		offsetAccum += bm;
-		int aQ = offsetAccum;
-		offsetAccum += bB;
+		int verticesXDataOffset = offsetAccum;
+		offsetAccum += verticesXDataSize;
+		int verticesYDataOffset = offsetAccum;
+		offsetAccum += verticesYDataSize;
+		int verticesZDataOffset = offsetAccum;
+		offsetAccum += verticesZDataSize;
 		int bz = offsetAccum;
 		offsetAccum += a6 * 6;
 		int bv = offsetAccum;
@@ -253,29 +253,29 @@ public class Model extends StreamedWrapper {
 			this._jgq = new byte[this.texTriangleCount];
 			this._jgs = new byte[this.texTriangleCount];
 		}
-		W.seek(aT);
-		V.seek(aS);
-		T.seek(aR);
-		R.seek(aQ);
+		W.seek(verticesMaskDataOffset);
+		V.seek(verticesXDataOffset);
+		T.seek(verticesYDataOffset);
+		R.seek(verticesZDataOffset);
 		P.seek(aP);
-		int bb = 0, a9 = 0, a8 = 0;
+		int xaccum = 0, yaccum = 0, zaccum = 0;
 		for (aC = 0; aC < this.vertexCount; aC++) {
-			int Q = W.getUByte();
-			int aa = 0;
-			if ((Q & 1) != 0) {
-				aa = V.getSignedSmart();
+			int verticesMask = W.getUByte();
+			int xoff = 0;
+			if ((verticesMask & 1) != 0) {
+				xoff = V.getSignedSmart();
 			}
-			int Z = 0;
-			if ((Q & 2) != 0) {
-				Z = -T.getSignedSmart();
+			int yoff = 0;
+			if ((verticesMask & 2) != 0) {
+				yoff = -T.getSignedSmart();
 			}
-			int Y = 0;
-			if ((Q & 4) != 0) {
-				Y = R.getSignedSmart();
+			int zoff = 0;
+			if ((verticesMask & 4) != 0) {
+				zoff = R.getSignedSmart();
 			}
-			bb = this.verticesX[aC] = bb + aa;
-			a9 = this.verticesY[aC] = a9 + Z;
-			a8 = this.verticesZ[aC] = a8 + Y;
+			this.verticesX[aC] = xaccum += xoff;
+			this.verticesY[aC] = yaccum += yoff;
+			this.verticesZ[aC] = zaccum += zoff;
 			if (O == 1) {
 				if (aG) {
 					this.vertexSkins[aC] = P.getSmartMinusOne();
@@ -308,9 +308,9 @@ public class Model extends StreamedWrapper {
 		}
 		W.seek(ap);
 		V.seek(ao);
-		T.seek(am);
-		R.seek(ak);
-		P.seek(aj);
+		T.seek(trianglePrioritiesDataOffset);
+		R.seek(triangleAlphasDataOffset);
+		P.seek(triangleSkinsDataOffset);
 		N.seek(ai);
 		M.seek(ah);
 		for (aC = 0; aC < this.triangleCount; aC++) {
@@ -350,68 +350,62 @@ public class Model extends StreamedWrapper {
 			}
 		}
 		this.maxVertex = -1;
-		W.seek(aW);
-		V.seek(aV);
+		W.seek(triangleDataOffset);
+		V.seek(triangleTypeDataOffset);
 		T.seek(aU);
-		int aF = 0, aE = 0, aD = 0;
-		int S = 0;
+		int triangleA = 0, triangleB = 0, triangleC = 0;
+		int triangleAccum = 0;
 		for (aC = 0; aC < this.triangleCount; aC++) {
-			int aI = V.getUByte();
-			int ax = aI & 7;
-			if (ax == 1) {
-				aF = W.getSignedSmart() + S;
-				S = aF;
-				aE = W.getSignedSmart() + S;
-				S = aE;
-				aD = W.getSignedSmart() + S;
-				S = aD;
-				this.trianglesA[aC] = (short) aF;
-				this.trianglesB[aC] = (short) aE;
-				this.trianglesC[aC] = (short) aD;
-				if (aF > this.maxVertex) {
-					this.maxVertex = aF;
+			int triangleMask = V.getUByte();
+			int triangleType = triangleMask & 7;
+			if (triangleType == 1) {
+				triangleA = triangleAccum += W.getSignedSmart();
+				triangleB = triangleAccum += W.getSignedSmart();
+				triangleC = triangleAccum += W.getSignedSmart();
+				this.trianglesA[aC] = (short) triangleA;
+				this.trianglesB[aC] = (short) triangleB;
+				this.trianglesC[aC] = (short) triangleC;
+				if (triangleA > this.maxVertex) {
+					this.maxVertex = triangleA;
 				}
-				if (aE > this.maxVertex) {
-					this.maxVertex = aE;
+				if (triangleB > this.maxVertex) {
+					this.maxVertex = triangleB;
 				}
-				if (aD > this.maxVertex) {
-					this.maxVertex = aD;
+				if (triangleC > this.maxVertex) {
+					this.maxVertex = triangleC;
 				}
-			} else if (ax == 2) {
-				aE = aD;
-				aD = W.getSignedSmart() + S;
-				S = aD;
-				this.trianglesA[aC] = (short) aF;
-				this.trianglesB[aC] = (short) aE;
-				this.trianglesC[aC] = (short) aD;
-				if (aD > this.maxVertex) {
-					this.maxVertex = aD;
+			} else if (triangleType == 2) {
+				triangleB = triangleC;
+				triangleC = triangleAccum += W.getSignedSmart();
+				this.trianglesA[aC] = (short) triangleA;
+				this.trianglesB[aC] = (short) triangleB;
+				this.trianglesC[aC] = (short) triangleC;
+				if (triangleC > this.maxVertex) {
+					this.maxVertex = triangleC;
 				}
-			} else if (ax == 3) {
-				aF = aD;
-				aD = W.getSignedSmart() + S;
-				S = aD;
-				this.trianglesA[aC] = (short) aF;
-				this.trianglesB[aC] = (short) aE;
-				this.trianglesC[aC] = (short) aD;
-				if (aD > this.maxVertex) {
-					this.maxVertex = aD;
+			} else if (triangleType == 3) {
+				triangleA = triangleC;
+				triangleC = triangleAccum += W.getSignedSmart();
+				this.trianglesA[aC] = (short) triangleA;
+				this.trianglesB[aC] = (short) triangleB;
+				this.trianglesC[aC] = (short) triangleC;
+				if (triangleC > this.maxVertex) {
+					this.maxVertex = triangleC;
 				}
-			} else if (ax == 4) {
-				int aM = aF;
-				aF = aE;
-				aE = aM;
-				aD = W.getSignedSmart() + S;
-				S = aD;
-				this.trianglesA[aC] = (short) aF;
-				this.trianglesB[aC] = (short) aE;
-				this.trianglesC[aC] = (short) aD;
-				if (aD > this.maxVertex) {
-					this.maxVertex = aD;
+			} else if (triangleType == 4) {
+				int aM = triangleA;
+				triangleA = triangleB;
+				triangleB = aM;
+				triangleC = triangleAccum += W.getSignedSmart();
+				this.trianglesA[aC] = (short) triangleA;
+				this.trianglesB[aC] = (short) triangleB;
+				this.trianglesC[aC] = (short) triangleC;
+				if (triangleC > this.maxVertex) {
+					this.maxVertex = triangleC;
 				}
 			}
 			if (this._jgz > 0) {
-				if ((aI & 8) != 0) {
+				if ((triangleMask & 8) != 0) {
 					this._jfy[aC] = T.getUByte();
 					this._jfz[aC] = T.getUByte();
 					this._jgb[aC] = T.getUByte();
@@ -426,8 +420,8 @@ public class Model extends StreamedWrapper {
 		P.seek(bq);
 		N.seek(bl);
 		for (aC = 0; aC < this.texTriangleCount; aC++) {
-			int aI = this._jgh[aC];
-			if (aI == 0) {
+			int texTriangleType = this.texTrianglesType[aC];
+			if (texTriangleType == 0) {
 				this.texTrianglesA[aC] = W.getShort();
 				this.texTrianglesB[aC] = W.getShort();
 				this.texTrianglesC[aC] = W.getShort();
@@ -451,7 +445,7 @@ public class Model extends StreamedWrapper {
 				this._jgu[aC] = R.getByte();
 				this._jgv[aC] = P.getByte();
 				this._jgo[aC] = N.getByte();
-				if (aI == 2) {
+				if (texTriangleType == 2) {
 					this._jgq[aC] = N.getByte();
 					this._jgs[aC] = N.getByte();
 				}
