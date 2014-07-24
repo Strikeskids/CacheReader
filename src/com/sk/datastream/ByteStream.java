@@ -7,7 +7,7 @@ public class ByteStream extends Stream {
 	private int offset;
 
 	public ByteStream(final byte[] payload) {
-		if (payload == null || payload.length == 0)
+		if (payload == null)
 			throw new IllegalArgumentException();
 		this.payload = payload;
 	}
