@@ -1,4 +1,5 @@
 package com.sk.cache;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,27 +46,28 @@ public class DataSource {
 		this.indexFiles[META_INDEX_FILE_NUM] = metaIndexFile;
 		this.indexChannels = new FileChannel[META_INDEX_FILE_NUM + 1];
 	}
-	
+
 	public static File getDefaultCacheDirectory() {
-        	String rootDirectory = System.getProperty("user.home");
-        	if (rootDirectory != null) {
-        	    rootDirectory = rootDirectory + "/";
-        	}
-        	if (rootDirectory == null) {
-        	    if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
-        	        rootDirectory = System.getenv("USERPROFILE");
-        	    } else {
-        	        rootDirectory = System.getenv("HOME");
-        	    }
-        	}
-	        if (rootDirectory != null) {
-        	    rootDirectory = rootDirectory + "/";
-        	}
-        	if (rootDirectory == null) {
-        	    rootDirectory = "~/";
-        	}
-        	return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + "runescape" + File.separatorChar + "LIVE" + File.separatorChar);
-        }
+		String rootDirectory = System.getProperty("user.home");
+		if (rootDirectory != null) {
+			rootDirectory = rootDirectory + "/";
+		}
+		if (rootDirectory == null) {
+			if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+				rootDirectory = System.getenv("USERPROFILE");
+			} else {
+				rootDirectory = System.getenv("HOME");
+			}
+		}
+		if (rootDirectory != null) {
+			rootDirectory = rootDirectory + "/";
+		}
+		if (rootDirectory == null) {
+			rootDirectory = "~/";
+		}
+		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + "runescape"
+				+ File.separatorChar + "LIVE" + File.separatorChar);
+	}
 
 	public FileChannel getCacheChannel() {
 		return cacheChannel = refreshBrokenChannel(cacheFile, cacheChannel);
@@ -111,7 +113,7 @@ public class DataSource {
 		while (nextSectorId != 0) {
 			Sector sector;
 			try {
-				sector = readSector(nextSectorId);
+				sector = readSector(query.getFileId(), nextSectorId);
 			} catch (IOException ex) {
 				ex.printStackTrace();
 				return null;
@@ -120,7 +122,8 @@ public class DataSource {
 				throw new RuntimeException();
 			if (!query.checkSector(sector))
 				throw new RuntimeException();
-			outputBuffer.put(sector.getData(), 0, Math.min(sector.getData().length, outputBuffer.remaining()));
+			outputBuffer.put(sector.getData(), sector.getDataOffset(),
+					Math.min(sector.getData().length - sector.getDataOffset(), outputBuffer.remaining()));
 			nextSectorId = sector.getNextSector();
 		}
 		if (outputBuffer.remaining() != 0)
@@ -128,19 +131,17 @@ public class DataSource {
 		return outputBuffer.array();
 	}
 
-	public Sector readSector(int sectorId) throws IOException {
+	public Sector readSector(int prevFileId, int sectorId) throws IOException {
 		byte[] fullData = readSectorData(sectorId);
 		Stream infoStream = new ByteStream(fullData);
 
-		int fileId = infoStream.getUShort();
+		int fileId = prevFileId < Stream.SHORT_MASK ? infoStream.getUShort() : infoStream.getInt();
 		int fileChunk = infoStream.getUShort();
 		int nextSector = infoStream.getUInt24();
 		int cacheType = infoStream.getUByte();
 
-		byte[] data = new byte[infoStream.getLeft()];
-		infoStream.getBytes(data);
-
-		return new Sector(sectorId, cacheType, fileId, fileChunk, nextSector, data);
+		return new Sector(sectorId, cacheType, fileId, fileChunk, nextSector, infoStream.getAllBytes(),
+				infoStream.getLocation());
 	}
 
 	private byte[] readSectorData(int sector) throws IOException {
