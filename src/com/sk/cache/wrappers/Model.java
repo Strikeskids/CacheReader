@@ -56,9 +56,9 @@ public class Model extends StreamedWrapper {
 	public float[] u;
 	public float[] _jhb;
 	public int maxVertex;
-	public List<Map<String, Integer>> _jhg;
-	public List<Map<String, Integer>> _jhe;
-	public List<Map<String, Integer>> _jhd;
+	public List<Map<String, Number>> _jhg;
+	public List<Map<String, Number>> _jhe;
+	public List<Map<String, Number>> _jhd;
 
 	private final void init(Stream al) {
 		final int G = 26;
@@ -455,7 +455,7 @@ public class Model extends StreamedWrapper {
 		if (bG) {
 			int au = W.getUByte();
 			if (au > 0) {
-				this._jhd = new ArrayList<Map<String, Integer>>(au);
+				this._jhd = new ArrayList<Map<String, Number>>(au);
 				for (aC = 0; aC < au; aC++) {
 					int a4 = W.getUShort();
 					int a3 = W.getUShort();
@@ -469,7 +469,7 @@ public class Model extends StreamedWrapper {
 			}
 			int ae = W.getUByte();
 			if (ae > 0) {
-				this._jhe = new ArrayList<Map<String, Integer>>(ae);
+				this._jhe = new ArrayList<Map<String, Number>>(ae);
 				for (aC = 0; aC < ae; aC++) {
 					int a1 = W.getUShort();
 					int a0 = W.getUShort();
@@ -480,7 +480,7 @@ public class Model extends StreamedWrapper {
 		if (av) {
 			int aw = W.getUByte();
 			if (aw > 0) {
-				this._jhg = new ArrayList<Map<String, Integer>>(aw);
+				this._jhg = new ArrayList<Map<String, Number>>(aw);
 				for (aC = 0; aC < aw; aC++) {
 					int bA = W.getUShort();
 					int aY = W.getUShort();
@@ -503,10 +503,10 @@ public class Model extends StreamedWrapper {
 		}
 	}
 
-	private final Map<String, Integer> generateMap(Object... objs) {
-		Map<String, Integer> ret = new LinkedHashMap<String, Integer>();
+	private final Map<String, Number> generateMap(Object... objs) {
+		Map<String, Number> ret = new LinkedHashMap<String, Number>();
 		for (int i = 0; i < objs.length; i += 2) {
-			ret.put((String) objs[i], (Integer) objs[i + 1]);
+			ret.put((String) objs[i], (Number) objs[i + 1]);
 		}
 		return ret;
 	}
