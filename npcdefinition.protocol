@@ -1,5 +1,5 @@
 # npcs
-1 array ubyte big_smart -
+1 array ubyte big_smart modelIds
 2 string name
 12 ubyte
 30-34 string actions
@@ -27,7 +27,7 @@
 113 ushort - ushort
 114 byte - byte
 119 ubyte
-121 array ubyte ubyte - byte - byte - byte -
+# 121 array ubyte ubyte - byte - byte - byte -
 123 ushort
 125 byte
 127 ushort
@@ -56,4 +56,5 @@
 179 smart - smart - smart - smart - smart - smart - # complicated...
 180 ubyte # * 1000 / 50
 181 ushort - ubyte
+182 set true
 249 ea
