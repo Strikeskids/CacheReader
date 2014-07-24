@@ -1,9 +1,5 @@
 package com.sk.cache.wrappers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.sk.Debug;
 import com.sk.cache.wrappers.loaders.ObjectDefinitionLoader;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ExtraAttributeReader;
@@ -36,6 +32,14 @@ public class ObjectDefinition extends ProtocolWrapper {
 
 	public ObjectDefinition(ObjectDefinitionLoader loader, int id) {
 		super(loader, id, protocol);
+	}
+
+	public ModelBounds getModelBounds(int modelIndex) {
+		if (0 <= modelIndex && modelIndex < modelIds.length) {
+			final Model[] models = this.getLoader().getCacheSystem().modelLoader.loadMany(modelIds[modelIndex]);
+			return new ModelBounds(models);
+		}
+		return null;
 	}
 
 	private static final ProtocolGroup protocol = new ProtocolGroup();

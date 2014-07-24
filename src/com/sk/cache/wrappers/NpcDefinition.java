@@ -31,6 +31,19 @@ public class NpcDefinition extends ProtocolWrapper {
 		super(loader, id, protocol);
 	}
 
+	public ModelBounds getModelBounds() {
+		if (modelIds == null || modelIds.length == 0)
+			return null;
+		Model[] models = new Model[modelIds.length];
+		for (int i = 0; i < modelIds.length; ++i) {
+			Model cur = this.getLoader().getCacheSystem().modelLoader.load(modelIds[i]);
+			if (modelOffsets != null && modelOffsets[i] != null) {
+				cur.offsetVertices(modelOffsets[i][0], modelOffsets[i][1], modelOffsets[i][2]);
+			}
+		}
+		return new ModelBounds(models);
+	}
+
 	private static final ProtocolGroup protocol = new ProtocolGroup();
 	static {
 		new StaticLocReader(106, 118) {
@@ -81,35 +94,67 @@ public class NpcDefinition extends ProtocolWrapper {
 			}
 		}.addSelfToGroup(protocol);
 
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.SHORT, ParseType.SHORT}, null)}, 41).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "actions")}, 30, 31, 32, 33, 34).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[] {
+				ParseType.SHORT, ParseType.SHORT }, null) }, 41).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "actions") }, 30, 31, 32,
+				33, 34).addSelfToGroup(protocol);
 		new ExtraAttributeReader().addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART)}, 179).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART)}, 139).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false))}, 109, 111, 169, 178).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.BYTE}, null)}, 42).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "name")}, 2).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(0))}, 159).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.UBYTE)}, 134).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.UBYTE)}, 181).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false), "clickable")}, 107).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE)}, 114).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE)}, 125).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "combatLevel")}, 95).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT)}, 113, 164).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART, "headIcon")}, 138).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.USHORT}, null)}, 160).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.BIG_SMART}, null)}, 60).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(1))}, 158).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 12, 39, 100, 101, 119, 128, 140, 163, 165, 168, 180).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 44, 45, 97, 98, 103, 123, 127, 137, 142, 170, 171, 172, 173, 174, 175).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.BIG_SMART}, new String[]{"modelIds"})}, 1).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true))}, 99, 141, 143, 162, 182).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false), "visible")}, 93).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE)}, 155).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.USHORT, ParseType.USHORT}, null)}, 40).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "actions")}, 150, 151, 152, 153, 154).addSelfToGroup(protocol);
-
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.SMART),
+				new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART),
+				new FieldExtractor(ParseType.SMART), new FieldExtractor(ParseType.SMART),
+				new FieldExtractor(ParseType.SMART) }, 179).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BIG_SMART) }, 139)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(false)) }, 109, 111, 169,
+				178).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0,
+				new StreamExtractor[] { ParseType.BYTE }, null) }, 42).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "name") }, 2)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(0)) }, 159)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.UBYTE) }, 134)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.UBYTE) }, 181).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(false), "clickable") },
+				107).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BYTE),
+				new FieldExtractor(ParseType.BYTE) }, 114).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BYTE) }, 125)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT, "combatLevel") }, 95)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT) }, 113, 164).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BIG_SMART, "headIcon") }, 138)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0,
+				new StreamExtractor[] { ParseType.USHORT }, null) }, 160).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0,
+				new StreamExtractor[] { ParseType.BIG_SMART }, null) }, 60).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(1)) }, 158)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.UBYTE) }, 12, 39, 100, 101, 119,
+				128, 140, 163, 165, 168, 180).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT) }, 44, 45, 97, 98, 103, 123,
+				127, 137, 142, 170, 171, 172, 173, 174, 175).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0,
+				new StreamExtractor[] { ParseType.BIG_SMART }, new String[] { "modelIds" }) }, 1)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(true)) }, 99, 141, 143,
+				162, 182).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(false), "visible") }, 93)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BYTE),
+				new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE),
+				new FieldExtractor(ParseType.BYTE) }, 155).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[] {
+				ParseType.USHORT, ParseType.USHORT }, null) }, 40).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "actions") }, 150, 151, 152,
+				153, 154).addSelfToGroup(protocol);
 
 	}
 
