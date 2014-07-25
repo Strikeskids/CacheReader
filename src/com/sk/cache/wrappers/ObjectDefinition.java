@@ -1,5 +1,6 @@
 package com.sk.cache.wrappers;
 
+import com.sk.cache.wrappers.loaders.ModelLoader;
 import com.sk.cache.wrappers.loaders.ObjectDefinitionLoader;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ExtraAttributeReader;
@@ -35,8 +36,15 @@ public class ObjectDefinition extends ProtocolWrapper {
 	}
 
 	public ModelBounds getModelBounds(int modelIndex) {
-		if (0 <= modelIndex && modelIndex < modelIds.length) {
-			final Model[] models = this.getLoader().getCacheSystem().modelLoader.loadMany(modelIds[modelIndex]);
+		if (modelIds != null && 0 <= modelIndex && modelIndex < modelIds.length) {
+			final Model[] models = new Model[modelIds[modelIndex].length];
+			ModelLoader loader = this.getLoader().getCacheSystem().modelLoader;
+			for (int i = 0; i < models.length; ++i) {
+				if (loader.canLoad(modelIds[modelIndex][i]))
+					models[i] = loader.load(modelIds[modelIndex][i]);
+				else
+					return null;
+			}
 			return new ModelBounds(models);
 		}
 		return null;
@@ -60,8 +68,10 @@ public class ObjectDefinition extends ProtocolWrapper {
 						modelIds[i][j] = s.getBigSmart();
 					}
 				}
-				FieldExtractor.setValue(store, type, type, "modelIds", modelIds);
-				FieldExtractor.setValue(store, type, type, "modelTypes", modelTypes);
+				FieldExtractor
+						.setValue(store, type, type, "modelIds", modelIds);
+				FieldExtractor.setValue(store, type, type, "modelTypes",
+						modelTypes);
 			}
 		}.addSelfToGroup(protocol);
 
@@ -76,72 +86,105 @@ public class ObjectDefinition extends ProtocolWrapper {
 				for (int i = 0; i < count; ++i)
 					arr[i] = s.getBigSmart();
 				arr[count] = ending;
-				FieldExtractor.setValue(obj, type, type, "scriptId", script == 0xFFFF ? -1 : script);
-				FieldExtractor.setValue(obj, type, type, "configId", config == 0xFFFF ? -1 : config);
+				FieldExtractor.setValue(obj, type, type, "scriptId",
+						script == 0xFFFF ? -1 : script);
+				FieldExtractor.setValue(obj, type, type, "configId",
+						config == 0xFFFF ? -1 : config);
 				FieldExtractor.setValue(obj, type, type, "childrenIds", arr);
 			}
 		}.addSelfToGroup(protocol);
 
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(null)) }, 21, 22, 23, 62,
-				64, 73, 82, 88, 89, 91, 94, 97, 98, 103, 105, 168, 169, 177, 189, 198, 199, 200)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				new StaticExtractor(null)) }, 21, 22, 23, 62, 64, 73, 82, 88,
+				89, 91, 94, 97, 98, 103, 105, 168, 169, 177, 189, 198, 199, 200)
 				.addSelfToGroup(protocol);
 		new ExtraAttributeReader().addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BIG_SMART) }, 24)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.BIG_SMART) }, 24).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.STRING, "actions") }, 150, 151, 152, 153, 154)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "actions") }, 150, 151, 152,
-				153, 154).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "name") }, 2)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.STRING, "name") }, 2).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(
+				ParseType.UBYTE, 0, new StreamExtractor[] {
+						ParseType.BIG_SMART, ParseType.UBYTE }, null) }, 106)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[] {
-				ParseType.BIG_SMART, ParseType.UBYTE }, null) }, 106).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(1), "blockType") }, 27)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				new StaticExtractor(1), "blockType") }, 27)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0,
-				new StreamExtractor[] { ParseType.BYTE }, null) }, 42).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
-				new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.UBYTE),
-				new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[] { ParseType.USHORT }, null) }, 79)
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(
+				ParseType.UBYTE, 0, new StreamExtractor[] { ParseType.BYTE },
+				null) }, 42).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.UBYTE),
+				new ArrayExtractor(ParseType.UBYTE, 0,
+						new StreamExtractor[] { ParseType.USHORT }, null) }, 79)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.UBYTE, "height") }, 15)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.UBYTE, "height") }, 15).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.UBYTE) }, 78)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
-				new FieldExtractor(ParseType.UBYTE) }, 78).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.UBYTE),
-				new FieldExtractor(ParseType.USHORT) }, 99, 100).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(true), "walkable2") }, 74)
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(ParseType.UBYTE),
+				new FieldExtractor(ParseType.USHORT) }, 99, 100)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BYTE) }, 28, 29, 39, 196, 197)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				new StaticExtractor(true), "walkable2") }, 74)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
-				new FieldExtractor(ParseType.USHORT) }, 173).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(false), "walkable"),
-				new FieldExtractor(new StaticExtractor(0), "blockType") }, 17).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.SMART) }, 170, 171)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.BYTE) }, 28, 29, 39, 196, 197)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.UBYTE, "type") }, 19)
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT) }, 173)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0,
-				new StreamExtractor[] { ParseType.USHORT }, null) }, 5, 160).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.UBYTE, "width") }, 14)
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(new StaticExtractor(false), "walkable"),
+				new FieldExtractor(new StaticExtractor(0), "blockType") }, 17)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.UBYTE) }, 69, 75, 81, 101, 104, 178,
-				186, 250, 251, 253, 254).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.STRING, "actions") }, 30, 31, 32,
-				33, 34).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT) }, 44, 45, 65, 66, 67, 70,
-				71, 72, 93, 95, 102, 107, 164, 165, 166, 167, 190, 191, 192, 193, 194, 195)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.SMART) }, 170, 171).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.UBYTE, "type") }, 19).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(
+				ParseType.UBYTE, 0, new StreamExtractor[] { ParseType.USHORT },
+				null) }, 5, 160).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.UBYTE, "width") }, 14).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.UBYTE) }, 69, 75, 81, 101, 104, 178, 186, 250, 251,
+				253, 254).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.STRING, "actions") }, 30, 31, 32, 33, 34)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.INT) }, 162)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.USHORT) }, 44, 45, 65, 66, 67, 70, 71, 72, 93, 95,
+				102, 107, 164, 165, 166, 167, 190, 191, 192, 193, 194, 195)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(new StaticExtractor(false), "walkable") }, 18)
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				ParseType.INT) }, 162).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(
+				new StaticExtractor(false), "walkable") }, 18)
 				.addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.BYTE),
-				new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE),
-				new FieldExtractor(ParseType.BYTE) }, 163).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[] {
-				ParseType.USHORT, ParseType.USHORT }, null) }, 40, 41).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[] { new FieldExtractor(ParseType.USHORT),
-				new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT) }, 252, 255)
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(ParseType.BYTE),
+				new FieldExtractor(ParseType.BYTE),
+				new FieldExtractor(ParseType.BYTE),
+				new FieldExtractor(ParseType.BYTE) }, 163)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] { new ArrayExtractor(
+				ParseType.UBYTE, 0, new StreamExtractor[] { ParseType.USHORT,
+						ParseType.USHORT }, null) }, 40, 41)
+				.addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[] {
+				new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT),
+				new FieldExtractor(ParseType.USHORT) }, 252, 255)
 				.addSelfToGroup(protocol);
 
 	}
