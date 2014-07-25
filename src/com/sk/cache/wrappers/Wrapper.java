@@ -60,21 +60,27 @@ public abstract class Wrapper {
 				continue;
 			output.append(f.getName());
 			output.append(": ");
-			if (f.getType().isArray()) {
-				output.append("[");
-				for (int i = 0, len = Array.getLength(o); i < len; ++i) {
-					if (i != 0)
-						output.append(", ");
-					output.append(Array.get(o, i));
-				}
-				output.append("]");
-			} else {
-				output.append(o);
-			}
+			appendObject(output, o);
 			output.append(", ");
 		}
 		output.delete(output.length() - 2, output.length());
 		output.append("}");
 		return output.toString();
+	}
+
+	private void appendObject(StringBuilder output, Object o) {
+		if (o == null)
+			return;
+		if (o.getClass().isArray()) {
+			output.append("[");
+			for (int i = 0, len = Array.getLength(o); i < len; ++i) {
+				if (i != 0)
+					output.append(", ");
+				appendObject(output, Array.get(o, i));
+			}
+			output.append("]");
+		} else {
+			output.append(o);
+		}
 	}
 }
