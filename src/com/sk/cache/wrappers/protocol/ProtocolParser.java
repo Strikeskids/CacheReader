@@ -27,11 +27,11 @@ public class ProtocolParser {
 
 	public static void parseProtocol(BufferedReader r) throws IOException {
 		String line;
-		Map<String, List<Integer>> map = new HashMap<>();
+		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
 
 		while ((line = r.readLine()) != null) {
 			line = line.trim();
-			LinkedList<String> parts = new LinkedList<>(Arrays.asList(line.split(" ")));
+			LinkedList<String> parts = new LinkedList<String>(Arrays.asList(line.split(" ")));
 			String locString = next(parts);
 			if (locString == null) {
 				System.out.println(line);
@@ -66,7 +66,7 @@ public class ProtocolParser {
 	}
 
 	public static List<Integer> parseLocs(String locString) {
-		List<Integer> ret = new ArrayList<>();
+		List<Integer> ret = new ArrayList<Integer>();
 		if (locString.contains("-")) {
 			String[] locsplit = locString.split("-");
 			int start = Integer.parseInt(locsplit[0]), end = Integer.parseInt(locsplit[1]);
@@ -80,7 +80,7 @@ public class ProtocolParser {
 	}
 
 	public static String getExtractors(LinkedList<String> parts) {
-		List<String> extractors = new ArrayList<>();
+		List<String> extractors = new ArrayList<String>();
 		String curExtractor;
 		while ((curExtractor = getExtractor(parts)) != null) {
 			extractors.add(curExtractor);

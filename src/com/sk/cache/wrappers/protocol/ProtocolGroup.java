@@ -7,7 +7,7 @@ import com.sk.datastream.Stream;
 
 public class ProtocolGroup extends ProtocolReader {
 
-	private Map<Integer, ProtocolReader> readers = new HashMap<>();
+	private Map<Integer, ProtocolReader> readers = new HashMap<Integer, ProtocolReader>();
 
 	public void addReader(ProtocolReader reader, int... locs) {
 		for (int loc : locs) {

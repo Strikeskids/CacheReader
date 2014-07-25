@@ -6,7 +6,7 @@ import java.util.List;
 
 public class FlagGroup implements Flagger {
 
-	private List<Flagger> flaggers = new ArrayList<>();
+	private List<Flagger> flaggers = new ArrayList<Flagger>();
 
 	public FlagGroup() {
 	}

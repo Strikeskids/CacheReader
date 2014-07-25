@@ -12,7 +12,7 @@ import com.sk.util.ArrayHelper;
 
 public class LocalObjects extends StreamedWrapper {
 
-	private final List<LocalObject> objects = new ArrayList<>();
+	private final List<LocalObject> objects = new ArrayList<LocalObject>();
 	@SuppressWarnings("unchecked")
 	private final List<LocalObject> located[][][] = new List[4][64][64];
 
@@ -52,7 +52,7 @@ public class LocalObjects extends StreamedWrapper {
 	private void addObject(LocalObject o, int plane, int x, int y) {
 		if (ArrayHelper.checkInBounds(located, plane, x, y)) {
 			if (located[plane][x][y] == null)
-				located[plane][x][y] = new ArrayList<>(3);
+				located[plane][x][y] = new ArrayList<LocalObject>(3);
 			located[plane][x][y].add(o);
 		}
 	}

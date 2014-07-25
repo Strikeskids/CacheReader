@@ -11,7 +11,7 @@ import com.sk.cache.meta.ReferenceTable;
 
 public class CacheType {
 
-	private Map<Integer, Archive> archiveCache = new WeakHashMap<>();
+	private Map<Integer, Archive> archiveCache = new WeakHashMap<Integer, Archive>();
 
 	private final ReferenceTable table;
 	private final IndexFile index;

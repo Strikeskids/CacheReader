@@ -156,7 +156,7 @@ public class DataSource {
 	}
 
 	private File[] findIndexFiles() {
-		List<File> indexFiles = new ArrayList<>(40);
+		List<File> indexFiles = new ArrayList<File>(40);
 		for (int i = 0; i < MAX_INDEX_FILES; ++i) {
 			File currentIndex = new File(this.cacheDirectory, INDEX_FILE_BASE + i);
 			if (currentIndex.exists())

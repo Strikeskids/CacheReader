@@ -25,7 +25,6 @@ import com.sk.cache.dist.unpack.Unpacker;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.gui.GridPainter.GridGetter;
 import com.sk.cache.gui.GridPainter.Side;
-import com.sk.cache.wrappers.ObjectDefinition;
 import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.Region;
@@ -40,7 +39,7 @@ public class RegionViewer {
 
 	public static void main(String[] args) throws IOException {
 		CacheSystem sys = new CacheSystem(new File("/Users/Strikeskids/jagexcache/Runescape/LIVE"));
-		final Unpacker<PackedRegion> unpckr = new ProtocolUnpacker<>(PackedRegion.class, new RandomAccessFile(
+		final Unpacker<PackedRegion> unpckr = new ProtocolUnpacker<PackedRegion>(PackedRegion.class, new RandomAccessFile(
 				"packed/PackedRegion.packed", "r"));
 		final RegionLoader rl = new RegionLoader(sys);
 		final JFrame frame = new JFrame("Regions");
@@ -51,7 +50,7 @@ public class RegionViewer {
 		final JTextField pval = new JTextField(5);
 		final JLabel landscape = new JLabel();
 		final JLabel coords = new JLabel();
-		final DefaultListModel<ObjectDefinition> objectModel = new DefaultListModel<>();
+		final DefaultListModel objectModel = new DefaultListModel();
 		JButton update = new JButton("Update");
 		update.addActionListener(new ActionListener() {
 			@Override
@@ -127,7 +126,7 @@ public class RegionViewer {
 			}
 		}, Region.width, Region.height), BorderLayout.CENTER);
 		if (shouldShowObjects)
-			frame.getContentPane().add(new JScrollPane(new JList<>(objectModel)), BorderLayout.EAST);
+			frame.getContentPane().add(new JScrollPane(new JList(objectModel)), BorderLayout.EAST);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);

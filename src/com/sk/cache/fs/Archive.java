@@ -60,7 +60,7 @@ public class Archive {
 	private synchronized void unpack() {
 		if (children != null)
 			return;
-		children = new HashMap<>();
+		children = new HashMap<Integer, FileData>();
 		
 		createDecompressedStream();
 		

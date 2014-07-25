@@ -27,12 +27,12 @@ public abstract class Wrapper {
 	}
 
 	public Map<String, Object> getDeclaredFields() {
-		Map<String, Object> ret = new LinkedHashMap<>();
+		Map<String, Object> ret = new LinkedHashMap<String, Object>();
 		for (Field f : getClass().getDeclaredFields()) {
 			Object o;
 			try {
 				o = f.get(this);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			} catch (Exception e) {
 				o = null;
 			}
 			ret.put(f.getName(), o);
@@ -53,7 +53,7 @@ public abstract class Wrapper {
 			Object o;
 			try {
 				o = f.get(this);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			} catch (Exception e) {
 				continue;
 			}
 			if (o == null)

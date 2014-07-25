@@ -118,7 +118,7 @@ public class CacheImage extends StreamedWrapper {
 		byte[] alpha;
 		int[] imageColors;
 
-		private SoftReference<BufferedImage> imageRef = new SoftReference<>(null);
+		private SoftReference<BufferedImage> imageRef = new SoftReference<BufferedImage>(null);
 
 		public BufferedImage getImage() {
 			if (height == 0 && width == 0)

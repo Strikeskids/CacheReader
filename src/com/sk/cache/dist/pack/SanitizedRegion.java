@@ -16,7 +16,7 @@ public class SanitizedRegion extends PackedRegion {
 
 	public SanitizedRegion(Region source) {
 		this.source = source;
-		removed = new ArrayList<>();
+		removed = new ArrayList<LocalObject>();
 		simplify();
 		this.source = null;
 		this.removed = null;

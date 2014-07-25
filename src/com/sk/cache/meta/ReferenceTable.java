@@ -53,7 +53,7 @@ public class ReferenceTable {
 		if (entries == null) {
 			synchronized (this) {
 				if (entries == null) {
-					entries = new HashMap<>();
+					entries = new HashMap<Integer, ArchiveMeta>();
 					ByteStream compressed = new ByteStream(getTableData());
 					byte[] data = compressed.decompress();
 					decode(new ByteStream(data));
@@ -73,7 +73,7 @@ public class ReferenceTable {
 
 	private void decode(Stream data) {
 		this.data = data;
-		entries = new HashMap<>();
+		entries = new HashMap<Integer, ArchiveMeta>();
 		decode();
 		this.data = null;
 	}

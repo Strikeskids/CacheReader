@@ -21,7 +21,7 @@ import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 public class CacheSystem {
 	private final CacheSource cache;
-	private final Map<Type, WrapperLoader<?>> loaderMap = new HashMap<>();
+	private final Map<Type, WrapperLoader<?>> loaderMap = new HashMap<Type, WrapperLoader<?>>();
 
 	public final ItemDefinitionLoader itemLoader;
 	public final ObjectDefinitionLoader objectLoader;

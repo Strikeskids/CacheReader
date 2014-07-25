@@ -12,7 +12,7 @@ public class LocalObject {
 	public final int id;
 	public final byte x, y, plane;
 	public final byte type, orientation;
-	private SoftReference<ObjectDefinition> def = new SoftReference<>(null);
+	private SoftReference<ObjectDefinition> def = new SoftReference<ObjectDefinition>(null);
 	private Dimension dim;
 
 	public LocalObject(WrapperLoader<?> loader, int id, int lx, int ly, int plane, int type, int orientation) {
@@ -32,7 +32,7 @@ public class LocalObject {
 		if (ret == null) {
 			ret = loader.getCacheSystem().objectLoader.load(this.id);
 		}
-		def = new SoftReference<>(ret);
+		def = new SoftReference<ObjectDefinition>(ret);
 		return ret;
 	}
 

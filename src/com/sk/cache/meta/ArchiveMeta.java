@@ -14,8 +14,8 @@ public class ArchiveMeta extends FileMeta {
 	private int childCount;
 	private byte[] whirlpool;
 
-	private Map<Integer, FileMeta> children = new HashMap<>();
-	private List<Integer> childIndexOrder = new ArrayList<>();
+	private Map<Integer, FileMeta> children = new HashMap<Integer, FileMeta>();
+	private List<Integer> childIndexOrder = new ArrayList<Integer>();
 	private int maximumKey = -1;
 
 	public ArchiveMeta(int id) {

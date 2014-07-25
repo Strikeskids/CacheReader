@@ -52,7 +52,7 @@ public class FieldExtractor {
 			} else {
 				field.set(destination, newValue);
 			}
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(String.format("Failed to put data into destination object %s field %s",
 					destination, fieldName));

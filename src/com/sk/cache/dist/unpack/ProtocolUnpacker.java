@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
@@ -54,9 +55,11 @@ public class ProtocolUnpacker<T extends Packed> extends Unpacker<T> {
 			Object ret = readValue(input);
 			try {
 				return ProtocolType.EXTRACTORS.get(type).invoke(ret);
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		} else if (ProtocolType.ARRAY.isType(type)) {

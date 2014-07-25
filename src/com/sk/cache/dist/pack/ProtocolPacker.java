@@ -22,7 +22,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 
 	public ProtocolPacker(WrapperLoader<?> loader, Class<?> source, Class<T> storage, int endId) {
 		super(loader, source, storage, endId);
-		this.sourceFields = new HashMap<>();
+		this.sourceFields = new HashMap<String, Field>();
 		for (Field f : source.getFields()) {
 			sourceFields.put(f.getName(), f);
 		}
@@ -65,7 +65,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 		} else {
 			Class<?> type = value.getClass();
 			if (ProtocolType.BYTE.isType(type)) {
-				out.write((byte) value);
+				out.write((Byte) value);
 				ret++;
 			} else if (ProtocolType.INTEGER.isType(type)) {
 				ret += writeValue(out, ((Number) value).longValue());
@@ -93,7 +93,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 			if (Number.class.isAssignableFrom(value.getClass())) {
 				value = ((Number) value).longValue();
 			}
-			value = (long) value;
+			value = (Long) value;
 		}
 		return value;
 	}
@@ -102,7 +102,7 @@ public class ProtocolPacker<T extends Packed> extends Packer<T> {
 			IllegalAccessException, IOException {
 		int packed = 0, ret = 0, count = 0;
 		for (ProtocolField f : booleans) {
-			boolean value = (boolean) getFromSource(input, f.getField());
+			boolean value = (Boolean) getFromSource(input, f.getField());
 			packed <<= 1;
 			packed |= value ? 1 : 0;
 			if (count++ >= 30) {
