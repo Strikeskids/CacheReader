@@ -16,7 +16,16 @@ public abstract class WrapperLoader<T extends Wrapper> {
 	}
 
 	public abstract T load(int id);
-	
+
 	public abstract boolean canLoad(int id);
+
+	public T[] loadMany(int... ids) {
+		@SuppressWarnings("unchecked")
+		T[] ret = (T[]) new Object[ids.length];
+		for (int i = 0; i < ids.length; ++i) {
+			ret[i] = load(ids[i]);
+		}
+		return ret;
+	}
 
 }
