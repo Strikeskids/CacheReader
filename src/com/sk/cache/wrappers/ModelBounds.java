@@ -49,6 +49,19 @@ public class ModelBounds {
 		return new int[] { minX, maxX, minY, maxY, minZ, maxZ };
 	}
 
+	public int[] toBoundsArray(int orientation) {
+		switch (orientation) {
+		case 1:
+			return new int[] { minZ, maxZ, minY, maxY, -maxX, -minX };
+		case 2:
+			return new int[] { -maxX, -minX, minY, maxY, -maxZ, -minZ };
+		case 3:
+			return new int[] { -maxZ, -minZ, minY, maxY, maxX, minX };
+		default:
+			return toBoundsArray();
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "Model bounds " + Arrays.toString(toBoundsArray());
