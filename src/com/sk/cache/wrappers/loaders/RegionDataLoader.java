@@ -5,6 +5,7 @@ import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 import com.sk.cache.wrappers.Wrapper;
+import com.sk.cache.wrappers.region.RegionUtil;
 import com.sk.datastream.Stream;
 
 public abstract class RegionDataLoader<T extends Wrapper> extends WrapperLoader<T> {
@@ -20,10 +21,10 @@ public abstract class RegionDataLoader<T extends Wrapper> extends WrapperLoader<
 	public abstract T load(int regionHash);
 
 	public T load(int regionX, int regionY) {
-		if (regionX < 0 || regionY < 0 || regionX > 0x7f || regionY > 0x7f) {
+		if (RegionUtil.validateRegionCoordinates(regionX, regionY)) {
 			throw new IllegalArgumentException("Bad region coordinates");
 		}
-		return load(regionX | regionY << 7);
+		return load(RegionUtil.getRegionId(regionX, regionY));
 	}
 
 	protected Stream getData(int regionHash, int file) {

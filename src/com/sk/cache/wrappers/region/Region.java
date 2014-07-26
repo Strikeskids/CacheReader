@@ -7,11 +7,9 @@ import com.sk.util.ArrayHelper;
 
 public class Region extends StreamedWrapper {
 
-	public int[][][] flags = new int[4][width][height];
-	public byte[][][] landscapeData = new byte[4][width][height];
+	public int[][][] flags = new int[4][RegionUtil.REGION_WIDTH][RegionUtil.REGION_HEIGHT];
+	public byte[][][] landscapeData = new byte[4][RegionUtil.REGION_WIDTH][RegionUtil.REGION_HEIGHT];
 	public LocalObjects objects;
-	public final static int width = 64;
-	public final static int height = 64;
 
 	public Region(RegionLoader loader, int id) {
 		super(loader, id);

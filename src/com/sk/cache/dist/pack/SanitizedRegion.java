@@ -8,6 +8,7 @@ import com.sk.cache.wrappers.ObjectDefinition;
 import com.sk.cache.wrappers.region.Flagger;
 import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.Region;
+import com.sk.cache.wrappers.region.RegionUtil;
 
 public class SanitizedRegion extends PackedRegion {
 
@@ -33,7 +34,7 @@ public class SanitizedRegion extends PackedRegion {
 	}
 
 	private void initializeFlags() {
-		flags = new byte[source.flags.length][Region.width][Region.height];
+		flags = new byte[source.flags.length][RegionUtil.REGION_WIDTH][RegionUtil.REGION_HEIGHT];
 		for (int plane = 0; plane < source.flags.length; plane++) {
 			boolean different = false;
 			for (int x = 0; x < source.flags[plane].length; ++x) {

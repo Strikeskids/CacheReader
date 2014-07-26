@@ -28,6 +28,7 @@ import com.sk.cache.gui.GridPainter.Side;
 import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.Region;
+import com.sk.cache.wrappers.region.RegionUtil;
 
 public class RegionViewer {
 
@@ -124,7 +125,7 @@ public class RegionViewer {
 			public void clickCell(int x, int y) {
 				
 			}
-		}, Region.width, Region.height), BorderLayout.CENTER);
+		}, RegionUtil.REGION_WIDTH, RegionUtil.REGION_HEIGHT), BorderLayout.CENTER);
 		if (shouldShowObjects)
 			frame.getContentPane().add(new JScrollPane(new JList(objectModel)), BorderLayout.EAST);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
