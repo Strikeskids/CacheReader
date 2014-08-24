@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +60,10 @@ public class CacheSystem {
 	@SuppressWarnings("unchecked")
 	public <T extends Wrapper> WrapperLoader<T> getLoader(Class<T> wrapperClass) {
 		return (WrapperLoader<T>) loaderMap.get(wrapperClass);
+	}
+	
+	public Collection<WrapperLoader<?>> getLoaders() {
+		return loaderMap.values();
 	}
 
 	public <T extends Wrapper> void addLoader(WrapperLoader<T> loader) {
