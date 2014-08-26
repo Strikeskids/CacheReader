@@ -1,14 +1,9 @@
 package com.sk.cache.wrappers;
 
+import java.util.Map;
+
 import com.sk.cache.wrappers.loaders.QuestDefinitionLoader;
-import com.sk.cache.wrappers.protocol.BasicProtocol;
-import com.sk.cache.wrappers.protocol.ExtraAttributeReader;
-import com.sk.cache.wrappers.protocol.ProtocolGroup;
-import com.sk.cache.wrappers.protocol.extractor.ArrayExtractor;
-import com.sk.cache.wrappers.protocol.extractor.FieldExtractor;
-import com.sk.cache.wrappers.protocol.extractor.ParseType;
-import com.sk.cache.wrappers.protocol.extractor.StaticExtractor;
-import com.sk.cache.wrappers.protocol.extractor.StreamExtractor;
+import com.sk.datastream.Stream;
 
 public class QuestDefinition extends ProtocolWrapper {
 
@@ -17,27 +12,122 @@ public class QuestDefinition extends ProtocolWrapper {
 	public int questPoints;
 
 	public QuestDefinition(QuestDefinitionLoader loader, int id) {
-		super(loader, id, protocol);
+		super(loader, id);
 	}
 
-	private static final ProtocolGroup protocol = new ProtocolGroup();
-	static {
-		new ExtraAttributeReader().addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.JAG_STRING, "name")}, 1).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.USHORT}, null)}, 13).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART)}, 17).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 6, 7).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.INT}, null)}, 10).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 5, 15).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.INT)}, 12).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.USHORT, ParseType.INT, ParseType.INT}, new String[]{"scriptId", "scriptStartValue", "scriptEndValue"})}, 4).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.UBYTE, ParseType.UBYTE}, null)}, 14).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true))}, 8).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "questPoints")}, 9).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.JAG_STRING)}, 2).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.INT, ParseType.INT, ParseType.INT, ParseType.STRING}, null)}, 18, 19).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE,0,new StreamExtractor[]{ParseType.USHORT, ParseType.INT, ParseType.INT}, new String[]{"configId", "configStartValue", "configEndValue"})}, 3).addSelfToGroup(protocol);
-
+	@Override
+	protected void decodeOpcode(Stream data, int opcode) {
+		switch (opcode) {
+		case 1:
+			this.name = data.getJagString();
+			return;
+		case 2:
+			skipValue(opcode, data.getJagString());
+			return;
+		case 3:
+			int size = data.getUByte();
+			configId = new int[size];
+			configStartValue = new int[size];
+			configEndValue = new int[size];
+			for (int e = 0; e < size; e++) {
+				configId[e] = data.getUShort();
+				configStartValue[e] = data.getInt();
+				configEndValue[e] = data.getInt();
+			}
+			return;
+		case 4:
+			size = data.getUByte();
+			scriptId = new int[size];
+			scriptStartValue = new int[size];
+			scriptEndValue = new int[size];
+			for (int e = 0; e < size; e++) {
+				scriptId[e] = data.getUShort();
+				scriptStartValue[e] = data.getInt();
+				scriptEndValue[e] = data.getInt();
+			}
+			return;
+		case 5:
+			skipValue(opcode, data.getUShort());
+			return;
+		case 6:
+			int type = data.getUByte();
+			skipValue(opcode, type);
+			return;
+		case 7:
+			skipValue(opcode, data.getUByte());
+			return;
+		case 8:
+			skipValue(opcode, true);
+			return;
+		case 9:
+			questPoints = data.getUByte();
+			return;
+		case 10:
+			int b = data.getUByte();
+			int[] _bgs = new int[b];
+			for (int m = 0; m < b; m++) {
+				_bgs[m] = data.getInt();
+			}
+			skipValue(opcode, b, _bgs);
+			return;
+		case 12:
+			skipValue(opcode, data.getInt());
+			return;
+		case 13:
+			b = data.getUByte();
+			int[] _bgu = new int[b];
+			for (int m = 0; m < b; m++) {
+				_bgu[m] = data.getUShort();
+			}
+			skipValue(opcode, b, _bgu);
+			return;
+		case 14:
+			b = data.getUByte();
+			int[] _bgv = new int[b];
+			int[] _bgw = new int[b];
+			for (int m = 0; m < b; m++) {
+				_bgv[m] = data.getUByte();
+				_bgw[m] = data.getUByte();
+			}
+			skipValue(opcode, b, _bgv, _bgw);
+			return;
+		case 15:
+			skipValue(data.getUShort());
+			return;
+		case 17:
+			int icon = data.getBigSmart();
+			skipValue(opcode, icon);
+			return;
+		case 18:
+			b = data.getUByte();
+			int[] arr1 = new int[b];
+			int[] arr2 = new int[b];
+			int[] arr3 = new int[b];
+			String[] arr4 = new String[b];
+			for (int m = 0; m < b; m++) {
+				arr1[m] = data.getInt();
+				arr2[m] = data.getInt();
+				arr3[m] = data.getInt();
+				arr4[m] = data.getString();
+			}
+			return;
+		case 19:
+			b = data.getUByte();
+			arr1 = new int[b];
+			arr2 = new int[b];
+			arr3 = new int[b];
+			arr4 = new String[b];
+			for (int m = 0; m < b; m++) {
+				arr1[m] = data.getInt();
+				arr2[m] = data.getInt();
+				arr3[m] = data.getInt();
+				arr4[m] = data.getString();
+			}
+			return;
+		case 249:
+			Map<Integer, Object> params = decodeParams(data);
+			skipValue(opcode, params);
+			return;
+		}
 	}
-
 }
