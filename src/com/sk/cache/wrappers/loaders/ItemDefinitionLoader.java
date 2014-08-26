@@ -31,19 +31,31 @@ public class ItemDefinitionLoader extends ProtocolWrapperLoader<ItemDefinition> 
 		if (item.noteTemplateId != -1) {
 			fixNotedItem(item);
 		}
+		if (item.cosmeticTemplateId != -1 ) {
+			fixCosmeticItem(item);
+		}
 		item.edible = isEdible(item);
+	}
+	
+	private void fixCosmeticItem(ItemDefinition item) {
+		fixItem(item, item.cosmeticId);
+		item.cosmetic = true;
 	}
 
 	private void fixLentItem(ItemDefinition item) {
-		final ItemDefinition lent = this.load(item.lentId);
-		item.groundActions = lent.groundActions;
-		item.actions = lent.actions;
-		item.name = lent.name;
-		item.members = lent.members;
-		item.value = 0;
-		item.team = lent.team;
-		item.actions[4] = "Discard";
+		fixItem(item, item.lentId);
 		item.lent = true;
+	}
+	
+	private void fixItem(ItemDefinition item, int sourceId) {
+		final ItemDefinition source = this.load(sourceId);
+		item.groundActions = source.groundActions;
+		item.actions = source.actions;
+		item.name = source.name;
+		item.members = source.members;
+		item.value = 0;
+		item.team = source.team;
+		item.actions[4] = "Discard";
 	}
 
 	private void fixNotedItem(ItemDefinition item) {

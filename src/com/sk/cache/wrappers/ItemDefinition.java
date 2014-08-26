@@ -12,6 +12,7 @@ public class ItemDefinition extends ProtocolWrapper {
 	public boolean edible;
 	public boolean noted;
 	public boolean lent;
+	public boolean cosmetic;
 	public int slot = -1;
 	public int noteId = -1;
 	public int value = 0;
@@ -20,6 +21,8 @@ public class ItemDefinition extends ProtocolWrapper {
 	public String[] groundActions = { null, null, "Take", null, null };
 	public int noteTemplateId = -1;
 	public int lentTemplateId = -1;
+	public int cosmeticId = -1;
+	public int cosmeticTemplateId = -1;
 	public int team;
 
 	public String name;
@@ -204,10 +207,10 @@ public class ItemDefinition extends ProtocolWrapper {
 		} else if (opcode == 134) {
 			skipValue(opcode, stream.getUByte());
 		} else if (opcode == 139) {
-			int cosmeticId = stream.getUShort();
+			cosmeticId = stream.getUShort();
 			skipValue(opcode, cosmeticId);
 		} else if (opcode == 140) {
-			int cosmeticTemplateId = stream.getUShort();
+			cosmeticTemplateId = stream.getUShort();
 			skipValue(opcode, cosmeticTemplateId);
 		} else if (opcode >= 142 && opcode < 147) {
 			// array index k-142 default -1

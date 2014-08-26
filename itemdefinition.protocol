@@ -51,8 +51,8 @@
 # 130 3
 132 array ubyte ushort
 134 ubyte
-139 ushort
-140 ushort
+139 ushort cosmeticId
+140 ushort cosmeticTemplateId
 142-146 ushort
 150-154 ushort
 156 set false
