@@ -13,6 +13,7 @@ public class ItemDefinition extends ProtocolWrapper {
 	public boolean noted;
 	public boolean lent;
 	public boolean cosmetic;
+	public boolean tradeable;
 	public int slot = -1;
 	public int noteId = -1;
 	public int value = 0;
@@ -150,7 +151,7 @@ public class ItemDefinition extends ProtocolWrapper {
 			// }
 			// }
 		} else if (opcode == 65) {
-			skipValue(opcode, true);
+			tradeable = true;
 		} else if (opcode == 78) {
 			skipValue(opcode, stream.getBigSmart());
 		} else if (opcode == 79) {
