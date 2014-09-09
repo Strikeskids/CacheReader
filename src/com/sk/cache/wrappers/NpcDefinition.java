@@ -29,7 +29,7 @@ public class NpcDefinition extends ProtocolWrapper {
 			return null;
 		Model[] models = new Model[modelIds.length];
 		for (int i = 0; i < modelIds.length; ++i) {
-			Model cur = getLoader().getCacheSystem().modelLoader.load(modelIds[i]);
+			Model cur = models[i] = getLoader().getCacheSystem().modelLoader.load(modelIds[i]);
 			if (modelOffsets != null && modelOffsets[i] != null) {
 				cur.offsetVertices(modelOffsets[i][0], modelOffsets[i][1], modelOffsets[i][2]);
 			}
