@@ -160,13 +160,13 @@ public class NpcDefinition extends ProtocolWrapper {
 		} else if (opcode == 103) {
 			skipValue(data.getUShort());
 		} else if (opcode == 106 || opcode == 118) {
-			configId = data.getUShort();
-			if (configId == 65535) {
-				configId = -1;
-			}
 			scriptId = data.getUShort();
 			if (scriptId == 65535) {
 				scriptId = -1;
+			}
+			configId = data.getUShort();
+			if (configId == 65535) {
+				configId = -1;
 			}
 			int defaultChildId = -1;
 			if (opcode == 118) {
