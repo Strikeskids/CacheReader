@@ -88,7 +88,7 @@ public class QuestDefinition extends ProtocolWrapper {
 			return;
 		case 13:
 			b = data.getUByte();
-			int[] questRequirementIds = new int[b];
+			questRequirementIds = new int[b];
 			for (int m = 0; m < b; m++) {
 				questRequirementIds[m] = data.getUShort();
 			}
