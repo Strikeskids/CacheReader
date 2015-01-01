@@ -10,7 +10,20 @@ public class QuestDefinition extends ProtocolWrapper {
 	public String name;
 	public int[] scriptId, scriptStartValue, scriptEndValue, configId, configStartValue, configEndValue;
 	public int questPoints;
-
+	public int[] questRequirementIds;
+	public boolean members;
+	/**
+	 * 0 Novice
+	 * 1 Intermediate
+	 * 2 Experienced
+	 * 3 Master
+	 * 4 Grandmaster
+	 * 250 Special
+	 */
+	public int classification;
+	private int requiredQuestPoints;
+	public int[] skill, level;
+	
 	public QuestDefinition(QuestDefinitionLoader loader, int id) {
 		super(loader, id);
 	}
@@ -54,10 +67,10 @@ public class QuestDefinition extends ProtocolWrapper {
 			skipValue(opcode, type);
 			return;
 		case 7:
-			skipValue(opcode, data.getUByte());
+			classification = data.getUByte();
 			return;
 		case 8:
-			skipValue(opcode, true);
+			members = true;
 			return;
 		case 9:
 			questPoints = data.getUByte();
@@ -75,24 +88,22 @@ public class QuestDefinition extends ProtocolWrapper {
 			return;
 		case 13:
 			b = data.getUByte();
-			int[] _bgu = new int[b];
+			int[] questRequirementIds = new int[b];
 			for (int m = 0; m < b; m++) {
-				_bgu[m] = data.getUShort();
+				questRequirementIds[m] = data.getUShort();
 			}
-			skipValue(opcode, b, _bgu);
 			return;
 		case 14:
 			b = data.getUByte();
-			int[] _bgv = new int[b];
-			int[] _bgw = new int[b];
+			skill = new int[b];
+			level = new int[b];
 			for (int m = 0; m < b; m++) {
-				_bgv[m] = data.getUByte();
-				_bgw[m] = data.getUByte();
+				skill[m] = data.getUByte();
+				level[m] = data.getUByte();
 			}
-			skipValue(opcode, b, _bgv, _bgw);
 			return;
 		case 15:
-			skipValue(data.getUShort());
+			requiredQuestPoints = data.getUShort();
 			return;
 		case 17:
 			int icon = data.getBigSmart();
