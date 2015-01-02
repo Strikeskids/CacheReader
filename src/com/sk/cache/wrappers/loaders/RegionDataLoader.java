@@ -21,7 +21,7 @@ public abstract class RegionDataLoader<T extends Wrapper> extends WrapperLoader<
 	public abstract T load(int regionHash);
 
 	public T load(int regionX, int regionY) {
-		if (RegionUtil.validateRegionCoordinates(regionX, regionY)) {
+		if (!RegionUtil.validateRegionCoordinates(regionX, regionY)) {
 			throw new IllegalArgumentException("Bad region coordinates");
 		}
 		return load(RegionUtil.getRegionId(regionX, regionY));
