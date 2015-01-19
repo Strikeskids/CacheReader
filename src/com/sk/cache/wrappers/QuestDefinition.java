@@ -1,5 +1,6 @@
 package com.sk.cache.wrappers;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.sk.cache.wrappers.loaders.QuestDefinitionLoader;
@@ -10,20 +11,13 @@ public class QuestDefinition extends ProtocolWrapper {
 	public String name;
 	public int[] scriptId, scriptStartValue, scriptEndValue, configId, configStartValue, configEndValue;
 	public int questPoints;
-	public int[] questRequirementIds;
 	public boolean members;
-	/**
-	 * 0 Novice
-	 * 1 Intermediate
-	 * 2 Experienced
-	 * 3 Master
-	 * 4 Grandmaster
-	 * 250 Special
-	 */
-	public int classification;
-	private int requiredQuestPoints;
-	public int[] skill, level;
-	
+	public QuestClassification classification;
+
+	public int questPointRequirement;
+	public int[] questRequirements;
+	public int[] skillRequirements, levelRequirements;
+
 	public QuestDefinition(QuestDefinitionLoader loader, int id) {
 		super(loader, id);
 	}
@@ -67,7 +61,7 @@ public class QuestDefinition extends ProtocolWrapper {
 			skipValue(opcode, type);
 			return;
 		case 7:
-			classification = data.getUByte();
+			classification = CLASSIFICATION_MAP.get(data.getUByte());
 			return;
 		case 8:
 			members = true;
@@ -88,22 +82,22 @@ public class QuestDefinition extends ProtocolWrapper {
 			return;
 		case 13:
 			b = data.getUByte();
-			questRequirementIds = new int[b];
+			questRequirements = new int[b];
 			for (int m = 0; m < b; m++) {
-				questRequirementIds[m] = data.getUShort();
+				questRequirements[m] = data.getUShort();
 			}
 			return;
 		case 14:
 			b = data.getUByte();
-			skill = new int[b];
-			level = new int[b];
+			skillRequirements = new int[b];
+			levelRequirements = new int[b];
 			for (int m = 0; m < b; m++) {
-				skill[m] = data.getUByte();
-				level[m] = data.getUByte();
+				skillRequirements[m] = data.getUByte();
+				levelRequirements[m] = data.getUByte();
 			}
 			return;
 		case 15:
-			requiredQuestPoints = data.getUShort();
+			questPointRequirement = data.getUShort();
 			return;
 		case 17:
 			int icon = data.getBigSmart();
@@ -121,6 +115,7 @@ public class QuestDefinition extends ProtocolWrapper {
 				arr3[m] = data.getInt();
 				arr4[m] = data.getString();
 			}
+			skipValue(opcode, arr1, arr2, arr3, arr4);
 			return;
 		case 19:
 			b = data.getUByte();
@@ -134,6 +129,7 @@ public class QuestDefinition extends ProtocolWrapper {
 				arr3[m] = data.getInt();
 				arr4[m] = data.getString();
 			}
+			skipValue(opcode, arr1, arr2, arr3, arr4);
 			return;
 		case 249:
 			Map<Integer, Object> params = decodeParams(data);
@@ -141,4 +137,25 @@ public class QuestDefinition extends ProtocolWrapper {
 			return;
 		}
 	}
+	
+	private static final Map<Integer, QuestClassification> CLASSIFICATION_MAP;
+	
+	public static enum QuestClassification {
+		NOVICE(0), INTERMEDIATE(1), EXPERIENCED(2), MASTER(3), GRANDMASTER(4), SPECIAL(250);
+
+		public final int id;
+
+		private QuestClassification(int id) {
+			this.id = id;
+		}
+	}
+	
+	static {
+		QuestClassification[] values = QuestClassification.values();
+		CLASSIFICATION_MAP = new HashMap<Integer, QuestClassification>(values.length);
+		for (QuestClassification value : values) {
+			CLASSIFICATION_MAP.put(value.id, value);
+		}
+	}
+	
 }
