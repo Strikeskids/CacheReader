@@ -511,7 +511,7 @@ public class Model extends StreamedWrapper {
 		return ret;
 	}
 
-	final void offsetVertices(int xoff, int yoff, int zoff) {
+	public final void offsetVertices(int xoff, int yoff, int zoff) {
 		for (int i1 = 0; vertexCount > i1; i1++) {
 			verticesX[i1] += xoff;
 			verticesY[i1] += yoff;
