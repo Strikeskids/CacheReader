@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.sk.cache.DataSource;
 import com.sk.cache.wrappers.Wrapper;
+import com.sk.cache.wrappers.loaders.ImageLoader;
 import com.sk.cache.wrappers.loaders.ItemDefinitionLoader;
 import com.sk.cache.wrappers.loaders.LocalObjectLoader;
 import com.sk.cache.wrappers.loaders.ModelLoader;
@@ -32,6 +33,7 @@ public class CacheSystem {
 	public final QuestDefinitionLoader questLoader;
 	public final NpcDefinitionLoader npcLoader;
 	public final ModelLoader modelLoader;
+	public final ImageLoader imageLoader;
 
 	public CacheSystem(CacheSource cache) {
 		this.cache = cache;
@@ -43,6 +45,7 @@ public class CacheSystem {
 		addLoader(questLoader = new QuestDefinitionLoader(this));
 		addLoader(npcLoader = new NpcDefinitionLoader(this));
 		addLoader(modelLoader = new ModelLoader(this));
+		addLoader(imageLoader = new ImageLoader(this));
 	}
 
 	public CacheSystem(DataSource source) {
