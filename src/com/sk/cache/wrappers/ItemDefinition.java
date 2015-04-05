@@ -14,6 +14,7 @@ public class ItemDefinition extends ProtocolWrapper {
 	public boolean lent;
 	public boolean cosmetic;
 	public boolean tradeable;
+	public boolean equipable;
 	public int slot = -1;
 	public int noteId = -1;
 	public int value = 0;
@@ -66,6 +67,7 @@ public class ItemDefinition extends ProtocolWrapper {
 			this.value = stream.getInt();
 		} else if (opcode == 13) {
 			this.slot = stream.getUByte();
+			this.equipable = this.slot >= 0;
 		} else if (opcode == 14) {
 			skipValue(opcode, stream.getUByte());
 		} else if (opcode == 16) {
