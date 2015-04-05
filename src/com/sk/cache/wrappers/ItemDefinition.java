@@ -21,6 +21,7 @@ public class ItemDefinition extends ProtocolWrapper {
 	public int lentId = -1;
 	public String[] actions = { null, null, null, null, "Drop" };
 	public String[] groundActions = { null, null, "Take", null, null };
+	public String[] equipActions;
 	public int noteTemplateId = -1;
 	public int lentTemplateId = -1;
 	public int cosmeticId = -1;
@@ -239,7 +240,28 @@ public class ItemDefinition extends ProtocolWrapper {
 			skipValue(opcode, 2);
 		} else if (opcode == 249) {
 			Map<Integer, Object> params = decodeParams(stream);
+			loadEquipActions(params);
 			skipValue(opcode, params);
 		}
 	}
+
+	private void loadEquipActions(Map<Integer, Object> params) {
+		int count = 0, idx = 0;
+		for (int id : EQUIP_ACTION_PARAMS) {
+			if (params.containsKey(id)) {
+				count++;
+			}
+		}
+		if (count == 0)
+			return;
+		this.equipActions = new String[count];
+		for (int id : EQUIP_ACTION_PARAMS) {
+			String action = (String) params.get(id);
+			if (action != null) {
+				equipActions[idx++] = action;
+			}
+		}
+	}
+
+	private static final int[] EQUIP_ACTION_PARAMS = { 528, 529, 530, 531, 1211 };
 }
