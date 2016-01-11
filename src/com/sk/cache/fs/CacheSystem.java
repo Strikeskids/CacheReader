@@ -1,7 +1,9 @@
 package com.sk.cache.fs;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -21,7 +23,7 @@ import com.sk.cache.wrappers.loaders.RegionLoader;
 import com.sk.cache.wrappers.loaders.ScriptLoader;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
 
-public class CacheSystem {
+public class CacheSystem implements Closeable {
 	private final CacheSource cache;
 	private final Map<Type, WrapperLoader<?>> loaderMap = new HashMap<Type, WrapperLoader<?>>();
 
@@ -72,5 +74,10 @@ public class CacheSystem {
 	public <T extends Wrapper> void addLoader(WrapperLoader<T> loader) {
 		ParameterizedType type = (ParameterizedType) loader.getClass().getGenericSuperclass();
 		loaderMap.put(type.getActualTypeArguments()[0], loader);
+	}
+
+	@Override
+	public void close() throws IOException {
+		this.cache.close();
 	}
 }

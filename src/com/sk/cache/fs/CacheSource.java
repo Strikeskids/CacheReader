@@ -1,10 +1,12 @@
 package com.sk.cache.fs;
+
+import java.io.Closeable;
 import java.io.IOException;
 
 import com.sk.cache.DataSource;
 import com.sk.cache.meta.ReferenceTable;
 
-public class CacheSource {
+public class CacheSource implements Closeable {
 
 	private final DataSource source;
 	private final CacheType[] types = new CacheType[DataSource.MAX_INDEX_FILES];
@@ -42,9 +44,17 @@ public class CacheSource {
 		}
 		return types[cacheType];
 	}
-	
+
 	public DataSource getSourceSystem() {
 		return source;
+	}
+
+	@Override
+	public void close() throws IOException {
+		for (int i = 0; i < DataSource.MAX_INDEX_FILES; ++i) {
+			types[i] = null;
+		}
+		source.close();
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.sk.cache;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import com.sk.cache.meta.ArchiveRequest;
 import com.sk.datastream.ByteStream;
 import com.sk.datastream.Stream;
 
-public class DataSource {
+public class DataSource implements Closeable {
 
 	private static final String FILE_MODE = "r";
 
@@ -184,5 +185,13 @@ public class DataSource {
 
 	public int getIndexFileCount() {
 		return indexFileCount;
+	}
+
+	@Override
+	public void close() throws IOException {
+		for (FileChannel fc : indexChannels) {
+			fc.close();
+		}
+		cacheChannel.close();
 	}
 }
