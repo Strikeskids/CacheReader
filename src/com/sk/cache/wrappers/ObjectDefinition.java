@@ -15,6 +15,7 @@ public class ObjectDefinition extends ProtocolWrapper {
 	public boolean walkable = true;
 	public boolean walkable2 = false;
 	public int blockType = 2;
+	public int accessibleMask = -1;
 	public String[] actions = new String[5];
 
 	public int scriptId = -1;
@@ -154,7 +155,7 @@ public class ObjectDefinition extends ProtocolWrapper {
 			resize[opcode - 65] = data.getUShort();
 			skipValue(opcode, resize);
 		} else if (opcode == 69) {
-			skipValue(opcode, data.getUByte());
+			accessibleMask = data.getUByte();
 		} else if (opcode == 70 || opcode == 71 || opcode == 72) {
 			int[] offset = null;
 			if (offset == null) {
