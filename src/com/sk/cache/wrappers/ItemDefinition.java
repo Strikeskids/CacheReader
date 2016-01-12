@@ -2,7 +2,6 @@ package com.sk.cache.wrappers;
 
 import java.util.Map;
 
-import com.sk.cache.wrappers.ItemStats.CombatStyle;
 import com.sk.cache.wrappers.loaders.ItemDefinitionLoader;
 import com.sk.datastream.Stream;
 
@@ -260,35 +259,8 @@ public class ItemDefinition extends ProtocolWrapper {
 
 	private void loadItemStats(Map<Integer, Object> params) {
 		ItemStats stats = new ItemStats();
-		int found = 0;
-		found |= (stats.magicAccuracy = getIntegerParam(params, 3));
-		found |= (stats.rangedAccuracy = getIntegerParam(params, 4));
-		found |= (stats.attackSpeed = getIntegerParam(params, 14));
-		found |= (stats.meleeDamage = getIntegerParam(params, 641));
-		found |= (stats.rangedDamage = getIntegerParam(params, 643));
-		found |= (stats.magicDamage = getIntegerParam(params, 965));
-		found |= (stats.lifepoints = getIntegerParam(params, 1326));
-		int melee = getIntegerParam(params, 2821) | getIntegerParam(params, 2825);
-		int range = getIntegerParam(params, 2822) | getIntegerParam(params, 2826);
-		int magic = getIntegerParam(params, 2823) | getIntegerParam(params, 2827);
-		int neutral = getIntegerParam(params, 2824);
-		if (melee != 0 && (range | magic | neutral) == 0) {
-			stats.style = CombatStyle.MELEE;
-		} else if (range != 0 && (melee | magic | neutral) == 0) {
-			stats.style = CombatStyle.RANGED;
-		} else if (magic != 0 && (melee | range | neutral) == 0) {
-			stats.style = CombatStyle.MAGIC;
-		} else if (neutral != 0 && (melee | range | magic) == 0) {
-			stats.style = CombatStyle.NEUTRAL;
-		}
-		found |= melee | range | magic | neutral;
-		found |= (stats.meleeCritical = getIntegerParam(params, 2833));
-		found |= (stats.rangedCritical = getIntegerParam(params, 2834));
-		found |= (stats.magicCritical = getIntegerParam(params, 2835));
-		found |= (stats.armor = getIntegerParam(params, 2870));
-		found |= (stats.prayer = getIntegerParam(params, 2946));
-		found |= (stats.meleeAccuracy = getIntegerParam(params, 3267));
-		if (found != 0) {
+		stats.load(params);
+		if (stats.isDefault()) {
 			this.stats = stats;
 		}
 	}
