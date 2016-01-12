@@ -15,7 +15,6 @@ public class ItemDefinition extends ProtocolWrapper {
 	public boolean cosmetic;
 	public boolean tradeable;
 	public boolean equipable;
-	public boolean degradable;
 	public int slot = -1;
 	public int noteId = -1;
 	public int value = 0;
@@ -244,17 +243,8 @@ public class ItemDefinition extends ProtocolWrapper {
 			Map<Integer, Object> params = decodeParams(stream);
 			loadEquipActions(params);
 			loadItemStats(params);
-			this.degradable = getIntegerParam(params, 2952) != 0;
 			skipValue(opcode, params);
 		}
-	}
-
-	private int getIntegerParam(Map<Integer, Object> params, int param) {
-		Integer cur = (Integer) params.get(param);
-		if (cur != null) {
-			return cur;
-		}
-		return 0;
 	}
 
 	private void loadItemStats(Map<Integer, Object> params) {
