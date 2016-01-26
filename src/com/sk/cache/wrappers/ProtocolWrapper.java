@@ -26,7 +26,7 @@ public abstract class ProtocolWrapper extends StreamedWrapper {
 	
 	protected Map<Integer, Object> decodeParams(Stream stream) {
 		int h = stream.getUByte();
-		Map<Integer, Object> params = new LinkedHashMap<Integer, Object>();
+		Map<Integer, Object> params = new LinkedHashMap<Integer, Object>(h);
 		for (int m = 0; m < h; m++) {
 			boolean r = stream.getUByte() == 1;
 			int key = stream.getUInt24();
