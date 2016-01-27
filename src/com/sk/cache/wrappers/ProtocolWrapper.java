@@ -1,5 +1,6 @@
 package com.sk.cache.wrappers;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import com.sk.datastream.Stream;
 public abstract class ProtocolWrapper extends StreamedWrapper {
 
 	public Map<Integer, Object> attributes = null;
+	public static WeakReference<Map<Integer, Object>> decodedParams = new WeakReference<Map<Integer, Object>>(null);
 
 	public ProtocolWrapper(WrapperLoader<?> loader, int id) {
 		super(loader, id);
@@ -21,9 +23,9 @@ public abstract class ProtocolWrapper extends StreamedWrapper {
 			decodeOpcode(stream, opcode);
 		}
 	}
-	
+
 	protected abstract void decodeOpcode(Stream stream, int opcode);
-	
+
 	protected Map<Integer, Object> decodeParams(Stream stream) {
 		int h = stream.getUByte();
 		Map<Integer, Object> params = new LinkedHashMap<Integer, Object>(h);
@@ -33,6 +35,7 @@ public abstract class ProtocolWrapper extends StreamedWrapper {
 			Object value = (r) ? stream.getString() : stream.getInt();
 			params.put(key, value);
 		}
+		decodedParams = new WeakReference<Map<Integer, Object>>(params);
 		return params;
 	}
 
